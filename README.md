@@ -64,7 +64,7 @@
 
 ### Usage
 
-`python3 compose-viz.py [option] [input-file]`
+`python3 compose-viz.py [OPTIONS] [input-file]`
 
 ### Options
 
