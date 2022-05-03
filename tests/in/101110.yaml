@@ -1,0 +1,21 @@
+services:
+  frontend:
+    image: awesome/webapp
+
+  monitoring:
+    image: awesome/monitoring
+
+    
+
+  backend:
+    image: awesome/backend
+    depends_on:
+      - monitoring
+    extends:
+      service: frontend
+    ports:
+      - "8000:5010"
+    links:
+      - "db:database"
+  db:
+    image: postgres

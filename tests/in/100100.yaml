@@ -1,0 +1,16 @@
+services:
+  frontend:
+    image: awesome/webapp
+
+  monitoring:
+    image: awesome/monitoring
+    
+
+  backend:
+    image: awesome/backend
+    ports:
+      - "8000:5010"
+    links:
+      - "db:database"
+  db:
+    image: postgres

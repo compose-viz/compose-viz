@@ -1,0 +1,16 @@
+services:
+  frontend:
+    image: awesome/webapp
+
+  monitoring:
+    image: awesome/monitoring
+    
+
+  backend:
+    image: awesome/backend
+    depends_on:
+      - monitoring
+    links:
+      - "db:database"
+  db:
+    image: postgres

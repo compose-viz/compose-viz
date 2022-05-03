@@ -1,0 +1,28 @@
+services:
+  frontend:
+    image: awesome/webapp
+    ports:
+      - "8000:5000"
+
+  monitoring:
+    image: awesome/monitoring
+    depends_on:
+      - backend
+    ports:
+      - "8000:5010"
+    volumes:
+      - type: volume
+        source: db-data
+        target: /data
+        volume:
+          nocopy: true
+      - type: bind
+        source: /var/run/postgres/postgres.sock
+        target: /var/run/postgres/postgres.sock
+
+  backend:
+    image: awesome/backend
+    ports:
+      - "8000:5001"
+volumes:
+  db-data:
