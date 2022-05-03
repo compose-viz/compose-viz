@@ -1,0 +1,48 @@
+services:
+  frontend:
+    image: awesome/webapp
+    networks:
+      - front-tier
+      - back-tier
+
+  monitoring:
+    image: awesome/monitoring
+    networks:
+      - admin
+    
+
+  backend:
+    image: awesome/backend
+    networks:
+      back-tier:
+        aliases:
+          - database
+      admin:
+        aliases:
+          - mysql
+    volumes:
+      - type: volume
+        source: db-data
+        target: /data
+        volume:
+          nocopy: true
+      - type: bind
+        source: /var/run/postgres/postgres.sock
+        target: /var/run/postgres/postgres.sock
+    depends_on:
+      - monitoring
+    extends:
+      service: frontend
+    ports:
+      - "8000:5010"
+    links:
+      - "db:database"
+  db:
+    image: postgres
+
+networks:
+  front-tier:
+  back-tier:
+  admin:
+volumes:
+  db-data:

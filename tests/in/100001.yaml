@@ -1,0 +1,31 @@
+services:
+  frontend:
+    image: awesome/webapp
+    networks:
+      - front-tier
+      - back-tier
+
+  monitoring:
+    image: awesome/monitoring
+    networks:
+      - admin
+    
+
+  backend:
+    image: awesome/backend
+    networks:
+      back-tier:
+        aliases:
+          - database
+      admin:
+        aliases:
+          - mysql
+    links:
+      - "db:database"
+  db:
+    image: postgres
+
+networks:
+  front-tier:
+  back-tier:
+  admin:

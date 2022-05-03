@@ -1,0 +1,30 @@
+services:
+  frontend:
+    image: awesome/webapp
+    networks:
+      - front-tier
+      - back-tier
+
+  monitoring:
+    image: awesome/monitoring
+    networks:
+      - admin
+    extends:
+      service: frontend
+
+  backend:
+    image: awesome/backend
+    networks:
+      back-tier:
+        aliases:
+          - database
+      admin:
+        aliases:
+          - mysql
+    extends:
+      service: frontend
+
+networks:
+  front-tier:
+  back-tier:
+  admin:

@@ -1,0 +1,17 @@
+services:
+  frontend:
+    image: awesome/webapp
+    ports:
+      - "8000:5000"
+
+  monitoring:
+    image: awesome/monitoring
+    depends_on:
+      - backend
+    ports:
+      - "8000:5010"
+
+  backend:
+    image: awesome/backend
+    ports:
+      - "8000:5001"

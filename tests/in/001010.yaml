@@ -1,0 +1,12 @@
+services:
+  web:
+    build: .
+    depends_on:
+      - db
+      - redis
+    extends:
+      service: redis
+  redis:
+    image: redis
+  db:
+    image: postgres

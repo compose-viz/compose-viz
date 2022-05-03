@@ -1,0 +1,34 @@
+services:
+  frontend:
+    image: awesome/webapp
+    networks:
+      - front-tier
+      - back-tier
+    ports:
+      - "8000:5000"
+
+  monitoring:
+    image: awesome/monitoring
+    networks:
+      - admin
+    extends:
+      service: frontend
+
+  backend:
+    image: awesome/backend
+    networks:
+      back-tier:
+        aliases:
+          - database
+      admin:
+        aliases:
+          - mysql
+    extends:
+      service: frontend
+    ports:
+      - "8000:5001"
+
+networks:
+  front-tier:
+  back-tier:
+  admin:
