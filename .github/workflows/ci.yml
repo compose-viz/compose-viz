@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -91,5 +91,4 @@ jobs:
         run: |
           pip install pytest
           pip install pytest-cov
-          pytest
           python .\tests\test_validate_input_file.py .\tests\validate_input_file.py .\tests\in\docker-compose.yaml
