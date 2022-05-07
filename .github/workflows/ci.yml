@@ -89,6 +89,5 @@ jobs:
             
       - name: Validate Custom Input File
         run: |
-          pip install pytest
-          pip install pytest-cov
+          pip install -r requirements.txt
           pytest
