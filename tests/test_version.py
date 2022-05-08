@@ -1,4 +1,3 @@
-import pytest
 from typer.testing import CliRunner
 from compose_viz import cli, __app_name__, __version__
 

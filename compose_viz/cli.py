@@ -1,9 +1,7 @@
-from ast import parse
 from enum import Enum
 import typer
 from typing import Optional
 from compose_viz import __app_name__, __version__
-from compose_viz.compose import Compose
 from compose_viz.parser import Parser
 
 

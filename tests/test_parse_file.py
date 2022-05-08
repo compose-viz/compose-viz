@@ -1,4 +1,3 @@
-from typer.testing import CliRunner
 from compose_viz.parser import Parser
 from compose_viz.compose import Compose
 from compose_viz.service import Service
