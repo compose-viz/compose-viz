@@ -1,5 +1,4 @@
----
-name: "Release Tagged Version"
+name: Release Tagged Version
 
 on:
   push:
