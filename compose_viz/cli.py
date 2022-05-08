@@ -55,3 +55,7 @@ def compose_viz(
         typer.echo(f"Successfully parsed {input_path}")
 
     raise typer.Exit()
+
+
+def start_cli() -> None:
+    app(prog_name=__app_name__)

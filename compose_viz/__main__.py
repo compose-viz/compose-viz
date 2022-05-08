@@ -1,9 +1,5 @@
-from compose_viz import cli, __app_name__
-
-
-def main() -> None:
-    cli.app(prog_name=__app_name__)
+from compose_viz.cli import start_cli
 
 
 if __name__ == "__main__":
-    main()
+    start_cli()
