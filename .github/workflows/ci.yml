@@ -86,8 +86,14 @@ jobs:
           docker-compose -f tests/in/111101.yaml config -q
           docker-compose -f tests/in/111110.yaml config -q
           docker-compose -f tests/in/111111.yaml config -q
-            
+                  
+      - name: Setup Poetry
+        uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.1.7
+      - run: |
+          poetry install
+
       - name: Validate Custom Input File
         run: |
-          pip install -r requirements.txt
-          pytest
+          poetry run python -m pytest
