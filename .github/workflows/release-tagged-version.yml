@@ -27,7 +27,7 @@ jobs:
         with:
           poetry-version: 1.1.7
       - run: |
-          poetry install
+          poetry install --no-root
           poetry build
       
       - name: "Release Tagged Version"

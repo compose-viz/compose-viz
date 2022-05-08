@@ -91,9 +91,11 @@ jobs:
         uses: Gr1N/setup-poetry@v7
         with:
           poetry-version: 1.1.7
-      - run: |
-          poetry install
+
+      - name: Install Dependencies
+        run: |
+          poetry install --no-root
 
       - name: Validate Custom Input File
         run: |
-          poetry run python -m pytest
+          pytest
