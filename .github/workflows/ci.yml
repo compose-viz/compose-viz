@@ -98,4 +98,4 @@ jobs:
 
       - name: Validate Custom Input File
         run: |
-          pytest
+          poetry run python -m pytest
