@@ -3,7 +3,13 @@ name = "compose-viz"
 version = "0.1.0"
 description = "A docker-compose/podman-compose graph visualization tool that allows you to gernerate graph in DOT format or PNG."
 authors = ["Xyphuz Wu <xyphuzwu@gmail.com>"]
+readme = "README.md"
 license = "MIT"
+homepage = "https://github.com/compose-viz/compose-viz"
+repository = "https://github.com/compose-viz/compose-viz"
+include = [
+    "LICENSE",
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -17,4 +23,4 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-compose_viz = "compose_viz.cli:start_cli"
+cpv = "compose_viz.cli:start_cli"
