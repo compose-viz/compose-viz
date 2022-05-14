@@ -15,7 +15,7 @@ class Service:
     @property
     def name(self):
         return self._name
-    
+
     @property
     def image(self):
         return self._image
