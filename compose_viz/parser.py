@@ -7,4 +7,5 @@ class Parser:
 
     def parse(self, file_path: str) -> Compose:
         # validate input file using `docker-compose config -q sys.argv[1]` first
+        return Compose([])
         raise NotImplementedError
