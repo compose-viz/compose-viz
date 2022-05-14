@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, dev ]
 
 jobs:
   test:
@@ -86,9 +86,16 @@ jobs:
           docker-compose -f tests/in/111101.yaml config -q
           docker-compose -f tests/in/111110.yaml config -q
           docker-compose -f tests/in/111111.yaml config -q
-            
+                  
+      - name: Setup Poetry
+        uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.1.7
+
+      - name: Install Dependencies
+        run: |
+          poetry install --no-root
+
       - name: Validate Custom Input File
         run: |
-          pip install pytest
-          pip install pytest-cov
-          python tests/test_validate_input_file.py tests/validate_input_file.py tests/in/docker-compose.yaml
+          poetry run python -m pytest

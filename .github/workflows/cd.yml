@@ -1,0 +1,17 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build and Publish to PyPi
+        uses: JRubics/poetry-publish@v1.10
+        with:
+          pypi_token: ${{ secrets.PYPI_TOKEN }}
