@@ -38,6 +38,7 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
+        <li><a href="#installation">Installation</a></li>
         <li><a href="#usage">Usage</a></li>
         <li><a href="#options">Options</a></li>
         <li><a href="#example">Example</a></li>
@@ -62,20 +63,32 @@
 
 ## Getting Started
 
+### Installation
+
+#### Using `pip`
+
+`pip install compose-viz`
+
+#### Using `.whl`
+
+See [releases](https://github.com/compose-viz/compose-viz/releases).
+
 ### Usage
 
-`python3 compose-viz.py [OPTIONS] [input-file]`
+`cpv [OPTIONS] INPUT_PATH`
 
 ### Options
 
-| Option                        | Necessity | Description       | Default Value   |
-| ----------------------------- | --------- | ----------------- | --------------- |
-| `-o --output-file`            | Optional  | Output file path. | `./compose.png` |
-| `-m --output-format=DOT, PNG` | Optional  | Output format.    | PNG             |
+| Option                   | Description                                                                    |
+| ------------------------ | ------------------------------------------------------------------------------ |
+| `-o, --output-path`      | Output path for the generated visualization file. [default: ./compose-viz.png] |
+| `-m, --format [PNG,DOT]` | Output format for the generated visualization file. [default: PNG]             |
+| `-v, --version`          | Show the version of compose-viz.                                               |
+| `--help`                 | Show help and exit.                                                            |
 
 ### Example
 
-`python3 compose-viz.py docker-compose.yaml`
+`cpv -o docker-compose-viz.png docker-compose.yml`
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
