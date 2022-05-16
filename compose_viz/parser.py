@@ -13,7 +13,7 @@ class Parser:
         # load the yaml file
         with open(file_path, "r") as f:
             try:
-                yaml = YAML()
+                yaml = YAML(typ='safe', pure=True)
                 yaml_data = yaml.load(f)
             except YAML.YAMLError as exc:
                 raise YAML.YAMLError
@@ -33,7 +33,10 @@ class Parser:
                 service_image = service["image"]
                 #print("image: {}".format(service_image))
             if service.get("networks"):
-                service_networks = service["networks"]
+                if(type(service["networks"]) is list):
+                    service_networks = service["networks"]
+                else:
+                    service_networks = list(service["networks"].keys())
                 #print("networks: {}".format(service_networks))
             services.append(Service(
                 name=service_name,
