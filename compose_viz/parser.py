@@ -1,7 +1,7 @@
 from re import S
 from compose_viz.compose import Compose
 from compose_viz.compose import Service
-import yaml
+from ruamel.yaml import YAML
 
 
 class Parser:
@@ -13,9 +13,10 @@ class Parser:
         # load the yaml file
         with open(file_path, "r") as f:
             try:
-                yaml_data = yaml.safe_load(f)
-            except yaml.YAMLError as exc:
-                raise yaml.YAMLError
+                yaml = YAML(typ='safe', pure=True)
+                yaml_data = yaml.load(f)
+            except YAML.YAMLError as exc:
+                raise YAML.YAMLError
         # validate the yaml file
         if not yaml_data:
             print("Error: empty yaml file")
@@ -32,7 +33,10 @@ class Parser:
                 service_image = service["image"]
                 #print("image: {}".format(service_image))
             if service.get("networks"):
-                service_networks = service["networks"]
+                if(type(service["networks"]) is list):
+                    service_networks = service["networks"]
+                else:
+                    service_networks = list(service["networks"].keys())
                 #print("networks: {}".format(service_networks))
             services.append(Service(
                 name=service_name,
