@@ -3,7 +3,7 @@ import typer
 from typing import Optional
 from compose_viz import __app_name__, __version__
 from compose_viz.parser import Parser
-
+from compose_viz.graph import Graph
 
 class VisualizationFormats(str, Enum):
     png = "PNG"
@@ -53,6 +53,8 @@ def compose_viz(
 
     if compose:
         typer.echo(f"Successfully parsed {input_path}")
+
+    Graph(compose, output_path).render(format)
 
     raise typer.Exit()
 
