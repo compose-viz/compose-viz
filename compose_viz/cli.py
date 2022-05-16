@@ -5,6 +5,7 @@ from compose_viz import __app_name__, __version__
 from compose_viz.parser import Parser
 from compose_viz.graph import Graph
 
+
 class VisualizationFormats(str, Enum):
     png = "PNG"
     dot = "DOT"
