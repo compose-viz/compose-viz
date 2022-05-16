@@ -15,6 +15,10 @@ jobs:
           
       - name: Switch to Current Branch
         run: git checkout ${{ env.BRANCH }}
+
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
               
       - name: Setup Python 3.10.4
         uses: actions/setup-python@v3
