@@ -1,3 +1,5 @@
+import os
+
 from typer.testing import CliRunner
 from compose_viz import cli
 
@@ -11,3 +13,4 @@ def test_cli():
 
     assert result.exit_code == 0
     assert f"Successfully parsed {input_path}\n" in result.stdout
+    assert os.path.exists("compose-viz.png")
