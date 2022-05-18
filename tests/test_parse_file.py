@@ -155,7 +155,6 @@ from compose_viz.extends import Extends
     ('tests/in/001010.yaml',Compose([
         Service(
             name='web',
-            image='build from .',
             depends_on=['db','redis'],
             extends=Extends(service_name='redis'),
         ),
