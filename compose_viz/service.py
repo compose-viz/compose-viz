@@ -6,6 +6,10 @@ from compose_viz.extends import Extends
 class Service:
     def __init__(self, name: str, image: str = None, ports: List[str] = [], networks: List[str] = [], volumes: List[str] = [], depends_on: List[str] = [], links: List[str] = [], extends: Extends = None) -> None:
         self._name = name
+
+        if image is None and extends is None:
+            raise ValueError(f"Both image and extends are not defined in service '{name}', aborting.")
+
         self._image = image
         self._ports = ports
         self._networks = networks
