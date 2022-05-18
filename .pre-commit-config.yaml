@@ -1,0 +1,38 @@
+exclude: |
+    (?x)^(
+        README.md|
+        LICENSE|
+        voice_presentation_control/vosk_models/
+    )
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.2.0
+      hooks:
+        - id: check-yaml
+        - id: end-of-file-fixer
+        - id: trailing-whitespace
+    - repo: https://github.com/pycqa/flake8
+      rev: 4.0.1
+      hooks:
+        - id: flake8
+          args:
+            - "--max-line-length=120"
+    - repo: https://github.com/pycqa/isort
+      rev: 5.10.1
+      hooks:
+        - id: isort
+    - repo: https://github.com/psf/black
+      rev: 22.3.0
+      hooks:
+        - id: black
+          args: # arguments to configure black
+            - --line-length=120
+    - repo: local
+      hooks:
+        - id: pyright
+          name: pyright
+          entry: pyright
+          language: node
+          pass_filenames: false
+          types: [python]
+          additional_dependencies: ['pyright@1.1.247']
