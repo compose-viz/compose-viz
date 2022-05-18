@@ -56,6 +56,7 @@ from compose_viz.extends import Extends
     ('tests/in/000100.yaml',Compose([
         Service(
             name='web',
+            image='build from .',
             ports=['8000:5000'],
         ),
         Service(
@@ -121,6 +122,7 @@ from compose_viz.extends import Extends
     ('tests/in/001000.yaml',Compose([
         Service(
             name='web',
+            image='build from .',
             depends_on=['db','redis'],
         ),
         Service(
@@ -153,6 +155,7 @@ from compose_viz.extends import Extends
     ('tests/in/001010.yaml',Compose([
         Service(
             name='web',
+            image='build from .',
             depends_on=['db','redis'],
             extends=Extends(service_name='redis'),
         ),
@@ -464,6 +467,7 @@ from compose_viz.extends import Extends
     ('tests/in/011101.yaml',Compose([
         Service(
             name='vote',
+            image='build from ./',
             depends_on=['redis'],
             volumes=['app'],
             ports=['5000:80'],
@@ -471,6 +475,7 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='result',
+            image='build from ./',
             depends_on=['db'],
             volumes=['app'],
             ports=['5001:80','5858:5858'],
@@ -478,6 +483,7 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='worker',
+            image='build from ./',
             depends_on=['redis','db'],
             networks=['back-tier'],
         ),
@@ -536,6 +542,7 @@ from compose_viz.extends import Extends
     ('tests/in/100000.yaml',Compose([
         Service(
             name='web',
+            image='build from .',
             links=['db:database'],
         ),
         Service(
