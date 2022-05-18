@@ -58,6 +58,7 @@ from compose_viz.extends import Extends
     ])),
     ('tests/in/000100.yaml',Compose([
         Service(
+            name='web',
             ports=['8000:5000'],
         ),
         Service(
