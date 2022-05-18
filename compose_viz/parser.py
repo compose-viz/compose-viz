@@ -16,16 +16,14 @@ class Parser:
                 yaml = YAML(typ="safe", pure=True)
                 yaml_data = yaml.load(f)
             except Exception as e:
-                raise Exception(f"Error parsing file {file_path}: {e}")
+                raise RuntimeError(f"Error parsing file '{file_path}': {e}")
 
         # validate the yaml file
         if not yaml_data:
-            print("Error: empty yaml file")
-            raise ValueError
+            raise RuntimeError("Empty yaml file, aborting.")
 
         if not yaml_data.get("services"):
-            print("Error: no services found")
-            raise ValueError
+            raise RuntimeError("No services found, aborting.")
 
         # parse services data into Service objects
         services_data = yaml_data["services"]
