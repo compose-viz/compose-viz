@@ -100,6 +100,10 @@ jobs:
         run: |
           poetry install --no-root
 
-      - name: Validate Custom Input File
+      - name: Execute pre-commit
         run: |
-          poetry run python -m pytest
+          poetry run python -m pre_commit run --all-files --show-diff-on-failure
+
+      - name: Run Pytest
+        run: |
+          poetry run python -m pytest --tb=line

@@ -7,7 +7,7 @@ from compose_viz.service import Service
 
 
 @pytest.mark.parametrize(
-    "test_input,expected",
+    "test_input, expected",
     [
         (
             "tests/in/000001.yaml",
