@@ -29,11 +29,11 @@ from compose_viz.service import Service
         Service(
             name='common',
             image='busybox',
-            extends='base'
+            extends=['base'],
         ),
         Service(
             name='cli',
-            extends='common',
+            extends=['common'],
         ),
     ])),
     ('tests/in/000011.yaml',Compose([
@@ -57,7 +57,6 @@ from compose_viz.service import Service
     ])),
     ('tests/in/000100.yaml',Compose([
         Service(
-            build='.',
             ports=['8000:5000'],
         ),
         Service(
@@ -69,19 +68,19 @@ from compose_viz.service import Service
         Service(
             name='frontend',
             image='awesome/webapp',
-            ports=['8000:5000']
+            ports=['8000:5000'],
             networks=['front-tier', 'back-tier'],
         ),
         Service(
             name='monitoring',
             image='awesome/monitoring',
-            ports='8000:5001',
+            ports=['8000:5001'],
             networks=['admin'],
         ),
         Service(
             name='backend',
             image='awesome/backend',
-            ports='8000:5010',
+            ports=['8000:5010'],
             networks=['back-tier', 'admin'],
         ),
     ])),
@@ -127,7 +126,6 @@ from compose_viz.service import Service
     ('tests/in/001000.yaml',Compose([
         Service(
             name='web',
-            build='.',
             depends_on=['db','redis'],
         ),
         Service(
@@ -160,7 +158,6 @@ from compose_viz.service import Service
     ('tests/in/001010.yaml',Compose([
         Service(
             name='web',
-            build='.',
             depends_on=['db','redis'],
             extends=['redis']
         ),
@@ -275,7 +272,24 @@ from compose_viz.service import Service
             volumes=['db-data'],
         ),
     ])),
-
+    ('tests/in/010001.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            networks=['front-tier', 'back-tier'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            networks=['admin'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            networks=['back-tier', 'admin'],
+            volumes=['db-data'],
+        ),
+    ])),
 
 
 
@@ -283,7 +297,6 @@ from compose_viz.service import Service
     ('tests/in/100000.yaml',Compose([
         Service(
             name='web',
-            build='.',
             links=['db:database'],
         ),
         Service(
