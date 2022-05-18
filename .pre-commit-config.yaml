@@ -1,8 +1,7 @@
 exclude: |
     (?x)^(
         README.md|
-        LICENSE|
-        voice_presentation_control/vosk_models/
+        LICENSE
     )
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
