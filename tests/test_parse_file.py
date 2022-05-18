@@ -29,12 +29,11 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='common',
-            image='busybox',
             extends=Extends(service_name='frontend'),
         ),
         Service(
             name='cli',
-            extends=['common'],
+            extends=Extends(service_name='common'),
         ),
     ])),
     ('tests/in/000011.yaml',Compose([
@@ -45,13 +44,11 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='monitoring',
-            image='awesome/monitoring',
             networks=['admin'],
             extends=Extends(service_name='frontend'),
         ),
         Service(
             name='backend',
-            image='awesome/backend',
             networks=['back-tier', 'admin'],
             extends=Extends(service_name='frontend'),
         ),
@@ -94,12 +91,10 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='monitoring',
-            image='awesome/monitoring',
             extends=Extends(service_name='frontend'),
         ),
         Service(
             name='backend',
-            image='awesome/backend',
             extends=Extends(service_name='frontend'),
             ports=['8000:5001'],
         ),
@@ -113,13 +108,11 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='monitoring',
-            image='awesome/monitoring',
             networks=['admin'],
             extends=Extends(service_name='frontend'),
         ),
         Service(
             name='backend',
-            image='awesome/backend',
             ports=['8000:5001'],
             networks=['back-tier', 'admin'],
             extends=Extends(service_name='frontend'),
@@ -175,7 +168,6 @@ from compose_viz.extends import Extends
     ('tests/in/001011.yaml',Compose([
         Service(
             name='frontend',
-            image='awesome/webapp',
             networks=['front-tier', 'back-tier'],
             depends_on=['monitoring','backend'],
             extends=Extends(service_name='backend'),
@@ -236,7 +228,6 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='monitoring',
-            image='awesome/monitoring',
             depends_on=['backend'],
             extends=Extends(service_name='frontend'),
             ports=['8000:5010'],
@@ -255,7 +246,6 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='monitoring',
-            image='awesome/monitoring',
             networks=['admin'],
             depends_on=['backend'],
             extends=Extends(service_name='frontend'),
@@ -317,7 +307,6 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='backend',
-            image='awesome/backend',
             networks=['back-tier', 'admin'],
             volumes=['db-data'],
             extends=Extends(service_name='monitoring'),
@@ -361,7 +350,6 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='backend',
-            image='awesome/backend',
             volumes=['db-data'],
             extends=Extends(service_name='monitoring'),
             ports=['8000:5000'],
@@ -380,7 +368,6 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='backend',
-            image='awesome/backend',
             networks=['back-tier', 'admin'],
             volumes=['db-data'],
             extends=Extends(service_name='monitoring'),
@@ -433,7 +420,6 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='backend',
-            image='awesome/backend',
             volumes=['db-data'],
             depends_on=['monitoring'],
             extends=Extends(service_name='frontend'),
@@ -452,7 +438,6 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='backend',
-            image='awesome/backend',
             networks=['back-tier','admin'],
             volumes=['db-data'],
             depends_on=['monitoring'],
@@ -470,7 +455,6 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='backend',
-            image='awesome/backend',
             volumes=['db-data'],
             depends_on=['monitoring'],
             extends=Extends(service_name='frontend'),
@@ -523,7 +507,6 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='backend',
-            image='awesome/backend',
             volumes=['db-data'],
             depends_on=['monitoring'],
             extends=Extends(service_name='frontend'),
@@ -543,7 +526,6 @@ from compose_viz.extends import Extends
         ),
         Service(
             name='backend',
-            image='awesome/backend',
             networks=['back-tier', 'admin'],
             volumes=['db-data'],
             depends_on=['monitoring'],
