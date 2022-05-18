@@ -3,7 +3,7 @@ from compose_viz.parser import Parser
 from compose_viz.compose import Compose
 from compose_viz.service import Service
 
-@pytest.mark.parametrize("test_input,expected",[
+@pytest.mark.parametrize('test_input,expected',[
     ('tests/in/000001.yaml',Compose([
         Service(
             name='frontend',
@@ -25,7 +25,6 @@ from compose_viz.service import Service
         Service(
             name='base',
             image='busybox',
-            user='root',
         ),
         Service(
             name='common',
@@ -34,54 +33,265 @@ from compose_viz.service import Service
         ),
         Service(
             name='cli',
-            extends='common'
+            extends='common',
+        ),
+    ])),
+    ('tests/in/000011.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            networks=['front-tier', 'back-tier'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            networks=['admin'],
+            extends=['frontend'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            networks=['back-tier', 'admin'],
+            extends=['frontend'],
         ),
     ])),
     ('tests/in/000100.yaml',Compose([
-        #version='3.9'
         Service(
             build='.',
-            ports=['8000:5000']
+            ports=['8000:5000'],
         ),
         Service(
             name='redis',
             image='redis:alpine',
         ),
     ])),
+    ('tests/in/000101.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            ports=['8000:5000']
+            networks=['front-tier', 'back-tier'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            ports='8000:5001',
+            networks=['admin'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            ports='8000:5010',
+            networks=['back-tier', 'admin'],
+        ),
+    ])),
+    ('tests/in/000110.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            ports=['8000:5000'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            extends=['frontend'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            extends=['frontend'],
+            ports=['8000:5001'],
+        ),
+    ])),
+    ('tests/in/000111.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            ports=['8000:5000']
+            networks=['front-tier', 'back-tier'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            networks=['admin'],
+            extends=['frontend'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            ports=['8000:5001'],
+            networks=['back-tier', 'admin'],
+            extends=['frontend'],
+        ),
+    ])),
     ('tests/in/001000.yaml',Compose([
         Service(
             name='web',
             build='.',
-            depends_on=['db','redis']
+            depends_on=['db','redis'],
         ),
         Service(
             name='redis',
-            image='redis'
+            image='redis',
         ),
         Service(
             name='db',
-            image='postgres'
+            image='postgres',
+        ),
+    ])),
+    ('tests/in/001001.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            networks=['front-tier', 'back-tier'],
+            depends_on=['monitoring','backend'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            networks=['admin'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            networks=['back-tier', 'admin'],
+        ),
+    ])),
+    ('tests/in/001010.yaml',Compose([
+        Service(
+            name='web',
+            build='.',
+            depends_on=['db','redis'],
+            extends=['redis']
+        ),
+        Service(
+            name='redis',
+            image='redis',
+        ),
+        Service(
+            name='db',
+            image='postgres',
+        ),
+    ])),
+    ('tests/in/001011.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            networks=['front-tier', 'back-tier'],
+            depends_on=['monitoring','backend'],
+            extends=['backend'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            networks=['admin'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            networks=['back-tier', 'admin'],
+        ),
+    ])),
+    ('tests/in/001100.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            ports=['8000:5000'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            depends_on=['backend'],
+            ports=['8000:5010'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            ports=['8000:5001'],
+        ),
+    ])),
+    ('tests/in/001101.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            networks=['front-tier', 'back-tier'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            networks=['admin'],
+            depends_on=['backend'],
+            ports=['8000:5010'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            networks=['back-tier', 'admin'],
+        ),
+    ])),
+    ('tests/in/001110.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            ports=['8000:5000'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            depends_on=['backend'],
+            extends=['frontend'],
+            ports=['8000:5010'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            ports=['8000:5001'],
+        ),
+    ])),
+    ('tests/in/001111.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            networks=['front-tier', 'back-tier'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            networks=['admin'],
+            depends_on=['backend'],
+            extends=['frontend'],
+            ports=['8000:5010'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            networks=['back-tier', 'admin'],
         ),
     ])),
     ('tests/in/010000.yaml',Compose([
         Service(
             name='backend',
             image='awesome/backend',
-            volumes=['db-data']
-        )
+            volumes=['db-data'],
+        ),
     ])),
+
+
+
+
+
     ('tests/in/100000.yaml',Compose([
         Service(
             name='web',
             build='.',
-            links=['db:database']
+            links=['db:database'],
         ),
         Service(
             name='db',
-            image='postgres'
-        )
+            image='postgres',
+        ),
     ])),
-    ])
+])
     
 def test_parse_file(test_input, expected):
     parser = Parser()
