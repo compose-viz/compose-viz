@@ -4,7 +4,7 @@ services:
 
   monitoring:
     image: awesome/monitoring
-    
+
 
   backend:
     image: awesome/backend

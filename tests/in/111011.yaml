@@ -9,7 +9,7 @@ services:
     image: awesome/monitoring
     networks:
       - admin
-    
+
 
   backend:
     networks:

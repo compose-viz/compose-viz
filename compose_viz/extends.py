@@ -1,5 +1,8 @@
+from typing import Optional
+
+
 class Extends:
-    def __init__(self, service_name: str, from_file: str = None):
+    def __init__(self, service_name: str, from_file: Optional[str] = None):
         self._service_name = service_name
         self._from_file = from_file
 

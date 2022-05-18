@@ -3,7 +3,7 @@ services:
     image: awesome/webapp
   monitoring:
     image: awesome/monitoring
-    
+
 
   backend:
     volumes:

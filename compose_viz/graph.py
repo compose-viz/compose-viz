@@ -5,17 +5,17 @@ from compose_viz.compose import Compose
 
 def apply_vertex_style(type) -> dict:
     style = {
-        'service': {
-            'shape': 'component',
+        "service": {
+            "shape": "component",
         },
-        'volume': {
-            'shape': 'folder',
+        "volume": {
+            "shape": "folder",
         },
-        'network': {
-            'shape': 'pentagon',
+        "network": {
+            "shape": "pentagon",
         },
-        'port': {
-            'shape': 'circle',
+        "port": {
+            "shape": "circle",
         },
     }
 
@@ -24,18 +24,18 @@ def apply_vertex_style(type) -> dict:
 
 def apply_edge_style(type) -> dict:
     style = {
-        'ports': {
-            'style': 'solid',
+        "ports": {
+            "style": "solid",
         },
-        'links': {
-            'style': 'solid',
+        "links": {
+            "style": "solid",
         },
-        'volumes': {
-            'style': 'dashed',
+        "volumes": {
+            "style": "dashed",
         },
-        'depends_on': {
-            'style': 'dotted',
-        }
+        "depends_on": {
+            "style": "dotted",
+        },
     }
 
     return style[type]
@@ -44,7 +44,7 @@ def apply_edge_style(type) -> dict:
 class Graph:
     def __init__(self, compose: Compose, filename: str) -> None:
         self.dot = graphviz.Digraph()
-        self.dot.attr('graph', background='#ffffff', pad='0.5', ratio='fill')
+        self.dot.attr("graph", background="#ffffff", pad="0.5", ratio="fill")
         self.compose = compose
         self.filename = filename
 
@@ -56,17 +56,17 @@ class Graph:
 
     def render(self, format: str, cleanup: bool = True) -> None:
         for service in self.compose.services:
-            self.add_vertex(service.name, 'service')
+            self.add_vertex(service.name, "service")
             for network in service.networks:
-                self.add_vertex("net#" + network, 'network')
-                self.add_edge(service.name, "net#" + network, 'links')
+                self.add_vertex("net#" + network, "network")
+                self.add_edge(service.name, "net#" + network, "links")
             for volume in service.volumes:
-                self.add_vertex(volume, 'volume')
-                self.add_edge(service.name, volume, 'links')
+                self.add_vertex(volume, "volume")
+                self.add_edge(service.name, volume, "links")
             for port in service.ports:
-                self.add_vertex(port, 'port')
-                self.add_edge(service.name, port, 'ports')
+                self.add_vertex(port, "port")
+                self.add_edge(service.name, port, "ports")
             for depends_on in service.depends_on:
-                self.dot.edge(depends_on, service.name, 'depends_on')
+                self.dot.edge(depends_on, service.name, "depends_on")
 
         self.dot.render(outfile=self.filename, format=format, cleanup=cleanup)

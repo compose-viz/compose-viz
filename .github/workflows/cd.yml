@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Build and Publish to PyPi
         uses: JRubics/poetry-publish@v1.10
         with:

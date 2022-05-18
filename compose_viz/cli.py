@@ -1,9 +1,11 @@
 from enum import Enum
-import typer
 from typing import Optional
+
+import typer
+
 from compose_viz import __app_name__, __version__
-from compose_viz.parser import Parser
 from compose_viz.graph import Graph
+from compose_viz.parser import Parser
 
 
 class VisualizationFormats(str, Enum):
@@ -47,7 +49,7 @@ def compose_viz(
         help="Show the version of compose-viz.",
         callback=_version_callback,
         is_eager=True,
-    )
+    ),
 ) -> None:
     parser = Parser()
     compose = parser.parse(input_path)

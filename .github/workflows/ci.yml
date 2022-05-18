@@ -12,19 +12,19 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-          
+
       - name: Switch to Current Branch
         run: git checkout ${{ env.BRANCH }}
 
       - run: |
           sudo apt-get update
           sudo apt-get install -y graphviz
-              
+
       - name: Setup Python 3.10.4
         uses: actions/setup-python@v3
         with:
           python-version: '3.10.4'
-      
+
       - name: Validate Test Files
         run: |
           docker-compose -f tests/in/000001.yaml config -q
@@ -90,7 +90,7 @@ jobs:
           docker-compose -f tests/in/111101.yaml config -q
           docker-compose -f tests/in/111110.yaml config -q
           docker-compose -f tests/in/111111.yaml config -q
-                  
+
       - name: Setup Poetry
         uses: Gr1N/setup-poetry@v7
         with:

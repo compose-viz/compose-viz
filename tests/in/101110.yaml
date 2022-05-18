@@ -5,7 +5,7 @@ services:
   monitoring:
     image: awesome/monitoring
 
-    
+
 
   backend:
     depends_on:

@@ -6,7 +6,7 @@ services:
   monitoring:
     image: awesome/monitoring
 
-    
+
 
   backend:
     volumes:

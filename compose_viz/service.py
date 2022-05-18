@@ -1,10 +1,20 @@
-from typing import List
+from typing import List, Optional
 
 from compose_viz.extends import Extends
 
 
 class Service:
-    def __init__(self, name: str, image: str = None, ports: List[str] = [], networks: List[str] = [], volumes: List[str] = [], depends_on: List[str] = [], links: List[str] = [], extends: Extends = None) -> None:
+    def __init__(
+        self,
+        name: str,
+        image: Optional[str] = None,
+        ports: List[str] = [],
+        networks: List[str] = [],
+        volumes: List[str] = [],
+        depends_on: List[str] = [],
+        links: List[str] = [],
+        extends: Optional[Extends] = None,
+    ) -> None:
         self._name = name
 
         if image is None and extends is None:
