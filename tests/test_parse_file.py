@@ -2,6 +2,7 @@ import pytest
 from compose_viz.parser import Parser
 from compose_viz.compose import Compose
 from compose_viz.service import Service
+from compose_viz.extends import Extends
 
 @pytest.mark.parametrize('test_input,expected',[
     ('tests/in/000001.yaml',Compose([
@@ -29,7 +30,7 @@ from compose_viz.service import Service
         Service(
             name='common',
             image='busybox',
-            extends=['base'],
+            extends=Extends(service_name='frontend'),
         ),
         Service(
             name='cli',
@@ -46,13 +47,13 @@ from compose_viz.service import Service
             name='monitoring',
             image='awesome/monitoring',
             networks=['admin'],
-            extends=['frontend'],
+            extends=Extends(service_name='frontend'),
         ),
         Service(
             name='backend',
             image='awesome/backend',
             networks=['back-tier', 'admin'],
-            extends=['frontend'],
+            extends=Extends(service_name='frontend'),
         ),
     ])),
     ('tests/in/000100.yaml',Compose([
@@ -93,12 +94,12 @@ from compose_viz.service import Service
         Service(
             name='monitoring',
             image='awesome/monitoring',
-            extends=['frontend'],
+            extends=Extends(service_name='frontend'),
         ),
         Service(
             name='backend',
             image='awesome/backend',
-            extends=['frontend'],
+            extends=Extends(service_name='frontend'),
             ports=['8000:5001'],
         ),
     ])),
@@ -106,21 +107,21 @@ from compose_viz.service import Service
         Service(
             name='frontend',
             image='awesome/webapp',
-            ports=['8000:5000']
+            ports=['8000:5000'],
             networks=['front-tier', 'back-tier'],
         ),
         Service(
             name='monitoring',
             image='awesome/monitoring',
             networks=['admin'],
-            extends=['frontend'],
+            extends=Extends(service_name='frontend'),
         ),
         Service(
             name='backend',
             image='awesome/backend',
             ports=['8000:5001'],
             networks=['back-tier', 'admin'],
-            extends=['frontend'],
+            extends=Extends(service_name='frontend'),
         ),
     ])),
     ('tests/in/001000.yaml',Compose([
@@ -159,7 +160,7 @@ from compose_viz.service import Service
         Service(
             name='web',
             depends_on=['db','redis'],
-            extends=['redis']
+            extends=Extends(service_name='redis'),
         ),
         Service(
             name='redis',
@@ -176,7 +177,7 @@ from compose_viz.service import Service
             image='awesome/webapp',
             networks=['front-tier', 'back-tier'],
             depends_on=['monitoring','backend'],
-            extends=['backend'],
+            extends=Extends(service_name='backend'),
         ),
         Service(
             name='monitoring',
@@ -236,7 +237,7 @@ from compose_viz.service import Service
             name='monitoring',
             image='awesome/monitoring',
             depends_on=['backend'],
-            extends=['frontend'],
+            extends=Extends(service_name='frontend'),
             ports=['8000:5010'],
         ),
         Service(
@@ -256,7 +257,7 @@ from compose_viz.service import Service
             image='awesome/monitoring',
             networks=['admin'],
             depends_on=['backend'],
-            extends=['frontend'],
+            extends=Extends(service_name='frontend'),
             ports=['8000:5010'],
         ),
         Service(
@@ -290,10 +291,125 @@ from compose_viz.service import Service
             volumes=['db-data'],
         ),
     ])),
+    ('tests/in/010010.yaml',Compose([
+        Service(
+            name='common',
+            image='busybox',
+            volumes=['common-volume'],
+        ),
+        Service(
+            name='cli',
+            extends=Extends(service_name='common'),
+            volumes=['cli-volume'],
+        ),
+    ])),
+    ('tests/in/010011.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            networks=['front-tier', 'back-tier'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            networks=['admin'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            networks=['back-tier', 'admin'],
+            volumes=['db-data'],
+            extends=Extends(service_name='monitoring'),
+        ),
+    ])),
+    ('tests/in/010100.yaml',Compose([
+        Service(
+            name='backend',
+            image='awesome/backend',
+            volumes=['db-data'],
+            ports=["8000:5000"],
+        ),
+    ])),
 
+    ('tests/in/010111.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            networks=['front-tier', 'back-tier'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            networks=['admin'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            networks=['back-tier', 'admin'],
+            volumes=['db-data'],
+            extends=Extends(service_name='monitoring'),
+            ports=['8000:5000'],
+        ),
+    ])),
 
+    ('tests/in/011100.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            volumes=['db-data'],
+            depends_on=['monitoring'],
+            extends=Extends(service_name='frontend'),
+            ports=['8000:5010'],
+        ),
+    ])),
 
-
+    ('tests/in/011110.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            volumes=['db-data'],
+            depends_on=['monitoring'],
+            extends=Extends(service_name='frontend'),
+            ports=['8000:5010'],
+        ),
+    ])),
+    ('tests/in/011111.yaml',Compose([
+        Service(
+            name='frontend',
+            image='awesome/webapp',
+            networks=['front-tier', 'back-tier'],
+        ),
+        Service(
+            name='monitoring',
+            image='awesome/monitoring',
+            networks=['admin'],
+        ),
+        Service(
+            name='backend',
+            image='awesome/backend',
+            networks=['back-tier', 'admin'],
+            volumes=['db-data'],
+            depends_on=['monitoring'],
+            extends=Extends(service_name='monitoring'),
+            ports=['8000:5010'],
+        ),
+    ])),
     ('tests/in/100000.yaml',Compose([
         Service(
             name='web',
