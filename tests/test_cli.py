@@ -76,7 +76,7 @@ runner = CliRunner()
         "111111",
     ],
 )
-def test_cli(file_number: str):
+def test_cli(file_number: str) -> None:
     input_path = f"tests/in/{file_number}.yaml"
     output_path = f"{file_number}.png"
     result = runner.invoke(cli.app, ["-o", output_path, input_path])

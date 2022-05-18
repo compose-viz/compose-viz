@@ -1537,7 +1537,7 @@ from compose_viz.service import Service
         ),
     ],
 )
-def test_parse_file(test_input, expected):
+def test_parse_file(test_input: str, expected: Compose) -> None:
     parser = Parser()
     actual = parser.parse(test_input)
 

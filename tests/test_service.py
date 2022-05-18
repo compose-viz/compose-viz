@@ -4,7 +4,7 @@ from compose_viz.extends import Extends
 from compose_viz.service import Service
 
 
-def test_service_init():
+def test_service_init() -> None:
     with pytest.raises(ValueError, match=r"Both image and extends are not defined in service 'frontend', aborting."):
         Service(name="frontend")
 
