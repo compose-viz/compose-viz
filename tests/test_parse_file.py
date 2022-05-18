@@ -1,10 +1,10 @@
+import pytest
 from compose_viz.parser import Parser
 from compose_viz.compose import Compose
 from compose_viz.service import Service
 
-
-def test_parse_file():
-    expected: Compose = Compose([
+@pytest.mark.parametrize("test_input,expected",[
+    ('tests/in/000001.yaml',Compose([
         Service(
             name='frontend',
             image='awesome/webapp',
@@ -20,10 +20,72 @@ def test_parse_file():
             image='awesome/backend',
             networks=['back-tier', 'admin'],
         ),
+    ])),
+    ('tests/in/000010.yaml',Compose([
+        Service(
+            name='base',
+            image='busybox',
+            user='root',
+        ),
+        Service(
+            name='common',
+            image='busybox',
+            extends='base'
+        ),
+        Service(
+            name='cli',
+            extends='common'
+        ),
+    ])),
+    ('tests/in/000100.yaml',Compose([
+        #version='3.9'
+        Service(
+            build='.',
+            ports=['8000:5000']
+        ),
+        Service(
+            name='redis',
+            image='redis:alpine',
+        ),
+    ])),
+    ('tests/in/001000.yaml',Compose([
+        Service(
+            name='web',
+            build='.',
+            depends_on=['db','redis']
+        ),
+        Service(
+            name='redis',
+            image='redis'
+        ),
+        Service(
+            name='db',
+            image='postgres'
+        ),
+    ])),
+    ('tests/in/010000.yaml',Compose([
+        Service(
+            name='backend',
+            image='awesome/backend',
+            volumes=['db-data']
+        )
+    ])),
+    ('tests/in/100000.yaml',Compose([
+        Service(
+            name='web',
+            build='.',
+            links=['db:database']
+        ),
+        Service(
+            name='db',
+            image='postgres'
+        )
+    ])),
     ])
-
+    
+def test_parse_file(test_input, expected):
     parser = Parser()
-    actual = parser.parse('tests/in/000001.yaml')
+    actual = parser.parse(test_input)
 
     assert len(actual.services) == len(expected.services)
 
