@@ -1,7 +1,8 @@
 exclude: |
     (?x)^(
         README.md|
-        LICENSE
+        LICENSE|
+        tests/in/invalid.yaml
     )
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
