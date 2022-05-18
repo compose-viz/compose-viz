@@ -5,12 +5,10 @@ services:
       - "8000:5000"
 
   monitoring:
-    image: awesome/monitoring
     extends:
       service: frontend
 
   backend:
-    image: awesome/backend
     extends:
       service: frontend
     ports:

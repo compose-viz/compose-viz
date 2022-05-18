@@ -12,7 +12,6 @@ services:
     
 
   backend:
-    image: awesome/backend
     networks:
       back-tier:
         aliases:

@@ -6,7 +6,6 @@ services:
     
 
   backend:
-    image: awesome/backend
     volumes:
       - type: volume
         source: db-data

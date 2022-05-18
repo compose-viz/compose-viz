@@ -7,7 +7,6 @@ services:
     
 
   backend:
-    image: awesome/backend
     depends_on:
       - monitoring
     links:

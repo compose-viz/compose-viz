@@ -7,7 +7,6 @@ services:
     
 
   backend:
-    image: awesome/backend
     extends:
       service: frontend
     ports:

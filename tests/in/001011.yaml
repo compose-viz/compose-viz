@@ -1,6 +1,5 @@
 services:
   frontend:
-    image: awesome/webapp
     networks:
       - front-tier
       - back-tier

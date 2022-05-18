@@ -3,7 +3,6 @@ services:
     image: busybox
     user: root
   common:
-    image: busybox
     extends:
       service: base
   cli:

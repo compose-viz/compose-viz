@@ -6,7 +6,6 @@ services:
       - back-tier
 
   monitoring:
-    image: awesome/monitoring
     networks:
       - admin
     depends_on:
