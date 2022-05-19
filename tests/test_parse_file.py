@@ -1551,4 +1551,9 @@ def test_parse_file(test_input: str, expected: Compose) -> None:
         assert actual_service.volumes == expected_service.volumes
         assert actual_service.depends_on == expected_service.depends_on
         assert actual_service.links == expected_service.links
-        assert actual_service.extends == expected_service.extends
+
+        assert (actual_service.extends is not None) == (expected_service.extends is not None)
+
+        if (actual_service.extends is not None) and (expected_service.extends is not None):
+            assert actual_service.extends.service_name == expected_service.extends.service_name
+            assert actual_service.extends.from_file == expected_service.extends.from_file
