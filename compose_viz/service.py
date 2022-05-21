@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from compose_viz.extends import Extends
+from compose_viz.port import Port
 from compose_viz.volume import Volume
 
 
@@ -9,7 +10,7 @@ class Service:
         self,
         name: str,
         image: Optional[str] = None,
-        ports: List[str] = [],
+        ports: List[Port] = [],
         networks: List[str] = [],
         volumes: List[Volume] = [],
         depends_on: List[str] = [],

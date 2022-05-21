@@ -64,8 +64,8 @@ class Graph:
                 self.add_vertex(volume.source, "volume")
                 self.add_edge(service.name, volume.source, "links")
             for port in service.ports:
-                self.add_vertex(port, "port")
-                self.add_edge(service.name, port, "ports")
+                self.add_vertex(port.host_port, "port")
+                self.add_edge(service.name, port.host_port, "ports")
             for depends_on in service.depends_on:
                 self.dot.edge(depends_on, service.name, "depends_on")
 

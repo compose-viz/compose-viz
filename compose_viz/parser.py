@@ -4,6 +4,7 @@ from ruamel.yaml import YAML
 
 from compose_viz.compose import Compose, Service
 from compose_viz.extends import Extends
+from compose_viz.port import Port
 from compose_viz.volume import Volume, VolumeType
 
 
@@ -86,7 +87,13 @@ class Parser:
                     image=service_image,
                     networks=service_networks,
                     extends=service_extends,
-                    ports=service_ports,
+                    ports=[
+                        Port(
+                            # TODO: not implemented yet
+                            host_port=service_ports[0],
+                            container_port=service_ports[0],
+                        )
+                    ],
                     depends_on=service_depends_on,
                     volumes=service_volumes,
                     links=service_links,
