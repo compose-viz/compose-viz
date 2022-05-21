@@ -79,7 +79,9 @@ class Parser:
                         volume_target = spilt_data[1]
                         service_volumes.append(Volume(source=volume_source, target=volume_target))
 
-
+            service_links: List[str] = []
+            if service.get("links"):
+                service_links = service["links"]
 
             services.append(
                 Service(
@@ -90,6 +92,7 @@ class Parser:
                     ports=service_ports,
                     depends_on=service_depends_on,
                     volumes=service_volumes,
+                    links=service_links
                 )
             )
             # Service print debug
