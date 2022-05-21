@@ -4,7 +4,7 @@ from ruamel.yaml import YAML
 
 from compose_viz.compose import Compose, Service
 from compose_viz.extends import Extends
-
+from compose_viz.volume import Volume, VolumeType
 
 class Parser:
     def __init__(self):
@@ -65,6 +65,22 @@ class Parser:
             if service.get("depends_on"):
                 service_depends_on = service["depends_on"]
 
+            service_volumes: List[Volume] = []
+            if service.get("volumes"):
+                for volume_data in service["volumes"]:
+                    if type(volume_data) is dict:
+                        volume_source = volume_data["source"]
+                        volume_target = volume_data["target"]
+                        volume_type = VolumeType[volume_data["type"]]
+                        service_volumes.append(Volume(source=volume_source, target=volume_target, type=volume_type))
+                    elif type(volume_data) is str:
+                        spilt_data = volume_data.split(":",1)
+                        volume_source = spilt_data[0]
+                        volume_target = spilt_data[1]
+                        service_volumes.append(Volume(source=volume_source, target=volume_target))
+
+
+
             services.append(
                 Service(
                     name=service_name,
@@ -73,6 +89,7 @@ class Parser:
                     extends=service_extends,
                     ports=service_ports,
                     depends_on=service_depends_on,
+                    volumes=service_volumes,
                 )
             )
             # Service print debug
