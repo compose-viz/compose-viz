@@ -57,7 +57,13 @@ class Parser:
 
             service_ports: List[str] = []
             if service.get("ports"):
-                service_ports = service["ports"]
+                if type(service["ports"]) is list:
+                    for port_data in service["ports"]:
+                        if not port_data.contains(":"):
+                            raise RuntimeError("Invalid ports input, aborting.")
+                        spilt_data = port_data.split(":", 1)
+                        service_ports.append(Port(host_port=spilt_data[0], 
+                                    container_port=spilt_data[1]))
 
             service_depends_on: List[str] = []
             if service.get("depends_on"):
@@ -87,13 +93,7 @@ class Parser:
                     image=service_image,
                     networks=service_networks,
                     extends=service_extends,
-                    ports=[
-                        Port(
-                            # TODO: not implemented yet
-                            host_port=service_ports[0],
-                            container_port=service_ports[0],
-                        )
-                    ],
+                    ports=service_ports,
                     depends_on=service_depends_on,
                     volumes=service_volumes,
                     links=service_links,
