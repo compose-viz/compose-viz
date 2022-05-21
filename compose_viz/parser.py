@@ -59,7 +59,7 @@ class Parser:
             if service.get("ports"):
                 if type(service["ports"]) is list:
                     for port_data in service["ports"]:
-                        if not port_data.contains(":"):
+                        if ':' not in port_data:
                             raise RuntimeError("Invalid ports input, aborting.")
                         spilt_data = port_data.split(":", 1)
                         service_ports.append(Port(host_port=spilt_data[0], 
