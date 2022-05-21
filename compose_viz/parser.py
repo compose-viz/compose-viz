@@ -48,14 +48,15 @@ class Parser:
             if service.get("networks"):
                 if type(service["networks"]) is list:
                     service_networks = service["networks"]
-                else:
+                elif type(service["networks"]) is dict:
                     service_networks = list(service["networks"].keys())
 
             service_extends: Optional[Extends] = None
             if service.get("extends"):
-                service_extends = Extends(service_name=service["extends"]["service"])
+                if service["extends"].get("service"):
+                    service_extends = Extends(service_name=service["extends"]["service"])
 
-            service_ports: List[str] = []
+            service_ports: List[Port] = []
             if service.get("ports"):
                 if type(service["ports"]) is list:
                     for port_data in service["ports"]:
@@ -73,15 +74,23 @@ class Parser:
             if service.get("volumes"):
                 for volume_data in service["volumes"]:
                     if type(volume_data) is dict:
-                        volume_source = volume_data["source"]
-                        volume_target = volume_data["target"]
-                        volume_type = VolumeType[volume_data["type"]]
-                        service_volumes.append(Volume(source=volume_source, target=volume_target, type=volume_type))
+                        volume_source: str = None
+                        volume_target: str = None
+                        volume_type: VolumeType.volume = None
+                        if volume_data.get("source"):
+                            volume_source = volume_data["source"]
+                        if volume_data.get("target"):
+                            volume_target = volume_data["target"]
+                        if volume_data.get("type"):
+                            volume_type = VolumeType[volume_data["type"]]
+                        service_volumes.append(Volume(source=volume_source,
+                                                    target=volume_target, 
+                                                    type=volume_type))
                     elif type(volume_data) is str:
+                        if ':' not in volume_data:
+                            raise RuntimeError("Invalid volume input, aborting.")
                         spilt_data = volume_data.split(":", 1)
-                        volume_source = spilt_data[0]
-                        volume_target = spilt_data[1]
-                        service_volumes.append(Volume(source=volume_source, target=volume_target))
+                        service_volumes.append(Volume(source=spilt_data[0], target=spilt_data[1]))
 
             service_links: List[str] = []
             if service.get("links"):
