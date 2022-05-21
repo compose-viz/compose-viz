@@ -4,6 +4,7 @@ from compose_viz.compose import Compose
 from compose_viz.extends import Extends
 from compose_viz.parser import Parser
 from compose_viz.service import Service
+from compose_viz.volume import Volume, VolumeType
 
 
 @pytest.mark.parametrize(
@@ -345,7 +346,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         image="awesome/backend",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                     ),
                 ]
             ),
@@ -368,7 +376,14 @@ from compose_viz.service import Service
                         name="backend",
                         image="awesome/backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                     ),
                 ]
             ),
@@ -380,12 +395,12 @@ from compose_viz.service import Service
                     Service(
                         name="common",
                         image="busybox",
-                        volumes=["common-volume"],
+                        volumes=[Volume(source="common-volume", target="/var/lib/backup/data:rw")],
                     ),
                     Service(
                         name="cli",
                         extends=Extends(service_name="common"),
-                        volumes=["cli-volume"],
+                        volumes=[Volume(source="cli-volume", target="/var/lib/backup/data:ro")],
                     ),
                 ]
             ),
@@ -407,7 +422,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         extends=Extends(service_name="monitoring"),
                     ),
                 ]
@@ -420,7 +442,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         image="awesome/backend",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         ports=["8000:5000"],
                     ),
                 ]
@@ -444,7 +473,14 @@ from compose_viz.service import Service
                         name="backend",
                         image="awesome/backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         ports=["8000:5000"],
                     ),
                 ]
@@ -464,7 +500,14 @@ from compose_viz.service import Service
                     ),
                     Service(
                         name="backend",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         extends=Extends(service_name="monitoring"),
                         ports=["8000:5000"],
                     ),
@@ -488,7 +531,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         extends=Extends(service_name="monitoring"),
                         ports=["8000:5000"],
                     ),
@@ -507,7 +557,14 @@ from compose_viz.service import Service
                         name="monitoring",
                         image="awesome/monitoring",
                         depends_on=["backend"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                     ),
                     Service(
                         name="backend",
@@ -534,7 +591,14 @@ from compose_viz.service import Service
                         name="backend",
                         image="awesome/backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                     ),
                 ]
@@ -554,7 +618,14 @@ from compose_viz.service import Service
                     ),
                     Service(
                         name="backend",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         extends=Extends(service_name="frontend"),
                     ),
@@ -578,7 +649,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         extends=Extends(service_name="frontend"),
                     ),
@@ -596,7 +674,14 @@ from compose_viz.service import Service
                     Service(
                         name="monitoring",
                         image="awesome/monitoring",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["backend"],
                     ),
                     Service(
@@ -625,7 +710,14 @@ from compose_viz.service import Service
                         name="backend",
                         image="awesome/backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         ports=["8000:5010"],
                     ),
@@ -646,7 +738,14 @@ from compose_viz.service import Service
                     ),
                     Service(
                         name="backend",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         extends=Extends(service_name="frontend"),
                         ports=["8000:5010"],
@@ -671,7 +770,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         extends=Extends(service_name="monitoring"),
                         ports=["8000:5010"],
@@ -1106,7 +1212,14 @@ from compose_viz.service import Service
                     Service(
                         name="monitoring",
                         image="awesome/monitoring",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         links=["db:database"],
                     ),
                     Service(
@@ -1138,7 +1251,14 @@ from compose_viz.service import Service
                         name="backend",
                         image="awesome/backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         links=["db:database"],
                     ),
                     Service(
@@ -1162,7 +1282,14 @@ from compose_viz.service import Service
                     ),
                     Service(
                         name="backend",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         extends=Extends(service_name="frontend"),
                         links=["db:database"],
                     ),
@@ -1190,7 +1317,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         extends=Extends(service_name="frontend"),
                         links=["db:database"],
                     ),
@@ -1216,7 +1350,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         image="awesome/backend",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         ports=["8000:5010"],
                         links=["db:database"],
                     ),
@@ -1245,7 +1386,14 @@ from compose_viz.service import Service
                         name="backend",
                         image="awesome/backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         ports=["8000:5010"],
                         links=["db:database"],
                     ),
@@ -1270,7 +1418,14 @@ from compose_viz.service import Service
                     ),
                     Service(
                         name="backend",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         extends=Extends(service_name="frontend"),
                         ports=["8000:5010"],
                         links=["db:database"],
@@ -1299,7 +1454,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         extends=Extends(service_name="frontend"),
                         ports=["8000:5010"],
                         links=["db:database"],
@@ -1323,7 +1485,14 @@ from compose_viz.service import Service
                         name="monitoring",
                         image="awesome/monitoring",
                         depends_on=["backend"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         links=["db:database"],
                     ),
                     Service(
@@ -1355,7 +1524,14 @@ from compose_viz.service import Service
                         name="backend",
                         image="awesome/backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         links=["db:database"],
                     ),
@@ -1380,7 +1556,14 @@ from compose_viz.service import Service
                     ),
                     Service(
                         name="backend",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         extends=Extends(service_name="frontend"),
                         links=["db:database"],
@@ -1409,7 +1592,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         extends=Extends(service_name="frontend"),
                         links=["db:database"],
@@ -1436,7 +1626,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         image="awesome/backend",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         ports=["8000:5010"],
                         links=["db:database"],
@@ -1466,7 +1663,14 @@ from compose_viz.service import Service
                         name="backend",
                         image="awesome/backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         ports=["8000:5010"],
                         links=["db:database"],
@@ -1492,7 +1696,14 @@ from compose_viz.service import Service
                     ),
                     Service(
                         name="backend",
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         extends=Extends(service_name="frontend"),
                         ports=["8000:5010"],
@@ -1522,7 +1733,14 @@ from compose_viz.service import Service
                     Service(
                         name="backend",
                         networks=["back-tier", "admin"],
-                        volumes=["db-data"],
+                        volumes=[
+                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="/var/run/postgres/postgres.sock",
+                                target="/var/run/postgres/postgres.sock",
+                                type=VolumeType.bind,
+                            ),
+                        ],
                         depends_on=["monitoring"],
                         extends=Extends(service_name="frontend"),
                         ports=["8000:5010"],
@@ -1548,7 +1766,13 @@ def test_parse_file(test_input: str, expected: Compose) -> None:
         assert actual_service.image == expected_service.image
         assert actual_service.ports == expected_service.ports
         assert actual_service.networks == expected_service.networks
-        assert actual_service.volumes == expected_service.volumes
+
+        assert len(actual_service.volumes) == len(expected_service.volumes)
+        for actual_volume, expected_volume in zip(actual_service.volumes, expected_service.volumes):
+            assert actual_volume.source == expected_volume.source
+            assert actual_volume.target == expected_volume.target
+            assert actual_volume.type == expected_volume.type
+
         assert actual_service.depends_on == expected_service.depends_on
         assert actual_service.links == expected_service.links
 

@@ -61,8 +61,8 @@ class Graph:
                 self.add_vertex("net#" + network, "network")
                 self.add_edge(service.name, "net#" + network, "links")
             for volume in service.volumes:
-                self.add_vertex(volume, "volume")
-                self.add_edge(service.name, volume, "links")
+                self.add_vertex(volume.source, "volume")
+                self.add_edge(service.name, volume.source, "links")
             for port in service.ports:
                 self.add_vertex(port, "port")
                 self.add_edge(service.name, port, "ports")
