@@ -309,7 +309,7 @@ from compose_viz.volume import Volume, VolumeType
                     ),
                     Service(
                         name="backend",
-                        image="awesome/backend",
+                        extends=Extends(service_name="frontend"),
                         ports=["8000:5001"],
                     ),
                 ]
