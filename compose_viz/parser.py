@@ -3,7 +3,7 @@ from typing import List, Optional
 from ruamel.yaml import YAML
 
 from compose_viz.compose import Compose, Service
-
+from compose_viz.extends import Extends
 
 class Parser:
     def __init__(self):
@@ -30,12 +30,12 @@ class Parser:
         services = []
 
         for service, service_name in zip(services_data.values(), services_data.keys()):
-            # print("name: {}".format(service_name))
+            print("name: {}".format(service_name))
 
             service_image: Optional[str] = None
             if service.get("image"):
                 service_image = service["image"]
-                # print("image: {}".format(service_image))
+                print("image: {}".format(service_image))
 
             service_networks: List[str] = []
             if service.get("networks"):
@@ -43,13 +43,25 @@ class Parser:
                     service_networks = service["networks"]
                 else:
                     service_networks = list(service["networks"].keys())
-                # print("networks: {}".format(service_networks))
+                print("networks: {}".format(service_networks))
+            
+            service_image: Optional[str] = None
+            if service.get("image"):
+                service_image = service["image"]
+                print("image: {}".format(service_image))
+
+            service_extends: Optional[Extends] = None
+            if service.get("extends"):
+                service_extends = Extends(service_name=service["extends"]["service"])
+                print("extends: {}".format(service_extends))
+            
 
             services.append(
                 Service(
                     name=service_name,
                     image=service_image,
                     networks=service_networks,
+                    extends=service_extends
                 )
             )
 
