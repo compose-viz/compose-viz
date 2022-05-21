@@ -670,10 +670,12 @@ from compose_viz.volume import Volume, VolumeType
                     Service(
                         name="frontend",
                         image="awesome/webapp",
+                        ports=["8000:5000"],
                     ),
                     Service(
                         name="monitoring",
                         image="awesome/monitoring",
+                        ports=["8000:5010"],
                         volumes=[
                             Volume(source="db-data", target="/data"),
                             Volume(
