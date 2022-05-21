@@ -781,7 +781,7 @@ from compose_viz.volume import Volume, VolumeType
                             ),
                         ],
                         depends_on=["monitoring"],
-                        extends=Extends(service_name="monitoring"),
+                        extends=Extends(service_name="frontend"),
                         ports=["8000:5010"],
                     ),
                 ]
