@@ -41,7 +41,7 @@ from compose_viz.service import Service
                     ),
                     Service(
                         name="common",
-                        extends=Extends(service_name="frontend"),
+                        extends=Extends(service_name="base"),
                     ),
                     Service(
                         name="cli",
@@ -596,13 +596,13 @@ from compose_viz.service import Service
                     Service(
                         name="monitoring",
                         image="awesome/monitoring",
+                        volumes=["db-data"],
+                        depends_on=["backend"],
                     ),
                     Service(
                         name="backend",
-                        volumes=["db-data"],
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                        ports=["8000:5010"],
+                        image="awesome/backend",
+                        ports=["8000:5001"],
                     ),
                 ]
             ),
