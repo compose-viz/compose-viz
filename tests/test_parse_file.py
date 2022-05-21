@@ -309,7 +309,7 @@ from compose_viz.volume import Volume, VolumeType
                     ),
                     Service(
                         name="backend",
-                        image="awesome/backend",
+                        extends=Extends(service_name="frontend"),
                         ports=["8000:5001"],
                     ),
                 ]
@@ -670,10 +670,12 @@ from compose_viz.volume import Volume, VolumeType
                     Service(
                         name="frontend",
                         image="awesome/webapp",
+                        ports=["8000:5000"],
                     ),
                     Service(
                         name="monitoring",
                         image="awesome/monitoring",
+                        ports=["8000:5010"],
                         volumes=[
                             Volume(source="db-data", target="/data"),
                             Volume(
@@ -779,7 +781,7 @@ from compose_viz.volume import Volume, VolumeType
                             ),
                         ],
                         depends_on=["monitoring"],
-                        extends=Extends(service_name="monitoring"),
+                        extends=Extends(service_name="frontend"),
                         ports=["8000:5010"],
                     ),
                 ]
