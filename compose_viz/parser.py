@@ -37,6 +37,9 @@ class Parser:
             if service.get("image"):
                 service_image = service["image"]
                 print("image: {}".format(service_image))
+            elif service.get("build"):
+                service_image = "build from " + service["build"]
+                print("image: {}".format(service_image))
 
             service_networks: List[str] = []
             if service.get("networks"):
