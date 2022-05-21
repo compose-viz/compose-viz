@@ -1,10 +1,11 @@
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from ruamel.yaml import YAML
 
 from compose_viz.compose import Compose, Service
 from compose_viz.extends import Extends
 from compose_viz.volume import Volume, VolumeType
+
 
 class Parser:
     def __init__(self):
@@ -25,7 +26,6 @@ class Parser:
             raise RuntimeError("No services found, aborting.")
 
         # parse services data into Service objects
-        services_data = yaml_data["services"]
         services = self.parse_service_data(yaml_data["services"])
 
         # create Compose object
@@ -33,16 +33,15 @@ class Parser:
 
         return compose
 
-    def parse_service_data(self, services_yaml_data: List):
-        services = []
+    def parse_service_data(self, services_yaml_data: Dict[str, dict]) -> List[Service]:
+        services: List[Service] = []
         for service, service_name in zip(services_yaml_data.values(), services_yaml_data.keys()):
-            
+
             service_image: Optional[str] = None
             if service.get("image"):
                 service_image = service["image"]
             elif service.get("build"):
                 service_image = "build from " + service["build"]
-                
 
             service_networks: List[str] = []
             if service.get("networks"):
@@ -50,12 +49,10 @@ class Parser:
                     service_networks = service["networks"]
                 else:
                     service_networks = list(service["networks"].keys())
-                
 
             service_extends: Optional[Extends] = None
             if service.get("extends"):
                 service_extends = Extends(service_name=service["extends"]["service"])
-                
 
             service_ports: List[str] = []
             if service.get("ports"):
@@ -74,7 +71,7 @@ class Parser:
                         volume_type = VolumeType[volume_data["type"]]
                         service_volumes.append(Volume(source=volume_source, target=volume_target, type=volume_type))
                     elif type(volume_data) is str:
-                        spilt_data = volume_data.split(":",1)
+                        spilt_data = volume_data.split(":", 1)
                         volume_source = spilt_data[0]
                         volume_target = spilt_data[1]
                         service_volumes.append(Volume(source=volume_source, target=volume_target))
@@ -92,18 +89,17 @@ class Parser:
                     ports=service_ports,
                     depends_on=service_depends_on,
                     volumes=service_volumes,
-                    links=service_links
+                    links=service_links,
                 )
             )
             # Service print debug
-            #print("--------------------")
-            #print("Service name: {}".format(service_name))
-            #print("image: {}".format(service_image))
-            #print("networks: {}".format(service_networks))
-            #print("image: {}".format(service_image))
-            #print("extends: {}".format(service_extends))
-            #print("ports: {}".format(service_ports))
-            #print("depends: {}".format(service_depends_on))
-
+            # print("--------------------")
+            # print("Service name: {}".format(service_name))
+            # print("image: {}".format(service_image))
+            # print("networks: {}".format(service_networks))
+            # print("image: {}".format(service_image))
+            # print("extends: {}".format(service_extends))
+            # print("ports: {}".format(service_ports))
+            # print("depends: {}".format(service_depends_on))
 
         return services
