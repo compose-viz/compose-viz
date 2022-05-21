@@ -5,6 +5,15 @@ from ruamel.yaml import YAML
 from compose_viz.compose import Compose, Service
 from compose_viz.extends import Extends
 
+class service_parse_rule:
+    def __init__(
+        self, 
+        name: str, parse_path: List[str],
+        target: List[str]
+    ) -> None:
+        self.name = name
+        self.parse_path = parse_path
+        self.target = target
 
 class Parser:
     def __init__(self):
