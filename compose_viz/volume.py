@@ -5,13 +5,24 @@ class VolumeType(str, Enum):
     volume = "volume"
     bind = "bind"
     tmpfs = "tmpfs"
+    npipe = "npipe"
+
+
+class AccessMode(str, Enum):
+    rw = "rw"
+    ro = "ro"
+    z = "z"
+    Z = "Z"
 
 
 class Volume:
-    def __init__(self, source: str, target: str, type: VolumeType = VolumeType.volume):
+    def __init__(
+        self, source: str, target: str, type: VolumeType = VolumeType.volume, access_mode: AccessMode = AccessMode.rw
+    ):
         self._source = source
         self._target = target
         self._type = type
+        self._access_mode = access_mode
 
     @property
     def source(self):
@@ -24,3 +35,7 @@ class Volume:
     @property
     def type(self):
         return self._type
+
+    @property
+    def access_mode(self):
+        return self._access_mode

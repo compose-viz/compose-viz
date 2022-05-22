@@ -5,7 +5,7 @@ from compose_viz.extends import Extends
 from compose_viz.parser import Parser
 from compose_viz.port import Port
 from compose_viz.service import Service
-from compose_viz.volume import Volume, VolumeType
+from compose_viz.volume import AccessMode, Volume, VolumeType
 
 
 @pytest.mark.parametrize(
@@ -428,12 +428,14 @@ from compose_viz.volume import Volume, VolumeType
                     Service(
                         name="common",
                         image="busybox",
-                        volumes=[Volume(source="common-volume", target="/var/lib/backup/data:rw")],
+                        volumes=[
+                            Volume(source="common-volume", target="/var/lib/backup/data", access_mode=AccessMode.rw)
+                        ],
                     ),
                     Service(
                         name="cli",
                         extends=Extends(service_name="common"),
-                        volumes=[Volume(source="cli-volume", target="/var/lib/backup/data:ro")],
+                        volumes=[Volume(source="cli-volume", target="/var/lib/backup/data", access_mode=AccessMode.ro)],
                     ),
                 ]
             ),
