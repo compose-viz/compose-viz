@@ -2,11 +2,7 @@ services:
   backend:
     image: awesome/backend
     volumes:
-      - type: volume
-        source: db-data
-        target: /data
-        volume:
-          nocopy: true
+      - "db-data:/data"
       - type: bind
         source: /var/run/postgres/postgres.sock
         target: /var/run/postgres/postgres.sock

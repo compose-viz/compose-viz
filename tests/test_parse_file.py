@@ -3,7 +3,7 @@ import pytest
 from compose_viz.compose import Compose
 from compose_viz.extends import Extends
 from compose_viz.parser import Parser
-from compose_viz.port import Port
+from compose_viz.port import Port, Protocol
 from compose_viz.service import Service
 from compose_viz.volume import AccessMode, Volume, VolumeType
 
@@ -82,7 +82,7 @@ from compose_viz.volume import AccessMode, Volume, VolumeType
                         name="web",
                         image="build from .",
                         ports=[
-                            Port(host_port="8000", container_port="5000"),
+                            Port(host_port="8080", container_port="8080"),
                         ],
                     ),
                     Service(
@@ -100,7 +100,7 @@ from compose_viz.volume import AccessMode, Volume, VolumeType
                         name="frontend",
                         image="awesome/webapp",
                         ports=[
-                            Port(host_port="8000", container_port="5000"),
+                            Port(host_port="127.0.0.1:8080", container_port="80", protocol=Protocol.udp),
                         ],
                         networks=["front-tier", "back-tier"],
                     ),
@@ -108,7 +108,7 @@ from compose_viz.volume import AccessMode, Volume, VolumeType
                         name="monitoring",
                         image="awesome/monitoring",
                         ports=[
-                            Port(host_port="8000", container_port="5001"),
+                            Port(host_port="127.0.0.1:8081", container_port="5001"),
                         ],
                         networks=["admin"],
                     ),
@@ -116,7 +116,7 @@ from compose_viz.volume import AccessMode, Volume, VolumeType
                         name="backend",
                         image="awesome/backend",
                         ports=[
-                            Port(host_port="8000", container_port="5010"),
+                            Port(host_port="8000", container_port="5010", protocol=Protocol.udp),
                         ],
                         networks=["back-tier", "admin"],
                     ),
@@ -131,7 +131,7 @@ from compose_viz.volume import AccessMode, Volume, VolumeType
                         name="frontend",
                         image="awesome/webapp",
                         ports=[
-                            Port(host_port="8000", container_port="5000"),
+                            Port(host_port="80", container_port="80"),
                         ],
                     ),
                     Service(
