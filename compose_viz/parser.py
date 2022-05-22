@@ -64,14 +64,15 @@ class Parser:
                     if type(port_data) is dict:
                         # define a nested function to limit variable scope
                         def long_syntax():
+                            assert type(port_data) is dict
                             assert port_data["target"]
 
-                            container_port: str = port_data["target"]
+                            container_port: str = str(port_data["target"])
                             host_port: str = ""
                             protocol: Protocol = Protocol.tcp
 
-                            if port_data.get("host_port"):
-                                host_port = port_data["host_port"]
+                            if port_data.get("published"):
+                                host_port = str(port_data["published"])
                             else:
                                 host_port = container_port
 
@@ -80,7 +81,7 @@ class Parser:
                                 host_port = f"{host_ip}:{host_port}"
 
                             if port_data.get("protocol"):
-                                protocol = Protocol(port_data["protocol"])
+                                protocol = Protocol[str(port_data["protocol"])]
 
                             assert host_port, "Error parsing port, aborting."
 
@@ -105,6 +106,7 @@ class Parser:
                         #     - "6060:6060/udp"
 
                         def short_syntax():
+                            assert type(port_data) is str
                             regex = r"(?P<host_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:)?((?P<host_port>\d+(\-\d+)?):)?((?P<container_port>\d+(\-\d+)?))?(/(?P<protocol>\w+))?"  # noqa: E501
                             match = re.match(regex, port_data)
                             if match:
@@ -151,12 +153,12 @@ class Parser:
                     if type(volume_data) is dict:
                         assert volume_data["source"] and volume_data["target"], "Invalid volume input, aborting."
 
-                        volume_source: str = volume_data["source"]
-                        volume_target: str = volume_data["target"]
+                        volume_source: str = str(volume_data["source"])
+                        volume_target: str = str(volume_data["target"])
                         volume_type: VolumeType = VolumeType.volume
 
                         if volume_data.get("type"):
-                            volume_type = VolumeType[volume_data["type"]]
+                            volume_type = VolumeType[str(volume_data["type"])]
 
                         service_volumes.append(Volume(source=volume_source, target=volume_target, type=volume_type))
                     elif type(volume_data) is str:
