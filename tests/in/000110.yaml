@@ -2,7 +2,7 @@ services:
   frontend:
     image: awesome/webapp
     ports:
-      - "8000:5000"
+      - target: 80
 
   monitoring:
     extends:
