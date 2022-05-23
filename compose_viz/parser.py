@@ -145,10 +145,15 @@ class Parser:
 
             service_depends_on: List[str] = []
             if service.get("depends_on"):
-                service_depends_on = service["depends_on"]
+                if type(service["depends_on"]) is list:
+                    for depends_on in service["depends_on"]:
+                        service_depends_on.append(str(depends_on))
+                elif type(service["depends_on"]) is dict:
+                    service_depends_on = list(service["depends_on"].keys())
 
             service_volumes: List[Volume] = []
             if service.get("volumes"):
+                assert type(service["volumes"]) is list
                 for volume_data in service["volumes"]:
                     if type(volume_data) is dict:
                         assert volume_data["source"] and volume_data["target"], "Invalid volume input, aborting."
