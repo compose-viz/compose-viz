@@ -2,8 +2,10 @@ services:
   web:
     build: .
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
   redis:
     image: redis
   db:
