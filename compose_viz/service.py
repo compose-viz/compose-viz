@@ -18,13 +18,6 @@ class Service:
         extends: Optional[Extends] = None,
     ) -> None:
         self._name = name
-
-        if image is None and extends is None:
-            raise AttributeError(f"Both image and extends are not defined in service '{name}', aborting.")
-
-        if image is not None and extends is not None:
-            raise AttributeError(f"Only one of image and extends can be defined in service '{name}', aborting.")
-
         self._image = image
         self._ports = ports
         self._networks = networks

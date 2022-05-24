@@ -4,10 +4,11 @@ from enum import Enum
 class Protocol(str, Enum):
     tcp = "tcp"
     udp = "udp"
+    any = "any"
 
 
 class Port:
-    def __init__(self, host_port: str, container_port: str, protocol: Protocol = Protocol.tcp):
+    def __init__(self, host_port: str, container_port: str, protocol: Protocol = Protocol.any):
         self._host_port = host_port
         self._container_port = container_port
         self._protocol = protocol

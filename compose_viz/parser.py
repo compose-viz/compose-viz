@@ -6,7 +6,7 @@ from ruamel.yaml import YAML
 from compose_viz.compose import Compose, Service
 from compose_viz.extends import Extends
 from compose_viz.port import Port, Protocol
-from compose_viz.volume import AccessMode, Volume, VolumeType
+from compose_viz.volume import Volume, VolumeType
 
 
 class Parser:
@@ -40,10 +40,14 @@ class Parser:
         for service, service_name in zip(services_yaml_data.values(), services_yaml_data.keys()):
 
             service_image: Optional[str] = None
-            if service.get("image"):
+            if service.get("build"):
+                if type(service["build"]) is str:
+                    service_image = "build from " + service["build"]
+                elif type(service["build"]) is dict:
+                    assert service["build"].get("context"), "Missing build context, aborting."
+                    service_image = "build from " + str(service["build"]["context"])
+            elif service.get("image"):
                 service_image = service["image"]
-            elif service.get("build"):
-                service_image = "build from " + service["build"]
 
             service_networks: List[str] = []
             if service.get("networks"):
@@ -54,8 +58,16 @@ class Parser:
 
             service_extends: Optional[Extends] = None
             if service.get("extends"):
-                if service["extends"].get("service"):
-                    service_extends = Extends(service_name=service["extends"]["service"])
+                assert type(service["extends"]) is dict, "Invalid extends format, aborting."
+                assert service["extends"]["service"], "Missing extends service, aborting."
+                extend_service_name = str(service["extends"]["service"])
+
+                extend_from_file: Optional[str] = None
+                if service["extends"].get("file"):
+                    assert service["extends"]["file"], "Missing extends file, aborting."
+                    extend_from_file = str(service["extends"]["file"])
+
+                service_extends = Extends(service_name=extend_service_name, from_file=extend_from_file)
 
             service_ports: List[Port] = []
             if service.get("ports"):
@@ -69,7 +81,7 @@ class Parser:
 
                             container_port: str = str(port_data["target"])
                             host_port: str = ""
-                            protocol: Protocol = Protocol.tcp
+                            protocol: Protocol = Protocol.any
 
                             if port_data.get("published"):
                                 host_port = str(port_data["published"])
@@ -79,6 +91,8 @@ class Parser:
                             if port_data.get("host_ip"):
                                 host_ip = str(port_data["host_ip"])
                                 host_port = f"{host_ip}:{host_port}"
+                            else:
+                                host_port = f"0.0.0.0:{host_port}"
 
                             if port_data.get("protocol"):
                                 protocol = Protocol[str(port_data["protocol"])]
@@ -122,6 +136,8 @@ class Parser:
 
                                 if host_ip:
                                     host_port = f"{host_ip}{host_port}"
+                                else:
+                                    host_port = f"0.0.0.0:{host_port}"
 
                                 assert host_port, "Error while parsing port, aborting."
 
@@ -174,9 +190,7 @@ class Parser:
                             service_volumes.append(Volume(source=spilt_data[0], target=spilt_data[1]))
                         elif len(spilt_data) == 3:
                             service_volumes.append(
-                                Volume(
-                                    source=spilt_data[0], target=spilt_data[1], access_mode=AccessMode[spilt_data[2]]
-                                )
+                                Volume(source=spilt_data[0], target=spilt_data[1], access_mode=spilt_data[2])
                             )
 
             service_links: List[str] = []

@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: awesome/frontend
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+  backend:
+    image: awesome/backend
+    depends_on:
+      - db
+      - redis
+  db:
+    image: mysql
+  redis:
+    image: redis

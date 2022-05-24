@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: awesome/frontend
+    build: ./frontend
+
+  backend:
+    image: awesome/backend
+    build:
+      context: backend
+      dockerfile: ../backend.Dockerfile

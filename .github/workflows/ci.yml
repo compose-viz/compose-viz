@@ -20,76 +20,20 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y graphviz
 
+      - name: Validate Test Files
+        run: |
+          docker compose -f tests/ymls/builds/docker-compose.yml config -q
+          docker compose -f tests/ymls/depends_on/docker-compose.yml config -q
+          docker compose -f tests/ymls/extends/docker-compose.yml config -q
+          docker compose -f tests/ymls/links/docker-compose.yml config -q
+          docker compose -f tests/ymls/networks/docker-compose.yml config -q
+          docker compose -f tests/ymls/ports/docker-compose.yml config -q
+          docker compose -f tests/ymls/volumes/docker-compose.yml config -q
+
       - name: Setup Python 3.10.4
         uses: actions/setup-python@v3
         with:
           python-version: '3.10.4'
-
-      - name: Validate Test Files
-        run: |
-          docker-compose -f tests/in/000001.yaml config -q
-          docker-compose -f tests/in/000010.yaml config -q
-          docker-compose -f tests/in/000011.yaml config -q
-          docker-compose -f tests/in/000100.yaml config -q
-          docker-compose -f tests/in/000101.yaml config -q
-          docker-compose -f tests/in/000110.yaml config -q
-          docker-compose -f tests/in/000111.yaml config -q
-          docker-compose -f tests/in/001000.yaml config -q
-          docker-compose -f tests/in/001001.yaml config -q
-          docker-compose -f tests/in/001010.yaml config -q
-          docker-compose -f tests/in/001011.yaml config -q
-          docker-compose -f tests/in/001100.yaml config -q
-          docker-compose -f tests/in/001101.yaml config -q
-          docker-compose -f tests/in/001110.yaml config -q
-          docker-compose -f tests/in/001111.yaml config -q
-          docker-compose -f tests/in/010000.yaml config -q
-          docker-compose -f tests/in/010001.yaml config -q
-          docker-compose -f tests/in/010010.yaml config -q
-          docker-compose -f tests/in/010011.yaml config -q
-          docker-compose -f tests/in/010100.yaml config -q
-          docker-compose -f tests/in/010101.yaml config -q
-          docker-compose -f tests/in/010110.yaml config -q
-          docker-compose -f tests/in/010111.yaml config -q
-          docker-compose -f tests/in/011000.yaml config -q
-          docker-compose -f tests/in/011001.yaml config -q
-          docker-compose -f tests/in/011010.yaml config -q
-          docker-compose -f tests/in/011011.yaml config -q
-          docker-compose -f tests/in/011100.yaml config -q
-          docker-compose -f tests/in/011101.yaml config -q
-          docker-compose -f tests/in/011110.yaml config -q
-          docker-compose -f tests/in/011111.yaml config -q
-          docker-compose -f tests/in/100000.yaml config -q
-          docker-compose -f tests/in/100001.yaml config -q
-          docker-compose -f tests/in/100010.yaml config -q
-          docker-compose -f tests/in/100011.yaml config -q
-          docker-compose -f tests/in/100100.yaml config -q
-          docker-compose -f tests/in/100101.yaml config -q
-          docker-compose -f tests/in/100110.yaml config -q
-          docker-compose -f tests/in/100111.yaml config -q
-          docker-compose -f tests/in/101000.yaml config -q
-          docker-compose -f tests/in/101001.yaml config -q
-          docker-compose -f tests/in/101010.yaml config -q
-          docker-compose -f tests/in/101011.yaml config -q
-          docker-compose -f tests/in/101100.yaml config -q
-          docker-compose -f tests/in/101101.yaml config -q
-          docker-compose -f tests/in/101110.yaml config -q
-          docker-compose -f tests/in/101111.yaml config -q
-          docker-compose -f tests/in/110000.yaml config -q
-          docker-compose -f tests/in/110001.yaml config -q
-          docker-compose -f tests/in/110010.yaml config -q
-          docker-compose -f tests/in/110011.yaml config -q
-          docker-compose -f tests/in/110100.yaml config -q
-          docker-compose -f tests/in/110101.yaml config -q
-          docker-compose -f tests/in/110110.yaml config -q
-          docker-compose -f tests/in/110111.yaml config -q
-          docker-compose -f tests/in/111000.yaml config -q
-          docker-compose -f tests/in/111001.yaml config -q
-          docker-compose -f tests/in/111010.yaml config -q
-          docker-compose -f tests/in/111011.yaml config -q
-          docker-compose -f tests/in/111100.yaml config -q
-          docker-compose -f tests/in/111101.yaml config -q
-          docker-compose -f tests/in/111110.yaml config -q
-          docker-compose -f tests/in/111111.yaml config -q
 
       - name: Setup Poetry
         uses: Gr1N/setup-poetry@v7

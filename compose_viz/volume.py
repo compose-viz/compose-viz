@@ -8,17 +8,8 @@ class VolumeType(str, Enum):
     npipe = "npipe"
 
 
-class AccessMode(str, Enum):
-    rw = "rw"
-    ro = "ro"
-    z = "z"
-    Z = "Z"
-
-
 class Volume:
-    def __init__(
-        self, source: str, target: str, type: VolumeType = VolumeType.volume, access_mode: AccessMode = AccessMode.rw
-    ):
+    def __init__(self, source: str, target: str, type: VolumeType = VolumeType.volume, access_mode: str = "rw"):
         self._source = source
         self._target = target
         self._type = type
