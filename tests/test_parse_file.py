@@ -9,378 +9,190 @@ from compose_viz.volume import AccessMode, Volume, VolumeType
 
 
 @pytest.mark.parametrize(
-    "test_input, expected",
+    "test_file_path, expected",
     [
         (
-            "tests/in/000001.yaml",
+            "builds/docker-compose",
             Compose(
-                [
+                services=[
                     Service(
                         name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
+                        image="build from ./frontend",
                     ),
                     Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
+                        name="backend",
+                        image="build from backend",
+                    ),
+                ],
+            ),
+        ),
+        (
+            "depends_on/docker-compose",
+            Compose(
+                services=[
+                    Service(
+                        name="frontend",
+                        image="awesome/frontend",
+                        depends_on=[
+                            "db",
+                            "redis",
+                        ],
                     ),
                     Service(
                         name="backend",
                         image="awesome/backend",
-                        networks=["back-tier", "admin"],
+                        depends_on=[
+                            "db",
+                            "redis",
+                        ],
                     ),
-                ]
+                    Service(
+                        name="db",
+                        image="mysql",
+                    ),
+                    Service(
+                        name="redis",
+                        image="redis",
+                    ),
+                ],
             ),
         ),
         (
-            "tests/in/000010.yaml",
+            "extends/docker-compose",
             Compose(
-                [
+                services=[
                     Service(
                         name="base",
-                        image="busybox",
+                        image="alpine:latest",
                     ),
                     Service(
-                        name="common",
-                        extends=Extends(service_name="base"),
+                        name="derive_from_base",
+                        image="alpine:edge",
+                        extends=Extends(
+                            service_name="base",
+                        ),
                     ),
                     Service(
-                        name="cli",
-                        extends=Extends(service_name="common"),
+                        name="derive_from_file",
+                        extends=Extends(
+                            service_name="web",
+                            from_file="web.yml",
+                        ),
                     ),
-                ]
+                ],
             ),
         ),
         (
-            "tests/in/000011.yaml",
+            "links/docker-compose",
             Compose(
-                [
+                services=[
                     Service(
                         name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        networks=["admin"],
-                        extends=Extends(service_name="frontend"),
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        extends=Extends(service_name="frontend"),
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/000100.yaml",
-            Compose(
-                [
-                    Service(
-                        name="web",
-                        image="build from .",
-                        ports=[
-                            Port(host_port="8080", container_port="8080"),
+                        image="awesome/frontend",
+                        links=[
+                            "db:database",
                         ],
-                    ),
-                    Service(
-                        name="redis",
-                        image="redis:alpine",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/000101.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        ports=[
-                            Port(host_port="127.0.0.1:8080", container_port="80", protocol=Protocol.udp),
-                        ],
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        ports=[
-                            Port(host_port="127.0.0.1:8081", container_port="5001"),
-                        ],
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        ports=[
-                            Port(host_port="8000", container_port="5010", protocol=Protocol.udp),
-                        ],
-                        networks=["back-tier", "admin"],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/000110.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        ports=[
-                            Port(host_port="80", container_port="80"),
-                        ],
-                    ),
-                    Service(
-                        name="monitoring",
-                        extends=Extends(service_name="frontend"),
-                    ),
-                    Service(
-                        name="backend",
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5001"),
-                        ],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/000111.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        ports=[
-                            Port(host_port="8000", container_port="5000"),
-                        ],
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        networks=["admin"],
-                        extends=Extends(service_name="frontend"),
-                    ),
-                    Service(
-                        name="backend",
-                        ports=[
-                            Port(host_port="8000", container_port="5001"),
-                        ],
-                        networks=["back-tier", "admin"],
-                        extends=Extends(service_name="frontend"),
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/001000.yaml",
-            Compose(
-                [
-                    Service(
-                        name="web",
-                        image="build from .",
-                        depends_on=["db", "redis"],
-                    ),
-                    Service(
-                        name="redis",
-                        image="redis",
                     ),
                     Service(
                         name="db",
-                        image="postgres",
+                        image="mysql",
                     ),
-                ]
+                ],
             ),
         ),
         (
-            "tests/in/001001.yaml",
+            "networks/docker-compose",
             Compose(
-                [
+                services=[
                     Service(
                         name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                        depends_on=["monitoring", "backend"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/001010.yaml",
-            Compose(
-                [
-                    Service(
-                        name="web",
-                        depends_on=["db", "redis"],
-                        extends=Extends(service_name="redis"),
-                    ),
-                    Service(
-                        name="redis",
-                        image="redis",
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/001011.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        networks=["front-tier", "back-tier"],
-                        depends_on=["monitoring", "backend"],
-                        extends=Extends(service_name="backend"),
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/001100.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        ports=[
-                            Port(host_port="8000", container_port="5000"),
+                        image="awesome/frontend",
+                        networks=[
+                            "front-tier",
+                            "back-tier",
                         ],
                     ),
                     Service(
                         name="monitoring",
                         image="awesome/monitoring",
-                        depends_on=["backend"],
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
+                        networks=[
+                            "admin",
                         ],
                     ),
                     Service(
                         name="backend",
                         image="awesome/backend",
-                        ports=[
-                            Port(host_port="8000", container_port="5001"),
+                        networks=[
+                            "back-tier",
+                            "admin",
                         ],
                     ),
-                ]
+                ],
             ),
         ),
         (
-            "tests/in/001101.yaml",
+            "ports/docker-compose",
             Compose(
-                [
+                services=[
                     Service(
                         name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                        depends_on=["backend"],
+                        image="awesome/frontend",
                         ports=[
-                            Port(host_port="8000", container_port="5010"),
+                            Port(
+                                host_port="0.0.0.0:3000",
+                                container_port="3000",
+                            ),
+                            Port(
+                                host_port="0.0.0.0:3000-3005",
+                                container_port="3000-3005",
+                            ),
+                            Port(
+                                host_port="0.0.0.0:9090-9091",
+                                container_port="8080-8081",
+                            ),
+                            Port(
+                                host_port="0.0.0.0:49100",
+                                container_port="22",
+                            ),
+                            Port(
+                                host_port="127.0.0.1:8001",
+                                container_port="8001",
+                            ),
+                            Port(
+                                host_port="127.0.0.1:5000-5010",
+                                container_port="5000-5010",
+                            ),
+                            Port(
+                                host_port="0.0.0.0:6060",
+                                container_port="6060",
+                                protocol=Protocol.udp,
+                            ),
+                            Port(
+                                host_port="127.0.0.1:8080",
+                                container_port="80",
+                                protocol=Protocol.tcp,
+                            ),
+                            Port(
+                                host_port="0.0.0.0:443",
+                                container_port="443",
+                            ),
                         ],
                     ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                    ),
-                ]
+                ],
             ),
         ),
         (
-            "tests/in/001110.yaml",
+            "volumes/docker-compose",
             Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        ports=[
-                            Port(host_port="8000", container_port="5000"),
-                        ],
-                    ),
-                    Service(
-                        name="monitoring",
-                        depends_on=["backend"],
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                    ),
-                    Service(
-                        name="backend",
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5001"),
-                        ],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/001111.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        networks=["admin"],
-                        depends_on=["backend"],
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/010000.yaml",
-            Compose(
-                [
+                services=[
                     Service(
                         name="backend",
                         image="awesome/backend",
                         volumes=[
-                            Volume(source="db-data", target="/data"),
+                            Volume(
+                                source="./data",
+                                target="/data",
+                            ),
                             Volume(
                                 source="/var/run/postgres/postgres.sock",
                                 target="/var/run/postgres/postgres.sock",
@@ -388,1465 +200,37 @@ from compose_viz.volume import AccessMode, Volume, VolumeType
                             ),
                         ],
                     ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/010001.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/010010.yaml",
-            Compose(
-                [
                     Service(
                         name="common",
                         image="busybox",
                         volumes=[
-                            Volume(source="common-volume", target="/var/lib/backup/data", access_mode=AccessMode.rw)
+                            Volume(
+                                source="common-volume",
+                                target="/var/lib/backup/data",
+                            ),
                         ],
                     ),
                     Service(
                         name="cli",
-                        extends=Extends(service_name="common"),
-                        volumes=[Volume(source="cli-volume", target="/var/lib/backup/data", access_mode=AccessMode.ro)],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/010011.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
+                        extends=Extends(
+                            service_name="common",
+                        ),
                         volumes=[
-                            Volume(source="db-data", target="/data"),
                             Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        extends=Extends(service_name="monitoring"),
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/010100.yaml",
-            Compose(
-                [
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        ports=[
-                            Port(host_port="8000", container_port="5000"),
-                        ],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/010101.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        ports=[
-                            Port(host_port="8000", container_port="5000"),
-                        ],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/010110.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        extends=Extends(service_name="monitoring"),
-                        ports=[
-                            Port(host_port="8000", container_port="5000"),
-                        ],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/010111.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        extends=Extends(service_name="monitoring"),
-                        ports=[
-                            Port(host_port="8000", container_port="5000"),
-                        ],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/011000.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        depends_on=["backend"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
+                                source="cli-volume",
+                                target="/var/lib/backup/data",
+                                access_mode=AccessMode.ro,
                             ),
                         ],
                     ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/011001.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/011010.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/011011.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/011100.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        ports=[
-                            Port(host_port="8000", container_port="5000"),
-                        ],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["backend"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        ports=[
-                            Port(host_port="8000", container_port="5001"),
-                        ],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/011101.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/011110.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/011111.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/100000.yaml",
-            Compose(
-                [
-                    Service(
-                        name="web",
-                        image="build from .",
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/100001.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/100010.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        extends=Extends(service_name="frontend"),
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/100011.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        extends=Extends(service_name="frontend"),
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/100100.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/100101.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/100110.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/100111.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/101000.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        depends_on=["monitoring"],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/101001.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        depends_on=["monitoring"],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/101010.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/101011.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/101100.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        depends_on=["monitoring"],
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/101101.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        depends_on=["monitoring"],
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/101110.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/101111.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/110000.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/110001.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/110010.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        extends=Extends(service_name="frontend"),
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/110011.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        extends=Extends(service_name="frontend"),
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/110100.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/110101.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/110110.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/110111.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/111000.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        depends_on=["backend"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/111001.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/111010.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/111011.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/111100.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/111101.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        image="awesome/backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/111110.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                    ),
-                    Service(
-                        name="backend",
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
-            ),
-        ),
-        (
-            "tests/in/111111.yaml",
-            Compose(
-                [
-                    Service(
-                        name="frontend",
-                        image="awesome/webapp",
-                        networks=["front-tier", "back-tier"],
-                    ),
-                    Service(
-                        name="monitoring",
-                        image="awesome/monitoring",
-                        networks=["admin"],
-                    ),
-                    Service(
-                        name="backend",
-                        networks=["back-tier", "admin"],
-                        volumes=[
-                            Volume(source="db-data", target="/data"),
-                            Volume(
-                                source="/var/run/postgres/postgres.sock",
-                                target="/var/run/postgres/postgres.sock",
-                                type=VolumeType.bind,
-                            ),
-                        ],
-                        depends_on=["monitoring"],
-                        extends=Extends(service_name="frontend"),
-                        ports=[
-                            Port(host_port="8000", container_port="5010"),
-                        ],
-                        links=["db:database"],
-                    ),
-                    Service(
-                        name="db",
-                        image="postgres",
-                    ),
-                ]
+                ],
             ),
         ),
     ],
 )
-def test_parse_file(test_input: str, expected: Compose) -> None:
+def test_parse_file(test_file_path: str, expected: Compose) -> None:
     parser = Parser()
-    actual = parser.parse(test_input)
+    actual = parser.parse(f"tests/ymls/{test_file_path}.yml")
 
     assert len(actual.services) == len(expected.services)
 

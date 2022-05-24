@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  backend:
+    image: awesome/backend
+    volumes:
+      - "./data:/data"
+      - type: bind
+        source: /var/run/postgres/postgres.sock
+        target: /var/run/postgres/postgres.sock
+  common:
+    image: busybox
+    volumes:
+      - common-volume:/var/lib/backup/data:rw
+  cli:
+    extends:
+      service: common
+    volumes:
+      - cli-volume:/var/lib/backup/data:ro
+
+volumes:
+  common-volume:
+  cli-volume:

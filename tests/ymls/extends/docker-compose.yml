@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  base:
+    image: alpine:latest
+    tty: true
+  derive_from_base:
+    image: alpine:edge
+    extends:
+      service: base
+  derive_from_file:
+    extends:
+      file: web.yml
+      service: web

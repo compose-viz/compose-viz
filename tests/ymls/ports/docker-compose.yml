@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: awesome/frontend
+    ports:
+      - "3000"
+      - "3000-3005"
+      - "9090-9091:8080-8081"
+      - "49100:22"
+      - "127.0.0.1:8001:8001"
+      - "127.0.0.1:5000-5010:5000-5010"
+      - "6060:6060/udp"
+      - target: 80
+        host_ip: 127.0.0.1
+        published: 8080
+        protocol: tcp
+      - target: 443

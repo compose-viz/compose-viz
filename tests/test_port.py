@@ -7,7 +7,7 @@ def test_port_init_normal() -> None:
 
         assert p.host_port == "8080"
         assert p.container_port == "80"
-        assert p.protocol == Protocol.tcp
+        assert p.protocol == Protocol.any
     except Exception as e:
         assert False, e
 
