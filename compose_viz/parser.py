@@ -6,7 +6,7 @@ from ruamel.yaml import YAML
 from compose_viz.compose import Compose, Service
 from compose_viz.extends import Extends
 from compose_viz.port import Port, Protocol
-from compose_viz.volume import AccessMode, Volume, VolumeType
+from compose_viz.volume import Volume, VolumeType
 
 
 class Parser:
@@ -190,9 +190,7 @@ class Parser:
                             service_volumes.append(Volume(source=spilt_data[0], target=spilt_data[1]))
                         elif len(spilt_data) == 3:
                             service_volumes.append(
-                                Volume(
-                                    source=spilt_data[0], target=spilt_data[1], access_mode=AccessMode[spilt_data[2]]
-                                )
+                                Volume(source=spilt_data[0], target=spilt_data[1], access_mode=spilt_data[2])
                             )
 
             service_links: List[str] = []

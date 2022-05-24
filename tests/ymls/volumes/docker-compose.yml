@@ -11,7 +11,7 @@ services:
   common:
     image: busybox
     volumes:
-      - common-volume:/var/lib/backup/data:rw
+      - common-volume:/var/lib/backup/data:rw,z
   cli:
     extends:
       service: common
