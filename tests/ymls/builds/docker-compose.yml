@@ -6,7 +6,10 @@ services:
     build: ./frontend
 
   backend:
-    image: awesome/backend
     build:
       context: backend
       dockerfile: ../backend.Dockerfile
+
+  db:
+    build:
+      context: ./db

@@ -17,11 +17,15 @@ from compose_viz.volume import Volume, VolumeType
                 services=[
                     Service(
                         name="frontend",
-                        image="build from ./frontend",
+                        image="build from './frontend', image: awesome/frontend",
                     ),
                     Service(
                         name="backend",
-                        image="build from backend",
+                        image="build from 'backend' using '../backend.Dockerfile'",
+                    ),
+                    Service(
+                        name="db",
+                        image="build from './db'",
                     ),
                 ],
             ),

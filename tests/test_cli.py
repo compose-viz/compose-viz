@@ -16,10 +16,10 @@ runner = CliRunner()
         "tests/ymls/extends/docker-compose.yml",
         "tests/ymls/links/docker-compose.yml",
         "tests/ymls/networks/docker-compose.yml",
-        "tests/ymls/others/docker-compose.yml",
         "tests/ymls/ports/docker-compose.yml",
         "tests/ymls/volumes/docker-compose.yml",
         "examples/full-stack-node-app/docker-compose.yml",
+        "examples/non-normative/docker-compose.yml",
     ],
 )
 def test_cli(test_file_path: str) -> None:
