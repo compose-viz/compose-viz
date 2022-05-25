@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: awesome/frontend
+    build: ./frontend
+
+  backend:
+    build:
+      context: backend
+      dockerfile: ../backend.Dockerfile
+
+  db:
+    build:
+      context: ./db

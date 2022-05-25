@@ -1,0 +1,87 @@
+version: "3.9"
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+
+  api:
+    image: "awesome/api"
+    extends:
+      service: node
+    build:
+      args:
+        PACKAGE_PATH: api
+        WORKING_DIR: /usr/src/
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./api:/usr/src
+    depends_on:
+      - db
+      - adminer
+      - redis
+    networks:
+      - front-tier
+      - back-tier
+    command: ["npm", "start"]
+
+  frontend:
+    extends:
+      service: node
+    build:
+      args:
+        PACKAGE_PATH: frontend
+        WORKING_DIR: /usr/src/
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/usr/src
+    depends_on:
+      - api
+    networks:
+      - front-tier
+    command: ["npm", "start"]
+
+  db:
+    image: "awesome/db"
+    extends:
+      service: postgres
+      file: postgres.yml
+    restart: always
+    networks:
+      - back-tier
+    volumes:
+      - "db-data:/data"
+      - type: bind
+        source: /var/run/postgres/postgres.sock
+        target: /var/run/postgres/postgres.sock
+
+  redis:
+    image: "awesome/redis"
+    restart: always
+    networks:
+      - back-tier
+    expose:
+      - 6379
+
+  adminer:
+    image: "awesome/adminer"
+    networks:
+      - back-tier
+    ports:
+      - 8080:8080
+
+volumes:
+  db-data:
+
+networks:
+  front-tier:
+  back-tier:
