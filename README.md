@@ -40,9 +40,9 @@
       <ul>
         <li><a href="#prerequisities">Prerequisities</a></li>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#example">Example</a></li>
         <li><a href="#usage">Usage</a></li>
         <li><a href="#options">Options</a></li>
-        <li><a href="#example">Example</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
@@ -82,6 +82,16 @@ If you want to generate PNG (which is the default option), you need to install [
 
 See [releases](https://github.com/compose-viz/compose-viz/releases).
 
+### Example
+
+`cpv -o .\examples\full-stack-node-app\compose-viz.png .\examples\full-stack-node-app\docker-compose.yml`
+
+And this is what the results look like:
+
+![compose-viz.png](https://github.com/compose-viz/compose-viz/blob/main/examples/full-stack-node-app/compose-viz.png)
+
+Check out the result [here](https://github.com/compose-viz/compose-viz/blob/main/examples/full-stack-node-app/compose-viz.png).
+
 ### Usage
 
 `cpv [OPTIONS] INPUT_PATH`
@@ -94,12 +104,6 @@ See [releases](https://github.com/compose-viz/compose-viz/releases).
 | `-m, --format [PNG,DOT]` | Output format for the generated visualization file. [default: PNG]             |
 | `-v, --version`          | Show the version of compose-viz.                                               |
 | `--help`                 | Show help and exit.                                                            |
-
-### Example
-
-`cpv -o .\examples\full-stack-node-app\compose-viz.png .\examples\full-stack-node-app\docker-compose.yml`
-
-[Here](https://github.com/compose-viz/compose-viz/blob/main/examples/full-stack-node-app/compose-viz.png) is the result.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
