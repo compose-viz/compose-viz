@@ -1,3 +1,5 @@
+from typing import Optional
+
 import graphviz
 
 from compose_viz.compose import Compose
@@ -38,11 +40,11 @@ def apply_edge_style(type) -> dict:
         "depends_on": {
             "style": "dotted",
         },
-        "extends":{
+        "extends": {
             "dir": "both",
             "arrowhead": "inv",
             "arrowtail": "dot",
-        }
+        },
     }
 
     return style[type]
@@ -60,10 +62,10 @@ class Graph:
         transTable = name.maketrans({":": ""})
         return name.translate(transTable)
 
-    def add_vertex(self, name: str, type: str, lable: str = None) -> None:
+    def add_vertex(self, name: str, type: str, lable: Optional[str] = None) -> None:
         self.dot.node(self.validate_name(name), lable, **apply_vertex_style(type))
 
-    def add_edge(self, head: str, tail: str, type: str, lable: str = None) -> None:
+    def add_edge(self, head: str, tail: str, type: str, lable: Optional[str] = None) -> None:
         self.dot.edge(self.validate_name(head), self.validate_name(tail), lable, **apply_edge_style(type))
 
     def render(self, format: str, cleanup: bool = True) -> None:
