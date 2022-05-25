@@ -26,6 +26,7 @@ def apply_edge_style(type) -> dict:
     style = {
         "ports": {
             "style": "solid",
+            "dir": "both",
         },
         "links": {
             "style": "solid",
@@ -70,6 +71,7 @@ class Graph:
             if service.image is not None:
                 self.add_vertex(service.name, "service", lable=f"{service.name}\n({service.image})")
             if service.extends is not None:
+                self.add_vertex(service.name, "service", lable=f"{service.name}\n")
                 self.add_edge(service.extends.service_name, service.name, "extends")
             for network in service.networks:
                 self.add_vertex(network, "network", lable=f"net:{network}")
