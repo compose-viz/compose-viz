@@ -42,12 +42,19 @@ class Parser:
             service_image: Optional[str] = None
             if service.get("build"):
                 if type(service["build"]) is str:
-                    service_image = "build from " + service["build"]
+                    service_image = f"build from '{service['build']}'"
                 elif type(service["build"]) is dict:
-                    assert service["build"].get("context"), "Missing build context, aborting."
-                    service_image = "build from " + str(service["build"]["context"])
-            elif service.get("image"):
-                service_image = service["image"]
+                    if service["build"].get("context") and service["build"].get("dockerfile"):
+                        service_image = (
+                            f"build from '{service['build']['context']}' using '{service['build']['dockerfile']}'"
+                        )
+                    elif service["build"].get("context"):
+                        service_image = f"build from '{service['build']['context']}'"
+            if service.get("image"):
+                if service_image:
+                    service_image += ", image: " + service["image"]
+                else:
+                    service_image = service["image"]
 
             service_networks: List[str] = []
             if service.get("networks"):

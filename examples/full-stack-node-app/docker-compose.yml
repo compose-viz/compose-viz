@@ -23,8 +23,9 @@ services:
     volumes:
       - ./api:/usr/src
     depends_on:
-      - postgres
+      - db
       - adminer
+      - redis
     command: ["npm", "start"]
 
   frontend:
@@ -38,22 +39,34 @@ services:
       - 3000
     ports:
       - 3000:3000
-    environment:
-      - REACT_APP_ENV=development
-      - BACKEND=api:8000
-      - HTTPS=true
-      - NODE_PATH=/usr/src/
     volumes:
       - ./frontend:/usr/src
     depends_on:
       - api
     command: ["npm", "start"]
 
-  postgres:
-    image: postgres
+  db:
+    image: "awesome/db"
+    extends:
+      service: postgres
+      from: postgres.yml
     restart: always
+    volumes:
+      - "db-data:/data"
+      - type: bind
+        source: /var/run/postgres/postgres.sock
+        target: /var/run/postgres/postgres.sock
+
+  redis:
+    image: "awesome/redis"
+    restart: always
+    expose:
+      - 6379
 
   adminer:
-    image: adminer
+    image: "awesome/adminer"
     ports:
       - 8080:8080
+
+  volumes:
+    db-data:
