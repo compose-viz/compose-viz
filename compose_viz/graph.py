@@ -32,10 +32,16 @@ def apply_edge_style(type) -> dict:
         },
         "volumes": {
             "style": "dashed",
+            "dir": "both",
         },
         "depends_on": {
             "style": "dotted",
         },
+        "extends":{
+            "dir": "both",
+            "arrowhead": "inv",
+            "arrowtail": "dot",
+        }
     }
 
     return style[type]
@@ -48,25 +54,35 @@ class Graph:
         self.compose = compose
         self.filename = filename
 
-    def add_vertex(self, name: str, type: str) -> None:
-        self.dot.node(name, **apply_vertex_style(type))
+    def validate_name(self, name: str) -> str:
+        # graphviz does not allow ':' in node name
+        transTable = name.maketrans({":": ""})
+        return name.translate(transTable)
 
-    def add_edge(self, head: str, tail: str, type: str) -> None:
-        self.dot.edge(head, tail, **apply_edge_style(type))
+    def add_vertex(self, name: str, type: str, lable: str = None) -> None:
+        self.dot.node(self.validate_name(name), lable, **apply_vertex_style(type))
+
+    def add_edge(self, head: str, tail: str, type: str, lable: str = None) -> None:
+        self.dot.edge(self.validate_name(head), self.validate_name(tail), lable, **apply_edge_style(type))
 
     def render(self, format: str, cleanup: bool = True) -> None:
         for service in self.compose.services:
-            self.add_vertex(service.name, "service")
+            if service.image is not None:
+                self.add_vertex(service.name, "service", lable=f"{service.name}\n({service.image})")
+            if service.extends is not None:
+                self.add_edge(service.extends.service_name, service.name, "extends")
             for network in service.networks:
-                self.add_vertex("net#" + network, "network")
-                self.add_edge(service.name, "net#" + network, "links")
+                self.add_vertex(network, "network", lable=f"net:{network}")
+                self.add_edge(service.name, network, "links")
             for volume in service.volumes:
                 self.add_vertex(volume.source, "volume")
-                self.add_edge(service.name, volume.source, "links")
+                self.add_edge(service.name, volume.source, "volumes", lable=volume.target)
             for port in service.ports:
-                self.add_vertex(port.host_port, "port")
-                self.add_edge(service.name, port.host_port, "ports")
+                self.add_vertex(port.host_port, "port", lable=port.host_port)
+                self.add_edge(port.host_port, service.name, "ports", lable=port.container_port)
+            for link in service.links:
+                self.add_edge(link.split(":")[0], service.name, "links", link.split(":")[1])
             for depends_on in service.depends_on:
-                self.dot.edge(depends_on, service.name, "depends_on")
+                self.add_edge(service.name, depends_on, "depends_on")
 
         self.dot.render(outfile=self.filename, format=format, cleanup=cleanup)
