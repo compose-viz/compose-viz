@@ -29,6 +29,7 @@ jobs:
           docker compose -f tests/ymls/networks/docker-compose.yml config -q
           docker compose -f tests/ymls/ports/docker-compose.yml config -q
           docker compose -f tests/ymls/volumes/docker-compose.yml config -q
+          docker compose -f examples/full-stack-node-app/docker-compose.yml config -q
 
       - name: Setup Python 3.10.4
         uses: actions/setup-python@v3

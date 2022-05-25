@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+
+  api:
+    image: "awesome/api"
+    extends:
+      service: node
+    build:
+      args:
+        PACKAGE_PATH: api
+        WORKING_DIR: /usr/src/
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./api:/usr/src
+    depends_on:
+      - postgres
+      - adminer
+    command: ["npm", "start"]
+
+  frontend:
+    extends:
+      service: node
+    build:
+      args:
+        PACKAGE_PATH: frontend
+        WORKING_DIR: /usr/src/
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_ENV=development
+      - BACKEND=api:8000
+      - HTTPS=true
+      - NODE_PATH=/usr/src/
+    volumes:
+      - ./frontend:/usr/src
+    depends_on:
+      - api
+    command: ["npm", "start"]
+
+  postgres:
+    image: postgres
+    restart: always
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
