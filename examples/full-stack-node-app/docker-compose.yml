@@ -26,6 +26,9 @@ services:
       - db
       - adminer
       - redis
+    networks:
+      - front-tier
+      - back-tier
     command: ["npm", "start"]
 
   frontend:
@@ -43,6 +46,8 @@ services:
       - ./frontend:/usr/src
     depends_on:
       - api
+    networks:
+      - front-tier
     command: ["npm", "start"]
 
   db:
@@ -51,6 +56,8 @@ services:
       service: postgres
       from: postgres.yml
     restart: always
+    networks:
+      - back-tier
     volumes:
       - "db-data:/data"
       - type: bind
@@ -60,13 +67,21 @@ services:
   redis:
     image: "awesome/redis"
     restart: always
+    networks:
+      - back-tier
     expose:
       - 6379
 
   adminer:
     image: "awesome/adminer"
+    networks:
+      - back-tier
     ports:
       - 8080:8080
 
-  volumes:
-    db-data:
+volumes:
+  db-data:
+
+networks:
+  front-tier:
+  back-tier:
