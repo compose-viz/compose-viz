@@ -54,7 +54,7 @@ services:
     image: "awesome/db"
     extends:
       service: postgres
-      from: postgres.yml
+      file: postgres.yml
     restart: always
     networks:
       - back-tier
