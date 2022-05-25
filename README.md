@@ -38,6 +38,7 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
+        <li><a href="#prerequisities">Prerequisities</a></li>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#usage">Usage</a></li>
         <li><a href="#options">Options</a></li>
@@ -55,13 +56,21 @@
 
 ## About The Project
 
-`compose-viz` is a [docker-compose](https://github.com/docker/compose)/[podman-compose](https://github.com/containers/podman-compose) graph visualization tool that allows you to gernerate graph in [DOT](https://graphviz.org/doc/info/lang.html) format or `.png`.
+`compose-viz` is a compose file visualization tool that supports [compose-spec](https://github.com/compose-spec/compose-spec/blob/master/spec.md) and allows you to gernerate graph in [DOT](https://graphviz.org/doc/info/lang.html) format or `.png`.
+
+If you are looking for a compose file vizualization tool, and you are using one of the [compose-spec](https://github.com/compose-spec/compose-spec/blob/master/spec.md) implementations (e.g. [docker-compose](https://github.com/docker/compose)/[podman-compose](https://github.com/containers/podman-compose)), then `compose-viz` is a great choice for you. 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 
 ## Getting Started
+
+### Prerequisities
+
+#### Graphviz
+
+If you want to generate PNG (which is the default option), you need to install [Graphviz](https://graphviz.org/download/).
 
 ### Installation
 
@@ -88,7 +97,9 @@ See [releases](https://github.com/compose-viz/compose-viz/releases).
 
 ### Example
 
-`cpv -o docker-compose-viz.png docker-compose.yml`
+`cpv -o .\examples\full-stack-node-app\compose-viz.png .\examples\full-stack-node-app\docker-compose.yml`
+
+[Here](https://github.com/compose-viz/compose-viz/blob/main/examples/full-stack-node-app/compose-viz.png) is the result.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -96,7 +107,7 @@ See [releases](https://github.com/compose-viz/compose-viz/releases).
 
 ## Roadmap
 
-- [ ] Support [podman-compose](https://github.com/containers/podman-compose).
+- [ ] Support more vizualization components.
 
 See the [open issues](https://github.com/compose-viz/compose-viz/issues)
 for a full list of proposed features (and known issues).
