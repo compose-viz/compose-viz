@@ -86,7 +86,7 @@ See [releases](https://github.com/compose-viz/compose-viz/releases).
 
 `cpv -o .\examples\full-stack-node-app\compose-viz.png .\examples\full-stack-node-app\docker-compose.yml`
 
-And this is what the results look like:
+And this is what the result looks like:
 
 ![compose-viz.png](https://github.com/compose-viz/compose-viz/blob/main/examples/full-stack-node-app/compose-viz.png)
 
