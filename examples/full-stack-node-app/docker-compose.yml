@@ -5,6 +5,7 @@ services:
     image: "awesome/api"
     extends:
       service: node
+      file: common-services.yml
     build:
       args:
         PACKAGE_PATH: api
@@ -28,6 +29,7 @@ services:
   frontend:
     extends:
       service: node
+      file: common-services.yml
     build:
       args:
         PACKAGE_PATH: frontend
