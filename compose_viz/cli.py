@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Optional
 
 import typer
@@ -6,12 +5,7 @@ import typer
 from compose_viz import __app_name__, __version__
 from compose_viz.graph import Graph
 from compose_viz.parser import Parser
-
-
-class VisualizationFormats(str, Enum):
-    png = "PNG"
-    dot = "DOT"
-
+from compose_viz.viz_formats import VizFormats
 
 app = typer.Typer(
     invoke_without_command=True,
@@ -30,14 +24,14 @@ def _version_callback(value: bool) -> None:
 @app.callback()
 def compose_viz(
     input_path: str,
-    output_path: str = typer.Option(
-        "./compose-viz.png",
-        "--output-path",
+    output_filename: str = typer.Option(
+        "compose-viz",
+        "--output-filename",
         "-o",
-        help="Output path for the generated visualization file.",
+        help="Output filename for the generated visualization file.",
     ),
-    format: VisualizationFormats = typer.Option(
-        "PNG",
+    format: VizFormats = typer.Option(
+        "png",
         "--format",
         "-m",
         help="Output format for the generated visualization file.",
@@ -57,7 +51,7 @@ def compose_viz(
     if compose:
         typer.echo(f"Successfully parsed {input_path}")
 
-    Graph(compose, output_path).render(format)
+    Graph(compose, output_filename).render(format)
 
     raise typer.Exit()
 

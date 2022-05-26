@@ -93,4 +93,4 @@ class Graph:
             for depends_on in service.depends_on:
                 self.add_edge(service.name, depends_on, "depends_on")
 
-        self.dot.render(outfile=self.filename, format=format, cleanup=cleanup)
+        self.dot.render(outfile=f"{self.filename}.{format}", format=format, cleanup=cleanup)

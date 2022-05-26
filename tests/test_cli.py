@@ -24,11 +24,12 @@ runner = CliRunner()
 )
 def test_cli(test_file_path: str) -> None:
     input_path = f"{test_file_path}"
-    output_path = "compose-viz-test.png"
-    result = runner.invoke(cli.app, ["-o", output_path, input_path])
+    output_filename = "compose-viz-test"
+    default_format = "png"
+    result = runner.invoke(cli.app, ["-o", output_filename, input_path])
 
     assert result.exit_code == 0
     assert f"Successfully parsed {input_path}\n" in result.stdout
-    assert os.path.exists(output_path)
+    assert os.path.exists(f"{output_filename}.{default_format}")
 
-    os.remove(output_path)
+    os.remove(f"{output_filename}.{default_format}")
