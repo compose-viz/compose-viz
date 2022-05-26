@@ -1,11 +1,6 @@
 version: "3.9"
 
 services:
-  node:
-    build:
-      context: .
-      dockerfile: Dockerfile.node
-
   api:
     image: "awesome/api"
     extends:
@@ -30,7 +25,6 @@ services:
       - front-tier
       - back-tier
     command: ["npm", "start"]
-
   frontend:
     extends:
       service: node
@@ -49,12 +43,11 @@ services:
     networks:
       - front-tier
     command: ["npm", "start"]
-
   db:
     image: "awesome/db"
     extends:
       service: postgres
-      file: postgres.yml
+      file: common-services.yml
     restart: always
     networks:
       - back-tier
@@ -63,7 +56,6 @@ services:
       - type: bind
         source: /var/run/postgres/postgres.sock
         target: /var/run/postgres/postgres.sock
-
   redis:
     image: "awesome/redis"
     restart: always
@@ -71,13 +63,20 @@ services:
       - back-tier
     expose:
       - 6379
-
   adminer:
     image: "awesome/adminer"
-    networks:
-      - back-tier
+    links:
+      - db
     ports:
       - 8080:8080
+  proxy:
+    image: "awesome/proxy"
+    build:
+      context: .
+      dockerfile: Dockerfile.proxy
+    networks:
+      - front-tier
+
 
 volumes:
   db-data:

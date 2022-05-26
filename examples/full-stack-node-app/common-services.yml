@@ -3,3 +3,5 @@ version: "3.9"
 services:
   postgres:
     image: awesome/postgres
+  node:
+    image: awesome/node
