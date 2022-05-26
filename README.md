@@ -56,7 +56,7 @@
 
 ## About The Project
 
-`compose-viz` is a compose file visualization tool that supports [compose-spec](https://github.com/compose-spec/compose-spec/blob/master/spec.md) and allows you to gernerate graph in [DOT](https://graphviz.org/doc/info/lang.html) format or `.png`.
+`compose-viz` is a compose file visualization tool that supports [compose-spec](https://github.com/compose-spec/compose-spec/blob/master/spec.md) and allows you to gernerate graph in several formats.
 
 If you are looking for a compose file vizualization tool, and you are using one of the [compose-spec](https://github.com/compose-spec/compose-spec/blob/master/spec.md) implementations (e.g. [docker-compose](https://github.com/docker/compose)/[podman-compose](https://github.com/containers/podman-compose)), then `compose-viz` is a great choice for you. 
 
@@ -70,7 +70,7 @@ If you are looking for a compose file vizualization tool, and you are using one 
 
 #### Graphviz
 
-If you want to generate PNG (which is the default option), you need to install [Graphviz](https://graphviz.org/download/).
+You need to install [Graphviz](https://graphviz.org/download/) to generate graphs.
 
 ### Installation
 
@@ -93,9 +93,9 @@ cpv docker-compose.yml
 
 And this is what the result looks like:
 
-![compose-viz.png](https://github.com/compose-viz/compose-viz/blob/main/examples/voting-app/compose-viz.png)
+![compose-viz.svg](https://github.com/compose-viz/compose-viz/blob/main/examples/voting-app/compose-viz.svg)
 
-Check out the result [here](https://github.com/compose-viz/compose-viz/blob/main/examples/voting-app/compose-viz.png).
+Check out the result [here](https://github.com/compose-viz/compose-viz/blob/main/examples/voting-app).
 
 ### Usage
 
@@ -103,12 +103,12 @@ Check out the result [here](https://github.com/compose-viz/compose-viz/blob/main
 
 ### Options
 
-| Option                   | Description                                                                    |
-| ------------------------ | ------------------------------------------------------------------------------ |
-| `-o, --output-path`      | Output path for the generated visualization file. [default: ./compose-viz.png] |
-| `-m, --format [PNG,DOT]` | Output format for the generated visualization file. [default: PNG]             |
-| `-v, --version`          | Show the version of compose-viz.                                               |
-| `--help`                 | Show help and exit.                                                            |
+| Option                         | Description                                                                                                                                                                  |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-o, --output-filename` | Output filename for the generated visualization file. [default: compose-viz]                                                                                          |
+| `-m, --format`                 | Output format for the generated visualization file. See [supported formats](https://github.com/compose-viz/compose-viz/blob/main/compose_viz/viz_formats.py). [default: png] |
+| `-v, --version`                | Show the version of compose-viz.                                                                                                                                             |
+| `--help`                       | Show help and exit.                                                                                                                                                          |
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
