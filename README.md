@@ -88,7 +88,7 @@ This example yml is from [docker compose beginner tutorial](https://github.com/d
 
 ```bash
 cd examples/voting-app/
-cpv docker-compose.yml
+cpv -m svg docker-compose.yml
 ```
 
 And this is what the result looks like:
