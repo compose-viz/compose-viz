@@ -84,7 +84,10 @@ See [releases](https://github.com/compose-viz/compose-viz/releases).
 
 ### Example
 
-`cpv -o .\examples\full-stack-node-app\compose-viz.png .\examples\full-stack-node-app\docker-compose.yml`
+```bash
+cd examples/full-stack-node-app/
+cpv docker-compose.yml
+```
 
 And this is what the result looks like:
 
