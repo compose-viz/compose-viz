@@ -84,16 +84,18 @@ See [releases](https://github.com/compose-viz/compose-viz/releases).
 
 ### Example
 
+This example yml is from [docker compose beginner tutorial](https://github.com/docker/labs/blob/master/beginner/chapters/votingapp.md).
+
 ```bash
-cd examples/full-stack-node-app/
+cd examples/voting-app/
 cpv docker-compose.yml
 ```
 
 And this is what the result looks like:
 
-![compose-viz.png](https://github.com/compose-viz/compose-viz/blob/main/examples/full-stack-node-app/compose-viz.png)
+![compose-viz.png](https://github.com/compose-viz/compose-viz/blob/main/examples/voting-app/compose-viz.png)
 
-Check out the result [here](https://github.com/compose-viz/compose-viz/blob/main/examples/full-stack-node-app/compose-viz.png).
+Check out the result [here](https://github.com/compose-viz/compose-viz/blob/main/examples/voting-app/compose-viz.png).
 
 ### Usage
 
