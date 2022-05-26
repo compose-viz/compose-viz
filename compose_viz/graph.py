@@ -85,7 +85,11 @@ class Graph:
                 self.add_vertex(port.host_port, "port", lable=port.host_port)
                 self.add_edge(port.host_port, service.name, "ports", lable=port.container_port)
             for link in service.links:
-                self.add_edge(link.split(":")[0], service.name, "links", link.split(":")[1])
+                if ":" in link:
+                    service_name, alias = link.split(":", 1)
+                    self.add_edge(service_name, service.name, "links", alias)
+                else:
+                    self.add_edge(link, service.name, "links")
             for depends_on in service.depends_on:
                 self.add_edge(service.name, depends_on, "depends_on")
 
