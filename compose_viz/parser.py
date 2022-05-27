@@ -55,12 +55,12 @@ class Parser:
 
             service_extends: Optional[Extends] = None
             if service_data.extends is not None:
-                if type(service_data.extends) is str:
-                    service_extends = Extends(service_name=service_data.extends)
-                elif type(service_data.extends) is spec.Extend:
-                    service_extends = Extends(
-                        service_name=service_data.extends.service, from_file=service_data.extends.file
-                    )
+                # https://github.com/compose-spec/compose-spec/blob/master/spec.md#extends
+                # The value of the extends key MUST be a dictionary.
+                assert type(service_data.extends) is spec.Extend
+                service_extends = Extends(
+                    service_name=service_data.extends.service, from_file=service_data.extends.file
+                )
 
             service_ports: List[Port] = []
             if service_data.ports is not None:
@@ -95,15 +95,14 @@ class Parser:
                     elif type(port_data) is spec.Port:
                         assert port_data.target is not None, "Invalid port format, aborting."
 
-                        if type(port_data.published) is int:
-                            host_port = str(port_data.published)
-                        elif type(port_data.published) is str:
+                        # ruamel.yaml does not parse port as int
+                        assert type(port_data.published) is not int
+
+                        if type(port_data.published) is str:
                             host_port = port_data.published
 
                         if type(port_data.target) is int:
                             container_port = str(port_data.target)
-                        elif type(port_data.target) is str:
-                            container_port = port_data.target
 
                         host_ip = port_data.host_ip
                         protocol = port_data.protocol
@@ -158,6 +157,8 @@ class Parser:
                     elif type(volume_data) is spec.ServiceVolume:
                         assert volume_data.target is not None, "Invalid volume input, aborting."
 
+                        # https://github.com/compose-spec/compose-spec/blob/master/spec.md#long-syntax-4
+                        # `volume_data.source` is not applicable for a tmpfs mount.
                         if volume_data.source is None:
                             volume_data.source = volume_data.target
 
