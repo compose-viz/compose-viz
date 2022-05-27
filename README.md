@@ -56,7 +56,7 @@
 
 ## About The Project
 
-`compose-viz` is a compose file visualization tool that supports [compose-spec](https://github.com/compose-spec/compose-spec/blob/master/spec.md) and allows you to gernerate graph in several formats.
+`compose-viz` is a compose file visualization tool that follows [compose-spec](https://github.com/compose-spec/compose-spec/blob/master/spec.md) and allows you to gernerate graph in several formats.
 
 If you are looking for a compose file vizualization tool, and you are using one of the [compose-spec](https://github.com/compose-spec/compose-spec/blob/master/spec.md) implementations (e.g. [docker-compose](https://github.com/docker/compose)/[podman-compose](https://github.com/containers/podman-compose)), then `compose-viz` is a great choice for you. 
 
