@@ -2,7 +2,7 @@ from typing import Optional
 
 import graphviz
 
-from compose_viz.compose import Compose
+from compose_viz.models.compose import Compose
 
 
 def apply_vertex_style(type) -> dict:

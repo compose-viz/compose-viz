@@ -1,6 +1,6 @@
 from typing import List
 
-from compose_viz.service import Service
+from compose_viz.models.service import Service
 
 
 class Compose:

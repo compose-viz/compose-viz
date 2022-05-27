@@ -17,6 +17,11 @@ services:
       service: common
     volumes:
       - cli-volume:/var/lib/backup/data:ro
+  tmp:
+    image: awesome/nginx
+    volumes:
+      - type: tmpfs
+        target: /app
 
 volumes:
   common-volume:

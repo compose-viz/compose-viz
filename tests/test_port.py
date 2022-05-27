@@ -1,4 +1,4 @@
-from compose_viz.port import Port, Protocol
+from compose_viz.models.port import Port, Protocol
 
 
 def test_port_init_normal() -> None:

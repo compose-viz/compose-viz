@@ -1,4 +1,4 @@
-from compose_viz.volume import Volume, VolumeType
+from compose_viz.models.volume import Volume, VolumeType
 
 
 def test_volume_init_normal() -> None:

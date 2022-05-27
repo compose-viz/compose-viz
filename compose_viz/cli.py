@@ -4,8 +4,8 @@ import typer
 
 from compose_viz import __app_name__, __version__
 from compose_viz.graph import Graph
+from compose_viz.models.viz_formats import VizFormats
 from compose_viz.parser import Parser
-from compose_viz.viz_formats import VizFormats
 
 app = typer.Typer(
     invoke_without_command=True,
