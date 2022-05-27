@@ -7,10 +7,11 @@ from __future__ import annotations
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Extra, Field, conint, constr
+from pydantic import Extra, Field, conint, constr
+from pydantic_yaml import YamlModel
 
 
-class CredentialSpec(BaseModel):
+class CredentialSpec(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -25,14 +26,14 @@ class Condition(Enum):
     service_completed_successfully = "service_completed_successfully"
 
 
-class DependsOn(BaseModel):
+class DependsOn(YamlModel):
     class Config:
         extra = Extra.forbid
 
     condition: Condition
 
 
-class Extend(BaseModel):
+class Extend(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -40,7 +41,7 @@ class Extend(BaseModel):
     file: Optional[str] = None
 
 
-class Logging(BaseModel):
+class Logging(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -48,7 +49,7 @@ class Logging(BaseModel):
     options: Optional[Dict[constr(regex=r"^.+$"), Optional[Union[str, float]]]] = None  # type: ignore  # noqa: F722
 
 
-class Port(BaseModel):
+class Port(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -67,7 +68,7 @@ class PullPolicy(Enum):
     missing = "missing"
 
 
-class Ulimit(BaseModel):
+class Ulimit(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -80,7 +81,7 @@ class Selinux(Enum):
     Z = "Z"
 
 
-class Bind(BaseModel):
+class Bind(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -89,14 +90,14 @@ class Bind(BaseModel):
     selinux: Optional[Selinux] = None
 
 
-class AdditionalVolumeOption(BaseModel):
+class AdditionalVolumeOption(YamlModel):
     class Config:
         extra = Extra.forbid
 
     nocopy: Optional[bool] = None
 
 
-class Tmpfs(BaseModel):
+class Tmpfs(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -104,7 +105,7 @@ class Tmpfs(BaseModel):
     mode: Optional[float] = None
 
 
-class ServiceVolume(BaseModel):
+class ServiceVolume(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -118,7 +119,7 @@ class ServiceVolume(BaseModel):
     tmpfs: Optional[Tmpfs] = None
 
 
-class Healthcheck(BaseModel):
+class Healthcheck(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -135,7 +136,7 @@ class Order(Enum):
     stop_first = "stop-first"
 
 
-class RollbackConfig(BaseModel):
+class RollbackConfig(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -152,7 +153,7 @@ class ConfigOrder(Enum):
     stop_first = "stop-first"
 
 
-class UpdateConfig(BaseModel):
+class UpdateConfig(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -164,7 +165,7 @@ class UpdateConfig(BaseModel):
     order: Optional[ConfigOrder] = None
 
 
-class Limits(BaseModel):
+class Limits(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -173,7 +174,7 @@ class Limits(BaseModel):
     pids: Optional[int] = None
 
 
-class RestartPolicy(BaseModel):
+class RestartPolicy(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -183,14 +184,14 @@ class RestartPolicy(BaseModel):
     window: Optional[str] = None
 
 
-class Preference(BaseModel):
+class Preference(YamlModel):
     class Config:
         extra = Extra.forbid
 
     spread: Optional[str] = None
 
 
-class Placement(BaseModel):
+class Placement(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -199,7 +200,7 @@ class Placement(BaseModel):
     max_replicas_per_node: Optional[int] = None
 
 
-class DiscreteResourceSpec(BaseModel):
+class DiscreteResourceSpec(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -207,18 +208,18 @@ class DiscreteResourceSpec(BaseModel):
     value: Optional[float] = None
 
 
-class GenericResource(BaseModel):
+class GenericResource(YamlModel):
     class Config:
         extra = Extra.forbid
 
     discrete_resource_spec: Optional[DiscreteResourceSpec] = None
 
 
-class GenericResources(BaseModel):
+class GenericResources(YamlModel):
     __root__: List[GenericResource]
 
 
-class ConfigItem(BaseModel):
+class ConfigItem(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -228,7 +229,7 @@ class ConfigItem(BaseModel):
     aux_addresses: Optional[Dict[constr(regex=r"^.+$"), str]] = None  # type: ignore  # noqa: F722
 
 
-class Ipam(BaseModel):
+class Ipam(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -237,37 +238,37 @@ class Ipam(BaseModel):
     options: Optional[Dict[constr(regex=r"^.+$"), str]] = None  # type: ignore  # noqa: F722
 
 
-class ExternalNetwork(BaseModel):
+class ExternalNetwork(YamlModel):
     class Config:
         extra = Extra.forbid
 
     name: Optional[str] = None
 
 
-class ExternalVolume(BaseModel):
+class ExternalVolume(YamlModel):
     class Config:
         extra = Extra.forbid
 
     name: Optional[str] = None
 
 
-class ExternalSecret(BaseModel):
+class ExternalSecret(YamlModel):
     name: Optional[str] = None
 
 
-class ExternalConfig(BaseModel):
+class ExternalConfig(YamlModel):
     name: Optional[str] = None
 
 
-class ListOfStrings(BaseModel):
+class ListOfStrings(YamlModel):
     __root__: List[str] = Field(..., unique_items=True)
 
 
-class ListOrDict(BaseModel):
+class ListOrDict(YamlModel):
     __root__: Union[Dict[constr(regex=r".+"), Optional[Union[str, float, bool]]], List[str]]  # type: ignore  # noqa: F722, E501
 
 
-class BlkioLimit(BaseModel):
+class BlkioLimit(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -275,7 +276,7 @@ class BlkioLimit(BaseModel):
     rate: Optional[Union[int, str]] = None
 
 
-class BlkioWeight(BaseModel):
+class BlkioWeight(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -283,7 +284,7 @@ class BlkioWeight(BaseModel):
     weight: Optional[int] = None
 
 
-class ServiceConfigOrSecretItem(BaseModel):
+class ServiceConfigOrSecretItem(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -294,15 +295,15 @@ class ServiceConfigOrSecretItem(BaseModel):
     mode: Optional[float] = None
 
 
-class ServiceConfigOrSecret(BaseModel):
+class ServiceConfigOrSecret(YamlModel):
     __root__: List[Union[str, ServiceConfigOrSecretItem]]
 
 
-class Constraints(BaseModel):
+class Constraints(YamlModel):
     __root__: Any
 
 
-class BuildItem(BaseModel):
+class BuildItem(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -324,7 +325,7 @@ class BuildItem(BaseModel):
     tags: Optional[List[str]] = None
 
 
-class BlkioConfig(BaseModel):
+class BlkioConfig(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -336,7 +337,7 @@ class BlkioConfig(BaseModel):
     weight_device: Optional[List[BlkioWeight]] = None
 
 
-class ServiceNetwork(BaseModel):
+class ServiceNetwork(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -347,7 +348,7 @@ class ServiceNetwork(BaseModel):
     priority: Optional[float] = None
 
 
-class Device(BaseModel):
+class Device(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -358,11 +359,11 @@ class Device(BaseModel):
     options: Optional[ListOrDict] = None
 
 
-class Devices(BaseModel):
+class Devices(YamlModel):
     __root__: List[Device]
 
 
-class Network(BaseModel):
+class Network(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -377,7 +378,7 @@ class Network(BaseModel):
     labels: Optional[ListOrDict] = None
 
 
-class Volume(BaseModel):
+class Volume(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -388,7 +389,7 @@ class Volume(BaseModel):
     labels: Optional[ListOrDict] = None
 
 
-class Secret(BaseModel):
+class Secret(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -401,7 +402,7 @@ class Secret(BaseModel):
     template_driver: Optional[str] = None
 
 
-class Config(BaseModel):
+class Config(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -412,11 +413,11 @@ class Config(BaseModel):
     template_driver: Optional[str] = None
 
 
-class StringOrList(BaseModel):
+class StringOrList(YamlModel):
     __root__: Union[str, ListOfStrings]
 
 
-class Reservations(BaseModel):
+class Reservations(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -426,7 +427,7 @@ class Reservations(BaseModel):
     devices: Optional[Devices] = None
 
 
-class Resources(BaseModel):
+class Resources(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -434,7 +435,7 @@ class Resources(BaseModel):
     reservations: Optional[Reservations] = None
 
 
-class Deployment(BaseModel):
+class Deployment(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -449,7 +450,7 @@ class Deployment(BaseModel):
     placement: Optional[Placement] = None
 
 
-class Service(BaseModel):
+class Service(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -534,7 +535,7 @@ class Service(BaseModel):
     working_dir: Optional[str] = None
 
 
-class ComposeSpecification(BaseModel):
+class ComposeSpecification(YamlModel):
     class Config:
         extra = Extra.forbid
 
@@ -544,7 +545,7 @@ class ComposeSpecification(BaseModel):
         description="define the Compose project name, until user defines one explicitly.",
     )
     services: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Service]] = None  # type: ignore  # noqa: F722
-    networks: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Network]] = None  # type: ignore  # noqa: F722
-    volumes: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Volume]] = None  # type: ignore  # noqa: F722
+    networks: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Optional[Network]]] = None  # type: ignore  # noqa: F722
+    volumes: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Optional[Volume]]] = None  # type: ignore  # noqa: F722
     secrets: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Secret]] = None  # type: ignore  # noqa: F722
     configs: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Config]] = None  # type: ignore  # noqa: F722
