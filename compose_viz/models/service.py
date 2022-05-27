@@ -1,8 +1,8 @@
 from typing import List, Optional
 
-from compose_viz.extends import Extends
-from compose_viz.port import Port
-from compose_viz.volume import Volume
+from compose_viz.models.extends import Extends
+from compose_viz.models.port import Port
+from compose_viz.models.volume import Volume
 
 
 class Service:

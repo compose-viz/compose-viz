@@ -1,6 +1,6 @@
 import pytest
 
-from compose_viz.extends import Extends
+from compose_viz.models.extends import Extends
 
 
 def test_extend_init_normal() -> None:

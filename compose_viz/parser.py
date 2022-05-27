@@ -3,10 +3,10 @@ from typing import Dict, List, Optional
 
 from ruamel.yaml import YAML
 
-from compose_viz.compose import Compose, Service
-from compose_viz.extends import Extends
-from compose_viz.port import Port, Protocol
-from compose_viz.volume import Volume, VolumeType
+from compose_viz.models.compose import Compose, Service
+from compose_viz.models.extends import Extends
+from compose_viz.models.port import Port, Protocol
+from compose_viz.models.volume import Volume, VolumeType
 
 
 class Parser:

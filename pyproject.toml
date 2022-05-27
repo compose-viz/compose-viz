@@ -30,3 +30,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 cpv = "compose_viz.cli:start_cli"
+
+[tool.coverage.run]
+source = ["compose_viz"]
+omit = ["compose_viz/spec/*"]
