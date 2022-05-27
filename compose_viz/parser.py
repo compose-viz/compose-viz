@@ -1,6 +1,8 @@
 import re
 from typing import List, Optional
 
+from pydantic import ValidationError
+
 import compose_viz.spec.compose_spec as spec
 from compose_viz.models.compose import Compose, Service
 from compose_viz.models.extends import Extends
@@ -13,7 +15,13 @@ class Parser:
         pass
 
     def parse(self, file_path: str) -> Compose:
-        compose_data: spec.ComposeSpecification = spec.ComposeSpecification.parse_file(file_path)
+        compose_data: spec.ComposeSpecification
+
+        try:
+            compose_data = spec.ComposeSpecification.parse_file(file_path)
+        except ValidationError as e:
+            raise RuntimeError(f"Error parsing file '{file_path}': {e}")
+
         services: List[Service] = []
 
         assert compose_data.services is not None, "No services found, aborting."
