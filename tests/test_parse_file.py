@@ -227,6 +227,17 @@ from compose_viz.parser import Parser
                             ),
                         ],
                     ),
+                    Service(
+                        name="tmp",
+                        image="awesome/nginx",
+                        volumes=[
+                            Volume(
+                                source="/app",
+                                target="/app",
+                                type=VolumeType.tmpfs,
+                            ),
+                        ],
+                    ),
                 ],
             ),
         ),
