@@ -62,7 +62,10 @@ class Parser:
                     container_port: Optional[str] = None
                     protocol: Optional[str] = None
 
-                    if type(port_data) is str:
+                    if type(port_data) is float:
+                        container_port = str(int(port_data))
+                        host_port = f"0.0.0.0:{container_port}"
+                    elif type(port_data) is str:
                         regex = r"(?P<host_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:)?((?P<host_port>\d+(\-\d+)?):)?((?P<container_port>\d+(\-\d+)?))?(/(?P<protocol>\w+))?"  # noqa: E501
                         match = re.match(regex, port_data)
 
@@ -74,10 +77,10 @@ class Parser:
 
                             assert container_port, "Invalid port format, aborting."
 
-                            if container_port and not host_port:
+                            if container_port is not None and host_port is None:
                                 host_port = container_port
 
-                            if host_ip:
+                            if host_ip is not None:
                                 host_port = f"{host_ip}{host_port}"
                             else:
                                 host_port = f"0.0.0.0:{host_port}"
@@ -97,11 +100,11 @@ class Parser:
                         host_ip = port_data.host_ip
                         protocol = port_data.protocol
 
-                        if container_port and not host_port:
+                        if container_port is not None and host_port is None:
                             host_port = container_port
 
-                        if host_ip:
-                            host_port = f"{host_ip}{host_port}"
+                        if host_ip is not None:
+                            host_port = f"{host_ip}:{host_port}"
                         else:
                             host_port = f"0.0.0.0:{host_port}"
 
