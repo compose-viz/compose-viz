@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "compose-viz"
-version = "0.1.2"
+version = "0.2.0"
 description = "A compose file visualization tool that supports compose-spec and allows you to gernerate graph in several formats."
 authors = ["Xyphuz Wu <xyphuzwu@gmail.com>"]
 readme = "README.md"
@@ -17,6 +17,7 @@ typer = "^0.4.1"
 PyYAML = "^6.0"
 graphviz = "^0.20"
 "ruamel.yaml" = "^0.17.21"
+pydantic-yaml = "^0.6.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
@@ -30,3 +31,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 cpv = "compose_viz.cli:start_cli"
+
+[tool.coverage.run]
+source = ["compose_viz"]
+omit = ["compose_viz/spec/*"]

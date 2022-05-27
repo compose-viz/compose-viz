@@ -1,11 +1,11 @@
 import pytest
 
-from compose_viz.compose import Compose
-from compose_viz.extends import Extends
+from compose_viz.models.compose import Compose
+from compose_viz.models.extends import Extends
+from compose_viz.models.port import Port, Protocol
+from compose_viz.models.service import Service
+from compose_viz.models.volume import Volume, VolumeType
 from compose_viz.parser import Parser
-from compose_viz.port import Port, Protocol
-from compose_viz.service import Service
-from compose_viz.volume import Volume, VolumeType
 
 
 @pytest.mark.parametrize(
@@ -224,6 +224,17 @@ from compose_viz.volume import Volume, VolumeType
                                 source="cli-volume",
                                 target="/var/lib/backup/data",
                                 access_mode="ro,z",
+                            ),
+                        ],
+                    ),
+                    Service(
+                        name="tmp",
+                        image="awesome/nginx",
+                        volumes=[
+                            Volume(
+                                source="/app",
+                                target="/app",
+                                type=VolumeType.tmpfs,
                             ),
                         ],
                     ),
