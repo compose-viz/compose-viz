@@ -27,16 +27,13 @@ jobs:
         run: |
           echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
 
-      - name: Echo Tag Version
-        run: echo ${{ steps.tag_version.outputs.VERSION }}
-
       -
         name: Build and push
         uses: docker/build-push-action@v3
         with:
           push: true
           tags: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/compose-viz:latest
-            ${{ secrets.DOCKER_HUB_USERNAME }}/compose-viz:${{ steps.tag_version.outputs.VERSION }}
-          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/compose-viz:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/compose-viz:buildcache,mode=max
+            ${{ secrets.DOCKERHUB_USERNAME }}/compose-viz:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/compose-viz:${{ steps.tag_version.outputs.VERSION }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/compose-viz:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/compose-viz:buildcache,mode=max
