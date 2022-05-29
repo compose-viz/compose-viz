@@ -82,13 +82,25 @@ You need to install [Graphviz](https://graphviz.org/download/) to generate graph
 
 See [releases](https://github.com/compose-viz/compose-viz/releases).
 
+#### Docker Image
+
+See [wst24365888/compose-viz](https://hub.docker.com/r/wst24365888/compose-viz/tags).
+
 ### Example
 
 This example yml is from [docker compose beginner tutorial](https://github.com/docker/labs/blob/master/beginner/chapters/votingapp.md).
 
 ```bash
 cd examples/voting-app/
+
+# using python script
 cpv -m svg docker-compose.yml
+
+# using docker image
+docker run --rm -it -v $(pwd):/in wst24365888/compose-viz -m svg docker-compose.yml
+
+# using docker image in powershell
+docker run --rm -it -v ${pwd}:/in wst24365888/compose-viz -m svg docker-compose.yml
 ```
 
 And this is what the result looks like:
