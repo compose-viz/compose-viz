@@ -16,6 +16,12 @@ class Service:
         depends_on: List[str] = [],
         links: List[str] = [],
         extends: Optional[Extends] = None,
+        cgroup_parent: str = None,
+        container_name: str = None,
+        devices: List[str] = [],
+        env_file: List[str] = [],
+        expose: List[str] = [],
+        profiles: List[str] = [],
     ) -> None:
         self._name = name
         self._image = image
@@ -25,6 +31,12 @@ class Service:
         self._depends_on = depends_on
         self._links = links
         self._extends = extends
+        self.cgroup_parent = cgroup_parent
+        self.container_name = container_name
+        self.devices = devices
+        self.env_file = env_file
+        self.expose = expose
+        self.profiles = profiles
 
     @property
     def name(self):
