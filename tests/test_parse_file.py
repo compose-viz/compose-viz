@@ -248,7 +248,7 @@ from compose_viz.parser import Parser
                     Service(
                         name="frontend",
                         image="awesome/frontend",
-                        cgroup_parent="system",  
+                        cgroup_parent="system",
                     ),
                 ],
             ),
@@ -260,7 +260,7 @@ from compose_viz.parser import Parser
                     Service(
                         name="frontend",
                         image="awesome/frontend",
-                        container_name="myfrontend",  
+                        container_name="myfrontend",
                     ),
                 ],
             ),
@@ -272,24 +272,17 @@ from compose_viz.parser import Parser
                     Service(
                         name="frontend",
                         image="awesome/frontend",
-                        env_file=[
-                            "a.env"
-                        ],
+                        env_file=["a.env"],
                     ),
                     Service(
                         name="backend",
                         image="awesome/backend",
-                        env_file=[
-                            "b.env"
-                        ],
+                        env_file=["b.env"],
                     ),
                     Service(
                         name="db",
                         image="awesome/db",
-                        env_file=[
-                            "c.env",
-                            "d.env"
-                        ],
+                        env_file=["c.env", "d.env"],
                     ),
                 ],
             ),
@@ -301,46 +294,34 @@ from compose_viz.parser import Parser
                     Service(
                         name="frontend",
                         image="awesome/frontend",
-                        expose=[
-                            "27118"
-                        ],
+                        expose=["27118"],
                     ),
                     Service(
                         name="backend",
                         image="awesome/backend",
-                        expose=[
-                            "27017",
-                            "27018"
-                        ],
+                        expose=["27017", "27018"],
                     ),
                 ],
             ),
         ),
-                (
+        (
             "profiles/docker-compose",
             Compose(
                 services=[
                     Service(
                         name="frontend",
                         image="awesome/frontend",
-                        profiles=[
-                            "frontend"
-                        ],
+                        profiles=["frontend"],
                     ),
                     Service(
                         name="phpmyadmin",
                         image="phpmyadmin",
-                        profiles=[
-                            "debug"
-                        ],
+                        profiles=["debug"],
                     ),
                     Service(
                         name="db",
                         image="awesome/db",
-                        profiles=[
-                            "db",
-                            "sql"
-                        ],
+                        profiles=["db", "sql"],
                     ),
                 ],
             ),
@@ -379,7 +360,6 @@ def test_parse_file(test_file_path: str, expected: Compose) -> None:
         if (actual_service.extends is not None) and (expected_service.extends is not None):
             assert actual_service.extends.service_name == expected_service.extends.service_name
             assert actual_service.extends.from_file == expected_service.extends.from_file
-
 
         assert actual_service.cgroup_parent == expected_service.cgroup_parent
         assert actual_service.container_name == expected_service.container_name
