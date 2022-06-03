@@ -241,6 +241,91 @@ from compose_viz.parser import Parser
                 ],
             ),
         ),
+        (
+            "cgroup_parent/docker-compose",
+            Compose(
+                services=[
+                    Service(
+                        name="frontend",
+                        image="awesome/frontend",
+                        cgroup_parent="system",
+                    ),
+                ],
+            ),
+        ),
+        (
+            "container_name/docker-compose",
+            Compose(
+                services=[
+                    Service(
+                        name="frontend",
+                        image="awesome/frontend",
+                        container_name="myfrontend",
+                    ),
+                ],
+            ),
+        ),
+        (
+            "env_file/docker-compose",
+            Compose(
+                services=[
+                    Service(
+                        name="frontend",
+                        image="awesome/frontend",
+                        env_file=["a.env"],
+                    ),
+                    Service(
+                        name="backend",
+                        image="awesome/backend",
+                        env_file=["b.env"],
+                    ),
+                    Service(
+                        name="db",
+                        image="awesome/db",
+                        env_file=["c.env", "d.env"],
+                    ),
+                ],
+            ),
+        ),
+        (
+            "expose/docker-compose",
+            Compose(
+                services=[
+                    Service(
+                        name="frontend",
+                        image="awesome/frontend",
+                        expose=["27118"],
+                    ),
+                    Service(
+                        name="backend",
+                        image="awesome/backend",
+                        expose=["27017", "27018"],
+                    ),
+                ],
+            ),
+        ),
+        (
+            "profiles/docker-compose",
+            Compose(
+                services=[
+                    Service(
+                        name="frontend",
+                        image="awesome/frontend",
+                        profiles=["frontend"],
+                    ),
+                    Service(
+                        name="phpmyadmin",
+                        image="phpmyadmin",
+                        profiles=["debug"],
+                    ),
+                    Service(
+                        name="db",
+                        image="awesome/db",
+                        profiles=["db", "sql"],
+                    ),
+                ],
+            ),
+        ),
     ],
 )
 def test_parse_file(test_file_path: str, expected: Compose) -> None:
@@ -275,3 +360,10 @@ def test_parse_file(test_file_path: str, expected: Compose) -> None:
         if (actual_service.extends is not None) and (expected_service.extends is not None):
             assert actual_service.extends.service_name == expected_service.extends.service_name
             assert actual_service.extends.from_file == expected_service.extends.from_file
+
+        assert actual_service.cgroup_parent == expected_service.cgroup_parent
+        assert actual_service.container_name == expected_service.container_name
+
+        assert actual_service.expose == expected_service.expose
+        assert actual_service.env_file == expected_service.env_file
+        assert actual_service.profiles == expected_service.profiles

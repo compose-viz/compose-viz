@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: awesome/frontend
+    expose:
+      - "27118"
+  backend:
+    image: awesome/backend
+    expose:
+      - "27017"
+      - "27018"
