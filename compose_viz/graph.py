@@ -11,13 +11,22 @@ def apply_vertex_style(type) -> dict:
             "shape": "component",
         },
         "volume": {
-            "shape": "folder",
+            "shape": "cylinder",
         },
         "network": {
             "shape": "pentagon",
         },
         "port": {
             "shape": "circle",
+        },
+        "env_file": {
+            "shape": "tab",
+        },
+        "porfile": {
+            "shape": "invhouse",
+        },
+        "cgroup": {
+            "shape": "diamond",
         },
     }
 
@@ -26,7 +35,7 @@ def apply_vertex_style(type) -> dict:
 
 def apply_edge_style(type) -> dict:
     style = {
-        "ports": {
+        "expose": {
             "style": "solid",
             "dir": "both",
         },
@@ -44,6 +53,9 @@ def apply_edge_style(type) -> dict:
             "dir": "both",
             "arrowhead": "inv",
             "arrowtail": "dot",
+        },
+        "env_file": {
+            "style": "solid",
         },
     }
 
@@ -71,19 +83,33 @@ class Graph:
     def render(self, format: str, cleanup: bool = True) -> None:
         for service in self.compose.services:
             if service.image is not None:
-                self.add_vertex(service.name, "service", lable=f"{service.name}\n({service.image})")
+                self.add_vertex(
+                    service.name,
+                    "service",
+                    lable=f"{service.container_name if service.container_name else service.name}\n({service.image})",
+                )
             if service.extends is not None:
                 self.add_vertex(service.name, "service", lable=f"{service.name}\n")
                 self.add_edge(service.extends.service_name, service.name, "extends")
+            if service.cgroup_parent is not None:
+                self.add_vertex(service.cgroup_parent, "cgroup")
+                self.add_edge(service.cgroup_parent, service.name, "links")
+
             for network in service.networks:
                 self.add_vertex(network, "network", lable=f"net:{network}")
                 self.add_edge(service.name, network, "links")
             for volume in service.volumes:
                 self.add_vertex(volume.source, "volume")
                 self.add_edge(service.name, volume.source, "volumes", lable=volume.target)
+            for expose in service.expose:
+                self.add_vertex(expose, "port")
+                self.add_edge(expose, service.name, "expose")
             for port in service.ports:
                 self.add_vertex(port.host_port, "port", lable=port.host_port)
-                self.add_edge(port.host_port, service.name, "ports", lable=port.container_port)
+                self.add_edge(port.host_port, service.name, "links", lable=port.container_port)
+            for env_file in service.env_file:
+                self.add_vertex(env_file, "env_file")
+                self.add_edge(env_file, service.name, "env_file")
             for link in service.links:
                 if ":" in link:
                     service_name, alias = link.split(":", 1)
@@ -92,5 +118,8 @@ class Graph:
                     self.add_edge(link, service.name, "links")
             for depends_on in service.depends_on:
                 self.add_edge(service.name, depends_on, "depends_on")
+            for porfile in service.profiles:
+                self.add_vertex(porfile, "porfile")
+                self.add_edge(porfile, service.name, "links")
 
         self.dot.render(outfile=f"{self.filename}.{format}", format=format, cleanup=cleanup)
