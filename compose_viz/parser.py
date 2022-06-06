@@ -5,6 +5,7 @@ from pydantic import ValidationError
 
 import compose_viz.spec.compose_spec as spec
 from compose_viz.models.compose import Compose, Service
+from compose_viz.models.device import Device
 from compose_viz.models.extends import Extends
 from compose_viz.models.port import Port, Protocol
 from compose_viz.models.volume import Volume, VolumeType
@@ -202,6 +203,24 @@ class Parser:
                 if type(service_data.profiles) is spec.ListOfStrings:
                     profiles = service_data.profiles.__root__
 
+            devices: List[Device] = []
+            if service_data.devices is not None:
+                for device_data in service_data.devices:
+                    if type(device_data) is str:
+                        assert ":" in device_data, "Invalid volume input, aborting."
+
+                        spilt_data = device_data.split(":")
+                        if len(spilt_data) == 2:
+                            devices.append(Device(host_path=spilt_data[0], container_path=spilt_data[1]))
+                        elif len(spilt_data) == 3:
+                            devices.append(
+                                Device(
+                                    host_path=spilt_data[0],
+                                    container_path=spilt_data[1],
+                                    cgroup_permissions=spilt_data[2],
+                                )
+                            )
+
             services.append(
                 Service(
                     name=service_name,
@@ -217,6 +236,7 @@ class Parser:
                     env_file=env_file,
                     expose=expose,
                     profiles=profiles,
+                    devices=devices,
                 )
             )
 
