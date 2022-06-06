@@ -1,6 +1,7 @@
 import pytest
 
 from compose_viz.models.compose import Compose
+from compose_viz.models.device import Device
 from compose_viz.models.extends import Extends
 from compose_viz.models.port import Port, Protocol
 from compose_viz.models.service import Service
@@ -326,6 +327,38 @@ from compose_viz.parser import Parser
                 ],
             ),
         ),
+        (
+            "devices/docker-compose",
+            Compose(
+                services=[
+                    Service(
+                        name="frontend",
+                        image="awesome/frontend",
+                        devices=[
+                            Device(
+                                host_path="/dev/ttyUSB0",
+                                container_path="/dev/ttyUSB1",
+                            )
+                        ],
+                    ),
+                    Service(
+                        name="backend",
+                        image="awesome/backend",
+                        devices=[
+                            Device(
+                                host_path="/dev/ttyUSB2",
+                                container_path="/dev/ttyUSB3",
+                            ),
+                            Device(
+                                host_path="/dev/sda",
+                                container_path="/dev/xvda",
+                                cgroup_permissions="rwm",
+                            ),
+                        ],
+                    ),
+                ],
+            ),
+        ),
     ],
 )
 def test_parse_file(test_file_path: str, expected: Compose) -> None:
@@ -367,3 +400,9 @@ def test_parse_file(test_file_path: str, expected: Compose) -> None:
         assert actual_service.expose == expected_service.expose
         assert actual_service.env_file == expected_service.env_file
         assert actual_service.profiles == expected_service.profiles
+
+        assert len(actual_service.devices) == len(expected_service.devices)
+        for actual_device, expected_device in zip(actual_service.devices, expected_service.devices):
+            assert actual_device.host_path == expected_device.host_path
+            assert actual_device.container_path == expected_device.container_path
+            assert actual_device.cgroup_permissions == expected_device.cgroup_permissions
