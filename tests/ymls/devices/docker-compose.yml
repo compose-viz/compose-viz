@@ -4,9 +4,9 @@ services:
   frontend:
     image: awesome/frontend
     devices:
-      - "/dev/ttyUSB0:/dev/ttyUSB0"
+      - "/dev/ttyUSB0:/dev/ttyUSB1"
   backend:
     image: awesome/backend
     devices:
-      - "/dev/ttyUSB1:/dev/ttyUSB1"
-      - "/dev/ttyUSB2:/dev/ttyUSB2"
+      - "/dev/ttyUSB2:/dev/ttyUSB3"
+      - "/dev/sda:/dev/xvda:rwm"
