@@ -5,7 +5,7 @@ import graphviz
 from compose_viz.models.compose import Compose
 
 
-def apply_vertex_style(type) -> dict:
+def apply_vertex_style(type: str) -> dict:
     style = {
         "service": {
             "shape": "component",
@@ -36,7 +36,7 @@ def apply_vertex_style(type) -> dict:
     return style[type]
 
 
-def apply_edge_style(type) -> dict:
+def apply_edge_style(type: str) -> dict:
     style = {
         "exposes": {
             "style": "solid",
