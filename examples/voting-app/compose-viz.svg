@@ -38,8 +38,7 @@
 <!-- 0.0.0.06379&#45;&gt;redis -->
 <g id="edge2" class="edge">
 <title>0.0.0.06379&#45;&gt;redis</title>
-<path fill="none" stroke="black" d="M104.53,-188.06C126.48,-169.27 151.57,-147.8 170.41,-131.68"/>
-<polygon fill="black" stroke="black" points="102.22,-185.44 96.9,-194.6 106.77,-190.75 102.22,-185.44"/>
+<path fill="none" stroke="black" d="M96.9,-194.6C120.47,-174.43 149.35,-149.71 170.41,-131.68"/>
 <polygon fill="black" stroke="black" points="172.75,-134.28 178.07,-125.12 168.2,-128.96 172.75,-134.28"/>
 <text text-anchor="middle" x="171.25" y="-146.8" font-family="Times New Roman,serif" font-size="14.00">6379</text>
 </g>
@@ -67,7 +66,8 @@
 <!-- db&#45;data -->
 <g id="node6" class="node">
 <title>db&#45;data</title>
-<polygon fill="none" stroke="black" points="700.75,-36 697.75,-40 676.75,-40 673.75,-36 641.75,-36 641.75,0 700.75,0 700.75,-36"/>
+<path fill="none" stroke="black" d="M700.75,-32.73C700.75,-34.53 687.52,-36 671.25,-36 654.97,-36 641.75,-34.53 641.75,-32.73 641.75,-32.73 641.75,-3.27 641.75,-3.27 641.75,-1.47 654.97,0 671.25,0 687.52,0 700.75,-1.47 700.75,-3.27 700.75,-3.27 700.75,-32.73 700.75,-32.73"/>
+<path fill="none" stroke="black" d="M700.75,-32.73C700.75,-30.92 687.52,-29.45 671.25,-29.45 654.97,-29.45 641.75,-30.92 641.75,-32.73"/>
 <text text-anchor="middle" x="671.25" y="-14.3" font-family="Times New Roman,serif" font-size="14.00">db&#45;data</text>
 </g>
 <!-- db&#45;&gt;db&#45;data -->
@@ -108,8 +108,7 @@
 <!-- 0.0.0.05000&#45;&gt;vote -->
 <g id="edge6" class="edge">
 <title>0.0.0.05000&#45;&gt;vote</title>
-<path fill="none" stroke="black" d="M271.25,-327.24C271.25,-304.1 271.25,-279.18 271.25,-260.67"/>
-<polygon fill="black" stroke="black" points="267.75,-327.29 271.25,-337.29 274.75,-327.29 267.75,-327.29"/>
+<path fill="none" stroke="black" d="M271.25,-337.29C271.25,-311.63 271.25,-282.06 271.25,-260.85"/>
 <polygon fill="black" stroke="black" points="274.75,-260.58 271.25,-250.58 267.75,-260.58 274.75,-260.58"/>
 <text text-anchor="middle" x="278.25" y="-308.29" font-family="Times New Roman,serif" font-size="14.00">80</text>
 </g>
@@ -143,8 +142,7 @@
 <!-- 0.0.0.05001&#45;&gt;result -->
 <g id="edge9" class="edge">
 <title>0.0.0.05001&#45;&gt;result</title>
-<path fill="none" stroke="black" d="M614.25,-327.24C614.25,-304.1 614.25,-279.18 614.25,-260.67"/>
-<polygon fill="black" stroke="black" points="610.75,-327.29 614.25,-337.29 617.75,-327.29 610.75,-327.29"/>
+<path fill="none" stroke="black" d="M614.25,-337.29C614.25,-311.63 614.25,-282.06 614.25,-260.85"/>
 <polygon fill="black" stroke="black" points="617.75,-260.58 614.25,-250.58 610.75,-260.58 617.75,-260.58"/>
 <text text-anchor="middle" x="621.25" y="-308.29" font-family="Times New Roman,serif" font-size="14.00">80</text>
 </g>
@@ -181,7 +179,8 @@
 <!-- /var/run/docker.sock -->
 <g id="node13" class="node">
 <title>/var/run/docker.sock</title>
-<polygon fill="none" stroke="black" points="926.75,-124 923.75,-128 902.75,-128 899.75,-124 793.75,-124 793.75,-88 926.75,-88 926.75,-124"/>
+<path fill="none" stroke="black" d="M926.75,-120.73C926.75,-122.53 896.94,-124 860.25,-124 823.55,-124 793.75,-122.53 793.75,-120.73 793.75,-120.73 793.75,-91.27 793.75,-91.27 793.75,-89.47 823.55,-88 860.25,-88 896.94,-88 926.75,-89.47 926.75,-91.27 926.75,-91.27 926.75,-120.73 926.75,-120.73"/>
+<path fill="none" stroke="black" d="M926.75,-120.73C926.75,-118.92 896.94,-117.45 860.25,-117.45 823.55,-117.45 793.75,-118.92 793.75,-120.73"/>
 <text text-anchor="middle" x="860.25" y="-102.3" font-family="Times New Roman,serif" font-size="14.00">/var/run/docker.sock</text>
 </g>
 <!-- visualizer&#45;&gt;/var/run/docker.sock -->
@@ -201,8 +200,7 @@
 <!-- 0.0.0.08080&#45;&gt;visualizer -->
 <g id="edge14" class="edge">
 <title>0.0.0.08080&#45;&gt;visualizer</title>
-<path fill="none" stroke="black" d="M860.25,-327.24C860.25,-304.1 860.25,-279.18 860.25,-260.67"/>
-<polygon fill="black" stroke="black" points="856.75,-327.29 860.25,-337.29 863.75,-327.29 856.75,-327.29"/>
+<path fill="none" stroke="black" d="M860.25,-337.29C860.25,-311.63 860.25,-282.06 860.25,-260.85"/>
 <polygon fill="black" stroke="black" points="863.75,-260.58 860.25,-250.58 856.75,-260.58 863.75,-260.58"/>
 <text text-anchor="middle" x="874.25" y="-308.29" font-family="Times New Roman,serif" font-size="14.00">8080</text>
 </g>
