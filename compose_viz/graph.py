@@ -28,6 +28,9 @@ def apply_vertex_style(type) -> dict:
         "cgroup": {
             "shape": "diamond",
         },
+        "device": {
+            "shape": "box3d",
+        },
     }
 
     return style[type]
@@ -35,7 +38,7 @@ def apply_vertex_style(type) -> dict:
 
 def apply_edge_style(type) -> dict:
     style = {
-        "expose": {
+        "exposes": {
             "style": "solid",
             "dir": "both",
         },
@@ -103,7 +106,7 @@ class Graph:
                 self.add_edge(service.name, volume.source, "volumes", lable=volume.target)
             for expose in service.expose:
                 self.add_vertex(expose, "port")
-                self.add_edge(expose, service.name, "expose")
+                self.add_edge(expose, service.name, "exposes")
             for port in service.ports:
                 self.add_vertex(port.host_port, "port", lable=port.host_port)
                 self.add_edge(port.host_port, service.name, "links", lable=port.container_port)
@@ -121,5 +124,10 @@ class Graph:
             for porfile in service.profiles:
                 self.add_vertex(porfile, "porfile")
                 self.add_edge(porfile, service.name, "links")
+            for device in service.devices:
+                self.add_vertex(device.host_path, "device")
+                self.add_edge(
+                    device.host_path, service.name, "exposes", f"{device.container_path}\n({device.cgroup_permissions})"
+                )
 
         self.dot.render(outfile=f"{self.filename}.{format}", format=format, cleanup=cleanup)
