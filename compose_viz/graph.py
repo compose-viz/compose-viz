@@ -45,9 +45,12 @@ def apply_edge_style(type: str) -> dict:
         "links": {
             "style": "solid",
         },
-        "volumes": {
+        "volumes_rw": {
             "style": "dashed",
             "dir": "both",
+        },
+        "volumes_ro": {
+            "style": "dashed",
         },
         "depends_on": {
             "style": "dotted",
@@ -106,7 +109,7 @@ class Graph:
                 self.add_edge(
                     service.name,
                     volume.source,
-                    "volumes" if "rw" in volume.access_mode else "links",
+                    "volumes_rw" if "rw" in volume.access_mode else "volumes_ro",
                     lable=volume.target,
                 )
             for expose in service.expose:
