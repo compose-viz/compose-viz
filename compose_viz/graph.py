@@ -103,7 +103,12 @@ class Graph:
                 self.add_edge(service.name, network, "links")
             for volume in service.volumes:
                 self.add_vertex(volume.source, "volume")
-                self.add_edge(service.name, volume.source, "volumes", lable=volume.target)
+                self.add_edge(
+                    service.name,
+                    volume.source,
+                    "volumes" if "rw" in volume.access_mode else "links",
+                    lable=volume.target,
+                )
             for expose in service.expose:
                 self.add_vertex(expose, "port")
                 self.add_edge(expose, service.name, "exposes")
