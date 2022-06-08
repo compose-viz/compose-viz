@@ -19,7 +19,7 @@ class Service:
         extends: Optional[Extends] = None,
         cgroup_parent: Optional[str] = None,
         container_name: Optional[str] = None,
-        devices: Optional[Device] = [],
+        devices: List[Device] = [],
         env_file: List[str] = [],
         expose: List[str] = [],
         profiles: List[str] = [],
