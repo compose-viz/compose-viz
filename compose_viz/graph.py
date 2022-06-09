@@ -99,7 +99,7 @@ class Graph:
                 self.add_edge(service.extends.service_name, service.name, "extends")
             if service.cgroup_parent is not None:
                 self.add_vertex(service.cgroup_parent, "cgroup")
-                self.add_edge(service.cgroup_parent, service.name, "links")
+                self.add_edge(service.name, service.cgroup_parent, "links")
 
             for network in service.networks:
                 self.add_vertex(network, "network", lable=f"net:{network}")
@@ -131,7 +131,7 @@ class Graph:
                 self.add_edge(service.name, depends_on, "depends_on")
             for porfile in service.profiles:
                 self.add_vertex(porfile, "porfile")
-                self.add_edge(porfile, service.name, "links")
+                self.add_edge(service.name, porfile, "links")
             for device in service.devices:
                 self.add_vertex(device.host_path, "device")
                 self.add_edge(
