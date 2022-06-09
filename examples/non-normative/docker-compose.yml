@@ -48,6 +48,8 @@ services:
     cgroup_parent: awesome-parent
   db:
     image: postgres
+    profiles:
+      - foo
     devices:
       - "/dev/ttyUSB2:/dev/ttyUSB3"
       - "/dev/sda:/dev/xvda:rwm"
