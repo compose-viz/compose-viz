@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: awesome/frontend
+    env_file: a.env
+  backend:
+    image: awesome/backend
+    env_file:
+      - b.env
+  db:
+    image: awesome/db
+    env_file:
+      - c.env
+      - d.env

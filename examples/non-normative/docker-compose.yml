@@ -6,10 +6,19 @@ services:
       - back-tier
 
   monitoring:
+    env_file:
+        - a.env
+        - b.env
+    container_name: monitoring-server
     image: awesome/monitoring
     networks:
       - admin
-
+    expose:
+      - 1234
+    profiles:
+      - tools
+      - foo
+    cgroup_parent: awesome-parent
 
   backend:
     networks:
@@ -36,8 +45,12 @@ services:
       - "8000:5010"
     links:
       - "db:database"
+    cgroup_parent: awesome-parent
   db:
     image: postgres
+    devices:
+      - "/dev/ttyUSB2:/dev/ttyUSB3"
+      - "/dev/sda:/dev/xvda:rwm"
 
 networks:
   front-tier:

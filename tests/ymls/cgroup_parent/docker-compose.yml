@@ -1,0 +1,6 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: awesome/frontend
+    cgroup_parent: "system"

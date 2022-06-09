@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  frontend:
+    image: awesome/frontend
+    profiles: ["frontend"]
+  phpmyadmin:
+    image: phpmyadmin
+    profiles:
+      - debug
+  db:
+    image: awesome/db
+    profiles:
+      - db
+      - sql

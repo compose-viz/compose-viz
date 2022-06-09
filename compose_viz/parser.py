@@ -5,6 +5,7 @@ from pydantic import ValidationError
 
 import compose_viz.spec.compose_spec as spec
 from compose_viz.models.compose import Compose, Service
+from compose_viz.models.device import Device
 from compose_viz.models.extends import Extends
 from compose_viz.models.port import Port, Protocol
 from compose_viz.models.volume import Volume, VolumeType
@@ -176,6 +177,50 @@ class Parser:
             if service_data.links is not None:
                 service_links = service_data.links
 
+            cgroup_parent: Optional[str] = None
+            if service_data.cgroup_parent is not None:
+                cgroup_parent = service_data.cgroup_parent
+
+            container_name: Optional[str] = None
+            if service_data.container_name is not None:
+                container_name = service_data.container_name
+
+            env_file: List[str] = []
+            if service_data.env_file is not None:
+                if type(service_data.env_file) is spec.StringOrList:
+                    if type(service_data.env_file.__root__) is spec.ListOfStrings:
+                        env_file = service_data.env_file.__root__.__root__
+                    elif type(service_data.env_file.__root__) is str:
+                        env_file.append(service_data.env_file.__root__)
+
+            expose: List[str] = []
+            if service_data.expose is not None:
+                for port in service_data.expose:
+                    expose.append(str(port))
+
+            profiles: List[str] = []
+            if service_data.profiles is not None:
+                if type(service_data.profiles) is spec.ListOfStrings:
+                    profiles = service_data.profiles.__root__
+
+            devices: List[Device] = []
+            if service_data.devices is not None:
+                for device_data in service_data.devices:
+                    if type(device_data) is str:
+                        assert ":" in device_data, "Invalid volume input, aborting."
+
+                        spilt_data = device_data.split(":")
+                        if len(spilt_data) == 2:
+                            devices.append(Device(host_path=spilt_data[0], container_path=spilt_data[1]))
+                        elif len(spilt_data) == 3:
+                            devices.append(
+                                Device(
+                                    host_path=spilt_data[0],
+                                    container_path=spilt_data[1],
+                                    cgroup_permissions=spilt_data[2],
+                                )
+                            )
+
             services.append(
                 Service(
                     name=service_name,
@@ -186,6 +231,12 @@ class Parser:
                     depends_on=service_depends_on,
                     volumes=service_volumes,
                     links=service_links,
+                    cgroup_parent=cgroup_parent,
+                    container_name=container_name,
+                    env_file=env_file,
+                    expose=expose,
+                    profiles=profiles,
+                    devices=devices,
                 )
             )
 
