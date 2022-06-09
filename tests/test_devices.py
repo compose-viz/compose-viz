@@ -1,5 +1,6 @@
 from compose_viz.models.device import Device
 
+
 def test_device_init_normal() -> None:
     try:
         d = Device(host_path="/dev/ttyUSB0", container_path="/dev/ttyUSB1")
@@ -8,6 +9,7 @@ def test_device_init_normal() -> None:
         assert d.container_path == "/dev/ttyUSB1"
     except Exception as e:
         assert False, e
+
 
 def test_device_with_cgroup_permissions() -> None:
     try:
