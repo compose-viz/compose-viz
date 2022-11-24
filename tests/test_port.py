@@ -14,6 +14,7 @@ def test_port_init_normal() -> None:
 def test_port_with_unspecify_host() -> None:
     try:
         p = Port(host_port="", container_port="8080")
+
         assert p.host_port == ""
         assert p.container_port == "8080"
     except Exception as e:
