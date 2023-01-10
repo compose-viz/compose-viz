@@ -173,6 +173,10 @@ from compose_viz.parser import Parser
                                 protocol=Protocol.udp,
                             ),
                             Port(
+                                host_port="0.0.0.0:7777",
+                                container_port="7777",
+                            ),
+                            Port(
                                 host_port="127.0.0.1:8080",
                                 container_port="80",
                                 protocol=Protocol.tcp,

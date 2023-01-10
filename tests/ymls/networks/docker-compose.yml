@@ -26,3 +26,5 @@ networks:
   front-tier:
   back-tier:
   admin:
+  traefik-public:
+    external: true
