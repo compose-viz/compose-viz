@@ -76,7 +76,9 @@ You need to install [Graphviz](https://graphviz.org/download/) to generate graph
 
 #### Using `pip`
 
-`pip install compose-viz`
+```
+pip install compose-viz
+```
 
 #### Using `.whl`
 
@@ -115,13 +117,13 @@ Check out the result [here](https://github.com/compose-viz/compose-viz/blob/main
 
 ### Options
 
-| Option                  | Description                                                                                                                                                                         |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `-o, --output-filename` | Output filename for the generated visualization file. [default: compose-viz]                                                                                                        |
-| `-m, --format`          | Output format for the generated visualization file. See [supported formats](https://github.com/compose-viz/compose-viz/blob/main/compose_viz/models/viz_formats.py). [default: png] |
-| `-r, --root-service`    | Root of the service tree (convenient for large compose yamls)                                                                                                                       |
-| `-v, --version`         | Show the version of compose-viz.                                                                                                                                                    |
-| `--help`                | Show help and exit.                                                                                                                                                                 |
+| Option                            | Description                                                                                                                                                                         |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-o, --output-filename FILENAME`  | Output filename for the generated visualization file. [default: compose-viz]                                                                                                        |
+| `-m, --format FORMAT`             | Output format for the generated visualization file. See [supported formats](https://github.com/compose-viz/compose-viz/blob/main/compose_viz/models/viz_formats.py). [default: png] |
+| `-r, --root-service SERVICE_NAME` | Root of the service tree (convenient for large compose yamls)                                                                                                                       |
+| `-v, --version`                   | Show the version of compose-viz.                                                                                                                                                    |
+| `--help`                          | Show help and exit.                                                                                                                                                                 |
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
