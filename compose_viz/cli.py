@@ -36,6 +36,12 @@ def compose_viz(
         "-m",
         help="Output format for the generated visualization file.",
     ),
+    root_service: str = typer.Option(
+        None,
+        "--root-service",
+        "-r",
+        help="Root of the service tree (convenient for large compose yamls)",
+    ),
     _: Optional[bool] = typer.Option(
         None,
         "--version",
@@ -46,7 +52,7 @@ def compose_viz(
     ),
 ) -> None:
     parser = Parser()
-    compose = parser.parse(input_path)
+    compose = parser.parse(input_path, root_service=root_service)
 
     if compose:
         typer.echo(f"Successfully parsed {input_path}")
