@@ -1,5 +1,5 @@
 import re
-from typing import List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import ValidationError
 
@@ -15,7 +15,27 @@ class Parser:
     def __init__(self):
         pass
 
-    def parse(self, file_path: str) -> Compose:
+    @staticmethod
+    def _unwrap_depends_on(data_depends_on: Union[spec.ListOfStrings, Dict[Any, spec.DependsOn], None]) -> List[str]:
+        service_depends_on = []
+        if type(data_depends_on) is spec.ListOfStrings:
+            service_depends_on = data_depends_on.__root__
+        elif type(data_depends_on) is dict:
+            for depends_on in data_depends_on.keys():
+                service_depends_on.append(str(depends_on))
+        return service_depends_on
+
+    @staticmethod
+    def compile_dependencies(service_name: str, compose_data: spec.ComposeSpecification) -> List[str]:
+        assert compose_data.services
+        dependencies = []
+        for dependency in Parser._unwrap_depends_on(compose_data.services[service_name].depends_on):
+            if dependency:
+                dependencies.append(dependency)
+                dependencies.extend(Parser.compile_dependencies(dependency, compose_data))
+        return dependencies
+
+    def parse(self, file_path: str, root_service: Optional[str] = None) -> Compose:
         compose_data: spec.ComposeSpecification
 
         try:
@@ -27,8 +47,15 @@ class Parser:
 
         assert compose_data.services is not None, "No services found, aborting."
 
+        root_dependencies: List[str] = list()
+        if root_service:
+            root_dependencies = Parser.compile_dependencies(root_service, compose_data)
+            root_dependencies.append(root_service)
+
         for service_name, service_data in compose_data.services.items():
             service_name = str(service_name)
+            if root_service and service_name not in root_dependencies:
+                continue
 
             service_image: Optional[str] = None
             if service_data.build is not None:
@@ -132,11 +159,7 @@ class Parser:
 
             service_depends_on: List[str] = []
             if service_data.depends_on is not None:
-                if type(service_data.depends_on) is spec.ListOfStrings:
-                    service_depends_on = service_data.depends_on.__root__
-                elif type(service_data.depends_on) is dict:
-                    for depends_on in service_data.depends_on.keys():
-                        service_depends_on.append(str(depends_on))
+                service_depends_on = Parser._unwrap_depends_on(service_data.depends_on)
 
             service_volumes: List[Volume] = []
             if service_data.volumes is not None:
