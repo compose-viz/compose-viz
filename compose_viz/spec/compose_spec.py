@@ -379,7 +379,7 @@ class Network(YamlModel):
     driver: Optional[str] = None
     driver_opts: Optional[Dict[constr(regex=r"^.+$"), Union[str, float]]] = None  # type: ignore  # noqa: F722
     ipam: Optional[Ipam] = None
-    external: Optional[ExternalNetwork] = None
+    external: Optional[bool | ExternalNetwork] = None
     internal: Optional[bool] = None
     enable_ipv6: Optional[bool] = None
     attachable: Optional[bool] = None
