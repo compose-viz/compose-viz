@@ -26,15 +26,14 @@ class Parser:
         return service_depends_on
 
     @staticmethod
-    def compile_dependencies(service_name: str, compose_data: spec.ComposeSpecification) -> List[str]:
-        assert compose_data.services
-        assert service_name in compose_data.services, f"Service '{service_name}' not found in given compose file."
+    def compile_dependencies(service_name: str, services: Dict[Any, spec.Service], file_path: str) -> List[str]:
+        assert service_name in services, f"Service '{service_name}' not found in given compose file: '{file_path}'"
 
         dependencies = []
-        for dependency in Parser._unwrap_depends_on(compose_data.services[service_name].depends_on):
+        for dependency in Parser._unwrap_depends_on(services[service_name].depends_on):
             if dependency:
                 dependencies.append(dependency)
-                dependencies.extend(Parser.compile_dependencies(dependency, compose_data))
+                dependencies.extend(Parser.compile_dependencies(dependency, services, file_path))
         return dependencies
 
     def parse(self, file_path: str, root_service: Optional[str] = None) -> Compose:
@@ -51,8 +50,9 @@ class Parser:
 
         root_dependencies: List[str] = []
         if root_service:
-            root_dependencies = Parser.compile_dependencies(root_service, compose_data)
+            root_dependencies = Parser.compile_dependencies(root_service, compose_data.services, file_path)
             root_dependencies.append(root_service)
+            root_dependencies = list(set(root_dependencies))
 
         for service_name, service_data in compose_data.services.items():
             service_name = str(service_name)
