@@ -177,7 +177,7 @@ for more information.
 
 - HSING-HAN, WU (Xyphuz)
   - Mail me: xyphuzwu@gmail.com
-  - About me: <https://about.xyphuz.com>
+  - About me: <https://www.xyphuz.com>
   - GitHub: <https://github.com/wst24365888>
 
 ### Project Link
