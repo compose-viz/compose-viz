@@ -28,6 +28,8 @@ class Parser:
     @staticmethod
     def compile_dependencies(service_name: str, compose_data: spec.ComposeSpecification) -> List[str]:
         assert compose_data.services
+        assert service_name in compose_data.services, f"Service '{service_name}' not found in given compose file."
+
         dependencies = []
         for dependency in Parser._unwrap_depends_on(compose_data.services[service_name].depends_on):
             if dependency:
@@ -47,7 +49,7 @@ class Parser:
 
         assert compose_data.services is not None, "No services found, aborting."
 
-        root_dependencies: List[str] = list()
+        root_dependencies: List[str] = []
         if root_service:
             root_dependencies = Parser.compile_dependencies(root_service, compose_data)
             root_dependencies.append(root_service)
