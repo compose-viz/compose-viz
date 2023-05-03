@@ -400,7 +400,7 @@ class Network(YamlModel):
     driver: Optional[str] = None
     driver_opts: Optional[Dict[constr(regex=r"^.+$"), Union[str, float]]] = None  # type: ignore  # noqa: F722
     ipam: Optional[Ipam] = None
-    external: Optional[ExternalNetwork] = None
+    external: Optional[bool | ExternalNetwork] = None
     internal: Optional[bool] = None
     enable_ipv6: Optional[bool] = None
     attachable: Optional[bool] = None
@@ -494,7 +494,7 @@ class Service(YamlModel):
     cap_drop: Optional[List[str]] = Field(None, unique_items=True)
     cgroup: Optional[Cgroup] = None
     cgroup_parent: Optional[str] = None
-    command: Optional[ExternalVolume] = None
+    command: Optional[Union[str, List[str]]] = None
     configs: Optional[ServiceConfigOrSecret] = None
     container_name: Optional[str] = None
     cpu_count: Optional[conint(ge=0)] = None  # type: ignore
@@ -516,7 +516,7 @@ class Service(YamlModel):
     dns_opt: Optional[List[str]] = Field(None, unique_items=True)
     dns_search: Optional[StringOrList] = None
     domainname: Optional[str] = None
-    entrypoint: Optional[ExternalVolume] = None
+    entrypoint: Optional[Union[str, List[str]]] = None
     env_file: Optional[StringOrList] = None
     environment: Optional[ListOrDict] = None
     expose: Optional[List[Union[str, float]]] = Field(None, unique_items=True)
