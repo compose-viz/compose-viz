@@ -51,7 +51,7 @@ class Logging(YamlModel):
         extra = Extra.allow
 
     driver: Optional[str] = None
-    options: Optional[Dict[constr(regex=r"^.+$"), Optional[Union[str, float]]]] = None
+    options: Optional[Dict[constr(regex=r"^.+$"), Optional[Union[str, float]]]] = None  # type: ignore  # noqa: F722
 
 
 class Port(YamlModel):
@@ -106,7 +106,7 @@ class Tmpfs(YamlModel):
     class Config:
         extra = Extra.allow
 
-    size: Optional[Union[conint(ge=0), str]] = None
+    size: Optional[Union[conint(ge=0), str]] = None  # type: ignore
     mode: Optional[float] = None
 
 
@@ -152,9 +152,11 @@ class RollbackConfig(YamlModel):
     max_failure_ratio: Optional[float] = None
     order: Optional[Order] = None
 
+
 class ConfigOrder(YamlStrEnum):
     start_first = "start-first"
     stop_first = "stop-first"
+
 
 class UpdateConfig(YamlModel):
     class Config:
@@ -232,7 +234,7 @@ class ConfigItem(YamlModel):
     subnet: Optional[str] = None
     ip_range: Optional[str] = None
     gateway: Optional[str] = None
-    aux_addresses: Optional[Dict[constr(regex=r"^.+$"), str]] = None
+    aux_addresses: Optional[Dict[constr(regex=r"^.+$"), str]] = None  # type: ignore  # noqa: F722
 
 
 class Ipam(YamlModel):
@@ -241,7 +243,7 @@ class Ipam(YamlModel):
 
     driver: Optional[str] = None
     config: Optional[List[ConfigItem]] = None
-    options: Optional[Dict[constr(regex=r"^.+$"), str]] = None
+    options: Optional[Dict[constr(regex=r"^.+$"), str]] = None  # type: ignore  # noqa: F722
 
 
 class ExternalNetwork(YamlModel):
@@ -254,7 +256,9 @@ class ExternalNetwork(YamlModel):
 class ExternalVolume(YamlModel):
     class Config:
         extra = Extra.allow
+
     name: Optional[str] = None
+
 
 class ExternalSecret(YamlModel):
     name: Optional[str] = None
@@ -262,6 +266,7 @@ class ExternalSecret(YamlModel):
 
 class ExternalConfig(YamlModel):
     name: Optional[str] = None
+
 
 class ListOfStrings(YamlModel):
     class Config:
@@ -275,7 +280,7 @@ class ListOrDict(YamlModel):
         extra = Extra.allow
 
     __root__: Union[
-        Dict[constr(regex=r".+"), Optional[Union[str, float, bool]]], List[str]
+        Dict[constr(regex=r".+"), Optional[Union[str, float, bool]]], List[str]  # type: ignore  # noqa: F722
     ]
 
 
@@ -393,7 +398,7 @@ class Network(YamlModel):
 
     name: Optional[str] = None
     driver: Optional[str] = None
-    driver_opts: Optional[Dict[constr(regex=r"^.+$"), Union[str, float]]] = None
+    driver_opts: Optional[Dict[constr(regex=r"^.+$"), Union[str, float]]] = None  # type: ignore  # noqa: F722
     ipam: Optional[Ipam] = None
     external: Optional[ExternalNetwork] = None
     internal: Optional[bool] = None
@@ -408,7 +413,7 @@ class Volume(YamlModel):
 
     name: Optional[str] = None
     driver: Optional[str] = None
-    driver_opts: Optional[Dict[constr(regex=r"^.+$"), Union[str, float]]] = None
+    driver_opts: Optional[Dict[constr(regex=r"^.+$"), Union[str, float]]] = None  # type: ignore  # noqa: F722
     external: Optional[ExternalVolume] = None
     labels: Optional[ListOrDict] = None
 
@@ -423,7 +428,7 @@ class Secret(YamlModel):
     external: Optional[ExternalSecret] = None
     labels: Optional[ListOrDict] = None
     driver: Optional[str] = None
-    driver_opts: Optional[Dict[constr(regex=r"^.+$"), Union[str, float]]] = None
+    driver_opts: Optional[Dict[constr(regex=r"^.+$"), Union[str, float]]] = None  # type: ignore  # noqa: F722
     template_driver: Optional[str] = None
 
 
@@ -492,8 +497,8 @@ class Service(YamlModel):
     command: Optional[ExternalVolume] = None
     configs: Optional[ServiceConfigOrSecret] = None
     container_name: Optional[str] = None
-    cpu_count: Optional[conint(ge=0)] = None
-    cpu_percent: Optional[conint(ge=0, le=100)] = None
+    cpu_count: Optional[conint(ge=0)] = None  # type: ignore
+    cpu_percent: Optional[conint(ge=0, le=100)] = None  # type: ignore
     cpu_shares: Optional[Union[float, str]] = None
     cpu_quota: Optional[Union[float, str]] = None
     cpu_period: Optional[Union[float, str]] = None
@@ -503,7 +508,7 @@ class Service(YamlModel):
     cpuset: Optional[str] = None
     credential_spec: Optional[CredentialSpec] = None
     depends_on: Optional[
-        Union[ListOfStrings, Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), DependsOn]]
+        Union[ListOfStrings, Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), DependsOn]]  # type: ignore  # noqa: F722, E501
     ] = None
     device_cgroup_rules: Optional[ListOfStrings] = None
     devices: Optional[List[str]] = Field(None, unique_items=True)
@@ -536,11 +541,11 @@ class Service(YamlModel):
     network_mode: Optional[str] = None
     networks: Optional[
         Union[
-            ListOfStrings, Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Optional[ServiceNetwork]]
+            ListOfStrings, Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Optional[ServiceNetwork]]  # type: ignore  # noqa: F722, E501
         ]
     ] = None
     oom_kill_disable: Optional[bool] = None
-    oom_score_adj: Optional[conint(ge=-1000, le=1000)] = None
+    oom_score_adj: Optional[conint(ge=-1000, le=1000)] = None  # type: ignore
     pid: Optional[str] = None
     pids_limit: Optional[Union[float, str]] = None
     platform: Optional[str] = None
@@ -562,11 +567,11 @@ class Service(YamlModel):
     storage_opt: Optional[Dict[str, Any]] = None
     tmpfs: Optional[StringOrList] = None
     tty: Optional[bool] = None
-    ulimits: Optional[Dict[constr(regex=r"^[a-z]+$"), Union[int, Ulimit]]] = None
+    ulimits: Optional[Dict[constr(regex=r"^[a-z]+$"), Union[int, Ulimit]]] = None  # type: ignore  # noqa: F722
     user: Optional[str] = None
     uts: Optional[str] = None
     userns_mode: Optional[str] = None
-    volumes: Optional[List[Union[str, AdditionalVolumeOption]]] = Field(None, unique_items=True)
+    volumes: Optional[List[Union[str, ServiceVolume]]] = Field(None, unique_items=True)
     volumes_from: Optional[List[str]] = Field(None, unique_items=True)
     working_dir: Optional[str] = None
 
@@ -575,17 +580,13 @@ class ComposeSpecification(YamlModel):
     class Config:
         extra = Extra.allow
 
-    version: Optional[str] = Field(
-        None, description="declared for backward compatibility, ignored."
-    )
-    name: Optional[constr(regex=r"^[a-z0-9][a-z0-9_-]*$")] = Field(
+    version: Optional[str] = Field(None, description="declared for backward compatibility, ignored.")
+    name: Optional[constr(regex=r"^[a-z0-9][a-z0-9_-]*$")] = Field(  # type: ignore  # noqa: F722
         None,
         description="define the Compose project name, until user defines one explicitly.",
     )
-    services: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Service]] = None
-    networks: Optional[
-        Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Optional[Network]]
-    ] = None
-    volumes: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Optional[Volume]]] = None
-    secrets: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Secret]] = None
-    configs: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Config]] = None
+    services: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Service]] = None  # type: ignore  # noqa: F722
+    networks: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Optional[Network]]] = None  # type: ignore  # noqa: F722
+    volumes: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Optional[Volume]]] = None  # type: ignore  # noqa: F722
+    secrets: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Secret]] = None  # type: ignore  # noqa: F722
+    configs: Optional[Dict[constr(regex=r"^[a-zA-Z0-9._-]+$"), Config]] = None  # type: ignore  # noqa: F722
