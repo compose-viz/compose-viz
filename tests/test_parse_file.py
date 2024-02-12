@@ -177,6 +177,10 @@ from compose_viz.parser import Parser
                                 container_port="7777",
                             ),
                             Port(
+                                host_port="${BIND_IP:-127.0.0.1}:8080",
+                                container_port="8080",
+                            ),
+                            Port(
                                 host_port="127.0.0.1:8080",
                                 container_port="80",
                                 protocol=Protocol.tcp,
