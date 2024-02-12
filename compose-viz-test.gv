@@ -1,0 +1,16 @@
+digraph {
+	graph [background="#ffffff" pad=0.5 ratio=fill]
+	redis [label="redis
+(redis:alpine)" shape=component]
+	frontend [label="net:frontend" shape=pentagon]
+	redis -> frontend [style=solid]
+	"0.0.0.06379" [label="0.0.0.0:6379" shape=circle]
+	"0.0.0.06379" -> redis [label=6379 style=solid]
+	vote [label="vote
+(dockersamples/examplevotingapp_vote:before)" shape=component]
+	frontend [label="net:frontend" shape=pentagon]
+	vote -> frontend [style=solid]
+	"0.0.0.05000" [label="0.0.0.0:5000" shape=circle]
+	"0.0.0.05000" -> vote [label=80 style=solid]
+	vote -> redis [style=dotted]
+}
