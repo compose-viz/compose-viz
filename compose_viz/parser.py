@@ -7,7 +7,7 @@ import compose_viz.spec.compose_spec as spec
 from compose_viz.models.compose import Compose, Service
 from compose_viz.models.device import Device
 from compose_viz.models.extends import Extends
-from compose_viz.models.port import Port, Protocol
+from compose_viz.models.port import Port, Protocol, AppProtocol
 from compose_viz.models.volume import Volume, VolumeType
 
 
@@ -99,12 +99,14 @@ class Parser:
                     host_port: Optional[str] = None
                     container_port: Optional[str] = None
                     protocol: Optional[str] = None
+                    app_protocol: Optional[str] = None
 
                     if type(port_data) is float:
                         container_port = str(int(port_data))
                         host_port = f"0.0.0.0:{container_port}"
                     elif type(port_data) is str:
-                        regex = r"((?P<host_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:)|:)?((?P<host_port>\d+(\-\d+)?):)?((?P<container_port>\d+(\-\d+)?))?(/(?P<protocol>\w+))?"  # noqa: E501
+                        # regex = r"((?P<host_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:)|:)?((?P<host_port>\d+(\-\d+)?):)?((?P<container_port>\d+(\-\d+)?))?(/(?P<protocol>\w+))?"  # noqa: E501
+                        regex = r"((?P<host_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:)|:)?((?P<host_port>\d+(\-\d+)?):)?((?P<container_port>\d+(\-\d+)?))?(/(?P<protocol>\w+))?(/(?P<app_protocol>\w+))?"  # noqa: E501
                         match = re.match(regex, port_data)
 
                         if match:
@@ -112,6 +114,7 @@ class Parser:
                             host_port = match.group("host_port")
                             container_port = match.group("container_port")
                             protocol = match.group("protocol")
+                            app_protocol = match.group("app_protocol")
 
                             assert container_port, "Invalid port format, aborting."
 
@@ -136,6 +139,7 @@ class Parser:
 
                         host_ip = port_data.host_ip
                         protocol = port_data.protocol
+                        app_protocol = port_data.app_protocol
 
                         if container_port is not None and host_port is None:
                             host_port = container_port
@@ -151,11 +155,15 @@ class Parser:
                     if protocol is None:
                         protocol = "any"
 
+                    if app_protocol is None:
+                        app_protocol = "na"
+
                     service_ports.append(
                         Port(
                             host_port=host_port,
                             container_port=container_port,
                             protocol=Protocol[protocol],
+                            app_protocol=AppProtocol[app_protocol],
                         )
                     )
 

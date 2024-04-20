@@ -63,6 +63,7 @@ class Port(YamlModel):
     target: Optional[int] = None
     published: Optional[Union[str, int]] = None
     protocol: Optional[str] = None
+    app_protocol: Optional[str] = None # [akaluza] manually added to support OSI-Layer 7
 
 
 class PullPolicy(YamlStrEnum):

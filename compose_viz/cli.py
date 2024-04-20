@@ -50,6 +50,12 @@ def compose_viz(
         callback=_version_callback,
         is_eager=True,
     ),
+    has_legend: bool = typer.Option(
+        bool(False),
+        "--legend",
+        "-l",
+        help="Include a legend in the visualization.",
+    ),
 ) -> None:
     parser = Parser()
     compose = parser.parse(input_path, root_service=root_service)
@@ -57,7 +63,7 @@ def compose_viz(
     if compose:
         typer.echo(f"Successfully parsed {input_path}")
 
-    Graph(compose, output_filename).render(format)
+    Graph(compose, output_filename, has_legend=has_legend).render(format)
 
     raise typer.Exit()
 

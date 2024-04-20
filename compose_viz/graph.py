@@ -3,6 +3,7 @@ from typing import Optional
 import graphviz
 
 from compose_viz.models.compose import Compose
+from compose_viz.models.port import AppProtocol
 
 
 def apply_vertex_style(type: str) -> dict:
@@ -69,11 +70,12 @@ def apply_edge_style(type: str) -> dict:
 
 
 class Graph:
-    def __init__(self, compose: Compose, filename: str) -> None:
+    def __init__(self, compose: Compose, filename: str, has_legend: bool) -> None:
         self.dot = graphviz.Digraph()
         self.dot.attr("graph", background="#ffffff", pad="0.5", ratio="fill")
         self.compose = compose
         self.filename = filename
+        self.has_legend = has_legend
 
     def validate_name(self, name: str) -> str:
         # graphviz does not allow ':' in node name
@@ -117,7 +119,12 @@ class Graph:
                 self.add_edge(expose, service.name, "exposes")
             for port in service.ports:
                 self.add_vertex(port.host_port, "port", lable=port.host_port)
-                self.add_edge(port.host_port, service.name, "links", lable=port.container_port)
+                if port.app_protocol.value != AppProtocol.na.value:
+                    self.add_edge(port.host_port, service.name, "links",
+                                  lable=port.container_port + " / " + port.protocol + " / " + port.app_protocol)
+                else:
+                    self.add_edge(port.host_port, service.name, "links",
+                                  lable=port.container_port + " / " + port.protocol)
             for env_file in service.env_file:
                 self.add_vertex(env_file, "env_file")
                 self.add_edge(env_file, service.name, "env_file")
@@ -137,5 +144,43 @@ class Graph:
                 self.add_edge(
                     device.host_path, service.name, "exposes", f"{device.container_path}\n({device.cgroup_permissions})"
                 )
+
+        # add a legend
+        if self.has_legend:
+            with self.dot.subgraph(name='cluster_key', ) as legend:
+                legend.attr(label='Legend')
+                legend.attr(rank='min')
+
+                legend.node('service',  shape='component',  label='Service\n(image)')
+                legend.node('volume',   shape='cylinder',   label='Volume')
+                legend.node('network',  shape='pentagon',  label='Network')
+                legend.node('port',     shape='circle',     label='Port')
+                legend.node('env_file', shape='tab',        label='Env File')
+                legend.node('profile',  shape='invhouse',   label='Profile')
+                legend.node('cgroup',   shape='diamond',    label='CGroupe')
+                legend.node('device',   shape='box3d',      label='Device')
+                legend.node('invis_0', style='invis')
+                legend.node('invis_1', style='invis')
+                legend.node('invis_2', style='invis')
+                legend.node('invis_3', style='invis')
+                legend.node('invis_4', style='invis')
+                legend.node('invis_5', style='invis')
+                legend.node('invis_6', style='invis')
+                legend.node('invis_7', style='invis')
+
+                legend.edge('service', 'volume', style='invis', label='DASHED')
+                legend.edge('volume', 'network', style='invis', label='DASHED')
+                legend.edge('network', 'port', style='invis', label='DOTTED')
+                legend.edge('port', 'env_file', style='invis', label='SOLID')
+                legend.edge('env_file', 'profile', style='invis')
+                legend.edge('profile', 'cgroup', style='invis')
+                legend.edge('cgroup', 'device', style='invis')
+                legend.edge('invis_0', 'invis_1', label='exposes', style='solid', dir='both')
+                legend.edge('invis_1', 'invis_2', label='links', style='solid')
+                legend.edge('invis_2', 'invis_3', label='volumes_rw', style='dashed', dir='both')
+                legend.edge('invis_3', 'invis_4', label='volumes_ro', style='dashed')
+                legend.edge('invis_4', 'invis_5', label='depends_on', style='dotted')
+                legend.edge('invis_5', 'invis_6', label='extends', dir='both', arrowhead='inv', arrowtail='dot')
+                legend.edge('invis_6', 'invis_7', label='env_file', style='solid')
 
         self.dot.render(outfile=f"{self.filename}.{format}", format=format, cleanup=cleanup)
