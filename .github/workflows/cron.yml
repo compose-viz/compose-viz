@@ -1,19 +1,24 @@
-name: CRON
+name: Submodule Updates
 
 on:
   schedule:
     - cron: '0 0 * * *'
 
 jobs:
-  update:
+  update_submodules:
+    name: Submodule update
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: update compose-spec submodule
-        run: |
-          git submodule update --init --recursive
-          git submodule update --remote --recursive
-      - name: Commit changes
-        run: |
-          git commit -am "chore: update submodules" || echo "No changes to commit."
-          git push
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Update Submodules
+        uses: releasehub-com/github-action-create-pr-parent-submodule@v1
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          parent_repository: ${{ github.repository_owner }}/compose-viz
+          checkout_branch: main
+          pr_against_branch: main
+          owner: ${{ github.repository_owner }}
+          label: "automerge"
