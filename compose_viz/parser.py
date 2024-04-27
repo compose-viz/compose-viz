@@ -1,7 +1,6 @@
 import re
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import ValidationError
 from pydantic_yaml import parse_yaml_raw_as
 
 import compose_viz.spec.compose_spec as spec
@@ -44,7 +43,7 @@ class Parser:
             with open(file_path, "r") as file:
                 file_content = file.read()
             compose_data = parse_yaml_raw_as(spec.ComposeSpecification, file_content)
-        except ValidationError as e:
+        except Exception as e:
             raise RuntimeError(f"Error parsing file '{file_path}': {e}")
 
         services: List[Service] = []
@@ -128,11 +127,8 @@ class Parser:
                     elif type(port_data) is spec.Ports:
                         assert port_data.target is not None, "Invalid port format, aborting."
 
-                        # ruamel.yaml does not parse port as int
-                        assert type(port_data.published) is not int
-
-                        if type(port_data.published) is str:
-                            host_port = port_data.published
+                        if type(port_data.published) is str or type(port_data.published) is int:
+                            host_port = str(port_data.published)
 
                         if type(port_data.target) is int:
                             container_port = str(port_data.target)
@@ -215,11 +211,16 @@ class Parser:
 
             env_file: List[str] = []
             if service_data.env_file is not None:
-                if type(service_data.env_file) is spec.StringOrList:
-                    if type(service_data.env_file.root) is spec.ListOfStrings:
-                        env_file = service_data.env_file.root.root
-                    elif type(service_data.env_file.root) is str:
-                        env_file.append(service_data.env_file.root)
+                if type(service_data.env_file.root) is str:
+                    env_file = [service_data.env_file.root]
+                elif type(service_data.env_file.root) is list:
+                    for env_file_data in service_data.env_file.root:
+                        if type(env_file_data) is str:
+                            env_file.append(env_file_data)
+                        elif type(env_file_data) is spec.EnvFilePath:
+                            env_file.append(env_file_data.path)
+                else:
+                    print(f"Invalid env_file data: {service_data.env_file.root}")
 
             expose: List[str] = []
             if service_data.expose is not None:
