@@ -8,7 +8,7 @@ def revise_naming_convention():
     }
 
     spec_file = open("./compose-viz/compose_viz/compose_viz/spec/compose_spec.py", "r")
-    print(os.system("pwd"))
+    
     for origin_name, new_name in name_mapping.items():
         spec_file.replace(origin_name, new_name)
 
@@ -16,7 +16,7 @@ def revise_naming_convention():
 
 
 if __name__ == "__main__":
-    
+    print(os.system("pwd"))
     revise_naming_convention()
     print("Revised naming convention successfully!")
     
