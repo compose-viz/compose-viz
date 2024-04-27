@@ -2,6 +2,7 @@ import re
 from typing import Any, Dict, List, Optional, Union
 
 from pydantic import ValidationError
+from pydantic_yaml import parse_yaml_raw_as
 
 import compose_viz.spec.compose_spec as spec
 from compose_viz.models.compose import Compose, Service
@@ -19,7 +20,7 @@ class Parser:
     def _unwrap_depends_on(data_depends_on: Union[spec.ListOfStrings, Dict[Any, spec.DependsOn], None]) -> List[str]:
         service_depends_on = []
         if type(data_depends_on) is spec.ListOfStrings:
-            service_depends_on = data_depends_on.__root__
+            service_depends_on = data_depends_on.root
         elif type(data_depends_on) is dict:
             for depends_on in data_depends_on.keys():
                 service_depends_on.append(str(depends_on))
@@ -40,7 +41,9 @@ class Parser:
         compose_data: spec.ComposeSpecification
 
         try:
-            compose_data = spec.ComposeSpecification.parse_file(file_path)
+            with open(file_path, "r") as file:
+                file_content = file.read()
+            compose_data = parse_yaml_raw_as(spec.ComposeSpecification, file_content)
         except ValidationError as e:
             raise RuntimeError(f"Error parsing file '{file_path}': {e}")
 
@@ -63,7 +66,7 @@ class Parser:
             if service_data.build is not None:
                 if type(service_data.build) is str:
                     service_image = f"build from '{service_data.build}'"
-                elif type(service_data.build) is spec.BuildItem:
+                elif type(service_data.build) is spec.Build:
                     if service_data.build.context is not None and service_data.build.dockerfile is not None:
                         service_image = (
                             f"build from '{service_data.build.context}' using '{service_data.build.dockerfile}'"
@@ -79,7 +82,7 @@ class Parser:
             service_networks: List[str] = []
             if service_data.networks is not None:
                 if type(service_data.networks) is spec.ListOfStrings:
-                    service_networks = service_data.networks.__root__
+                    service_networks = service_data.networks.root
                 elif type(service_data.networks) is dict:
                     service_networks = list(service_data.networks.keys())
 
@@ -87,7 +90,7 @@ class Parser:
             if service_data.extends is not None:
                 # https://github.com/compose-spec/compose-spec/blob/master/spec.md#extends
                 # The value of the extends key MUST be a dictionary.
-                assert type(service_data.extends) is spec.Extend
+                assert type(service_data.extends) is spec.Extends
                 service_extends = Extends(
                     service_name=service_data.extends.service, from_file=service_data.extends.file
                 )
@@ -122,7 +125,7 @@ class Parser:
                                 host_port = f"{host_ip}{host_port}"
                             else:
                                 host_port = f"0.0.0.0:{host_port}"
-                    elif type(port_data) is spec.Port:
+                    elif type(port_data) is spec.Ports:
                         assert port_data.target is not None, "Invalid port format, aborting."
 
                         # ruamel.yaml does not parse port as int
@@ -180,7 +183,7 @@ class Parser:
                                     access_mode=spilt_data[2],
                                 )
                             )
-                    elif type(volume_data) is spec.ServiceVolume:
+                    elif type(volume_data) is spec.Volumes:
                         assert volume_data.target is not None, "Invalid volume input, aborting."
 
                         # https://github.com/compose-spec/compose-spec/blob/master/spec.md#long-syntax-4
@@ -213,10 +216,10 @@ class Parser:
             env_file: List[str] = []
             if service_data.env_file is not None:
                 if type(service_data.env_file) is spec.StringOrList:
-                    if type(service_data.env_file.__root__) is spec.ListOfStrings:
-                        env_file = service_data.env_file.__root__.__root__
-                    elif type(service_data.env_file.__root__) is str:
-                        env_file.append(service_data.env_file.__root__)
+                    if type(service_data.env_file.root) is spec.ListOfStrings:
+                        env_file = service_data.env_file.root.root
+                    elif type(service_data.env_file.root) is str:
+                        env_file.append(service_data.env_file.root)
 
             expose: List[str] = []
             if service_data.expose is not None:
@@ -226,7 +229,7 @@ class Parser:
             profiles: List[str] = []
             if service_data.profiles is not None:
                 if type(service_data.profiles) is spec.ListOfStrings:
-                    profiles = service_data.profiles.__root__
+                    profiles = service_data.profiles.root
 
             devices: List[Device] = []
             if service_data.devices is not None:
