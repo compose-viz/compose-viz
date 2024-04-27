@@ -1,0 +1,52 @@
+name: Update Submodules
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  update_submodules:
+    name: Update Submodules
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Python 3.10.4
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10.4'
+
+      - name: Changing naming convention
+        run: |
+          python3 naming.py
+
+      - name: Create new branch and push changes
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git submodule update --remote
+
+      - name: Changing naming convention
+        run: |
+          python3 naming.py
+          git checkout -b $GITHUB_RUN_ID
+
+      - name: Push changes
+        run: |
+          git commit -am "chore: update submodules"
+          git push --set-upstream origin $GITHUB_RUN_ID
+
+      - name: File PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.pulls.create({
+              owner: '${{ github.repository_owner }}',
+              repo: 'compose-viz',
+              head: process.env.GITHUB_RUN_ID,
+              base: 'main',
+              title: `chore: update submodules (${process.env.GITHUB_RUN_ID})`,
+              body: `chore: update submodules (${process.env.GITHUB_RUN_ID})`,
+            });
