@@ -25,6 +25,10 @@ jobs:
         with:
           python-version: '3.10.4'
 
+      - name: Changing naming convention
+        run: |
+          python3 naming.py
+
       - name: Setup Poetry
         uses: abatilo/actions-poetry@v3
         with:
