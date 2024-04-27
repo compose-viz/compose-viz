@@ -3,6 +3,7 @@ from typing import Optional
 import graphviz
 
 from compose_viz.models.compose import Compose
+from compose_viz.models.port import AppProtocol, Protocol
 
 
 def apply_vertex_style(type: str) -> dict:
@@ -69,11 +70,57 @@ def apply_edge_style(type: str) -> dict:
 
 
 class Graph:
-    def __init__(self, compose: Compose, filename: str) -> None:
+    def __init__(self, compose: Compose, filename: str, include_legend: bool) -> None:
         self.dot = graphviz.Digraph()
         self.dot.attr("graph", background="#ffffff", pad="0.5", ratio="fill")
         self.compose = compose
         self.filename = filename
+
+        if include_legend:
+            self.dot.attr(rankdir="LR")
+
+            with self.dot.subgraph(name="cluster_edge_") as edge:
+                edge.attr(label="Edge")
+                edge.node("line_0_l", style="invis")
+                edge.node("line_0_r", style="invis")
+                edge.edge("line_0_l", "line_0_r", label="exposes", **apply_edge_style("exposes"))
+
+                edge.node("line_1_l", style="invis")
+                edge.node("line_1_r", style="invis")
+                edge.edge("line_1_l", "line_1_r", label="links", **apply_edge_style("links"))
+
+                edge.node("line_2_l", style="invis")
+                edge.node("line_2_r", style="invis")
+                edge.edge("line_2_l", "line_2_r", label="volumes_rw", **apply_edge_style("volumes_rw"))
+
+                edge.node("line_3_l", style="invis")
+                edge.node("line_3_r", style="invis")
+                edge.edge("line_3_l", "line_3_r", label="volumes_ro", **apply_edge_style("volumes_ro"))
+
+                edge.node("line_4_l", style="invis")
+                edge.node("line_4_r", style="invis")
+                edge.edge("line_4_l", "line_4_r", label="depends_on", **apply_edge_style("depends_on"))
+
+                edge.node("line_5_l", style="invis")
+                edge.node("line_5_r", style="invis")
+                edge.edge("line_5_l", "line_5_r", label="extends", **apply_edge_style("extends"))
+
+            with self.dot.subgraph(name="cluster_node_") as node:
+                node.attr(label="Node")
+                node.node("service", shape="component", label="Service\n(image)")
+                node.node("volume", shape="cylinder", label="Volume")
+                node.node("network", shape="pentagon", label="Network")
+                node.node("port", shape="circle", label="Port")
+                node.node("env_file", shape="tab", label="Env File")
+                node.node("profile", shape="invhouse", label="Profile")
+                node.node("cgroup", shape="diamond", label="CGroupe")
+                node.node("device", shape="box3d", label="Device")
+
+                node.body.append("{ rank=source;service network env_file cgroup }")
+
+            self.dot.node("inv", style="invis")
+            self.dot.edge("inv", "network", style="invis")
+            self.dot.edge("port", "line_2_l", style="invis")
 
     def validate_name(self, name: str) -> str:
         # graphviz does not allow ':' in node name
@@ -117,7 +164,14 @@ class Graph:
                 self.add_edge(expose, service.name, "exposes")
             for port in service.ports:
                 self.add_vertex(port.host_port, "port", lable=port.host_port)
-                self.add_edge(port.host_port, service.name, "links", lable=port.container_port)
+                self.add_edge(
+                    port.host_port,
+                    service.name,
+                    "links",
+                    lable=port.container_port
+                    + (("/" + port.protocol) if port.protocol != Protocol.any.value else "")
+                    + (("\n(" + port.app_protocol + ")") if port.app_protocol != AppProtocol.na.value else ""),
+                )
             for env_file in service.env_file:
                 self.add_vertex(env_file, "env_file")
                 self.add_edge(env_file, service.name, "env_file")

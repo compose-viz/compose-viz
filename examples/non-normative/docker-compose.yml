@@ -42,7 +42,13 @@ services:
     extends:
       service: frontend
     ports:
-      - "8000:5010"
+      - name: web-secured
+        target: 443
+        host_ip: 127.0.0.1
+        published: "8083-9000"
+        protocol: tcp
+        app_protocol: wbsock
+        mode : host
     links:
       - "db:database"
     cgroup_parent: awesome-parent
