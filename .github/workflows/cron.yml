@@ -1,12 +1,6 @@
 name: CRON
 
 on:
-  push:
-    branches: [ main, dev ]
-  pull_request:
-    branches: [ main, dev ]
-
-on:
   schedule:
     - cron: '0 0 * * *'
 
