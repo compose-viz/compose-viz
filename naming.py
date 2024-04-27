@@ -1,3 +1,4 @@
+import os
 def revise_naming_convention():
     name_mapping ={
         "EnvFile1" : "EnvFilePath",
@@ -6,8 +7,8 @@ def revise_naming_convention():
         "External1" : "ExternalConfig",
     }
 
-    spec_file = open("./compose_viz/spec/compose_spec.py", "r")
-
+    spec_file = open("./compose-viz/compose_viz/compose_viz/spec/compose_spec.py", "r")
+    print(os.system("pwd"))
     for origin_name, new_name in name_mapping.items():
         spec_file.replace(origin_name, new_name)
 
