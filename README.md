@@ -122,6 +122,7 @@ Check out the result [here](https://github.com/compose-viz/compose-viz/blob/main
 | `-o, --output-filename FILENAME`  | Output filename for the generated visualization file. [default: compose-viz]                                                                                                        |
 | `-m, --format FORMAT`             | Output format for the generated visualization file. See [supported formats](https://github.com/compose-viz/compose-viz/blob/main/compose_viz/models/viz_formats.py). [default: png] |
 | `-r, --root-service SERVICE_NAME` | Root of the service tree (convenient for large compose yamls)                                                                                                                       |
+| `-l, --legend`                    | Include a legend in the visualization.                                                                                                                                              |
 | `-v, --version`                   | Show the version of compose-viz.                                                                                                                                                    |
 | `--help`                          | Show help and exit.                                                                                                                                                                 |
 

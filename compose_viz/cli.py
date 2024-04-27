@@ -42,6 +42,12 @@ def compose_viz(
         "-r",
         help="Root of the service tree (convenient for large compose yamls)",
     ),
+    include_legend: bool = typer.Option(
+        False,
+        "--legend",
+        "-l",
+        help="Include a legend in the visualization.",
+    ),
     _: Optional[bool] = typer.Option(
         None,
         "--version",
@@ -57,7 +63,7 @@ def compose_viz(
     if compose:
         typer.echo(f"Successfully parsed {input_path}")
 
-    Graph(compose, output_filename).render(format)
+    Graph(compose, output_filename, include_legend).render(format)
 
     raise typer.Exit()
 
