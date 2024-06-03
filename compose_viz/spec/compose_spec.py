@@ -417,7 +417,7 @@ class Network(BaseModel):
     driver: Optional[str] = None
     driver_opts: Optional[Dict[str, Union[str, float]]] = None
     ipam: Optional[Ipam] = None
-    external: Optional[ExternalVolumeNetwork] = None
+    external: Optional[bool] = None
     internal: Optional[bool] = None
     enable_ipv6: Optional[bool] = None
     attachable: Optional[bool] = None
