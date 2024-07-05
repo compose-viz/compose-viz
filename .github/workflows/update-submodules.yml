@@ -18,12 +18,16 @@ jobs:
 
       - name: Create new branch and push changes
         run: |
-          git submodule update --remote
+          git submodule update --recursive --remote
 
       - name: Check for changes
         id: check
         run: |
-          git diff --quiet || echo "::set-output name=has_changes::true"
+          if [ -n "$(git diff --submodule)" ]; then
+            echo "has_changes=true" >> $GITHUB_ENV
+          else
+            echo "has_changes=false" >> $GITHUB_ENV
+          fi
 
   update_submodules:
     name: Update Submodules
