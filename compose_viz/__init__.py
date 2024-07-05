@@ -1,2 +1,2 @@
 __app_name__ = "compose_viz"
-__version__ = "0.3.2"
+__version__ = "0.3.3"
