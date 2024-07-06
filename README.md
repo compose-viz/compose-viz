@@ -156,7 +156,8 @@ create a pull request. You can also simply open an issue with the tag
 3. Commit your Changes with
    [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 4. Push to the Branch (`git push origin feat/amazing-feature`)
-5. Open a Pull Request
+5. Open a Pull Request, **please select the `dev` branch as the target
+   branch**.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
