@@ -63,7 +63,7 @@ jobs:
 
       - name: Update Submodule
         run: |
-          datamodel-codegen --input ./compose-spec/schema/compose-spec.json --output-model-type pydantic_v2.BaseModel --field-constraints --output ./compose_viz/spec/compose_spec.py
+          poetry run datamodel-codegen --input ./compose-spec/schema/compose-spec.json --output-model-type pydantic_v2.BaseModel --field-constraints --output ./compose_viz/spec/compose_spec.py
           poetry run python ./update-submodules.py
 
       - name: Execute pre-commit
