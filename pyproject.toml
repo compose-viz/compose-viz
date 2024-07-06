@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "compose-viz"
-version = "0.3.3"
+version = "0.3.4"
 description = "A compose file visualization tool that supports compose-spec and allows you to gernerate graph in several formats."
 authors = ["Xyphuz Wu <xyphuzwu@gmail.com>"]
 readme = "README.md"
@@ -33,4 +33,6 @@ cpv = "compose_viz.cli:start_cli"
 
 [tool.coverage.run]
 source = ["compose_viz"]
+omit = ["compose_viz/spec/*"]
+z"]
 omit = ["compose_viz/spec/*"]
