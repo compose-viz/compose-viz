@@ -1,10 +1,9 @@
 name: Update Submodules
-
 on:
   push:
     branches: [ dev ]
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *'  # Corrected cron syntax
 
 jobs:
   check_submodules:
@@ -15,18 +14,21 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
+          submodules: 'recursive'  # Check out submodules recursively
 
-      - name: Create new branch and push changes
+      - name: Update Submodules
         run: |
           git submodule update --recursive --remote
 
       - name: Check for changes
         id: check
         run: |
-          if [ -n "$(git diff --submodule)" ]; then
-            echo "has_changes=true" >> $GITHUB_ENV
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
           else
-            echo "has_changes=false" >> $GITHUB_ENV
+            echo "has_changes=false" >> $GITHUB_OUTPUT
           fi
 
   update_submodules:
@@ -35,6 +37,15 @@ jobs:
     needs: [check_submodules]
     if: needs.check_submodules.outputs.has_changes == 'true'
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: Update Submodules
+        run: |
+          git submodule update --recursive --remote
 
       - name: Setup Python 3.10.4
         uses: actions/setup-python@v3
@@ -64,9 +75,10 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git checkout -b $GITHUB_RUN_ID
-          git commit -am "chore: update submodules"
-          git push --set-upstream origin $GITHUB_RUN_ID
+          git checkout -b update-submodules-${{ github.run_id }}
+          git add .
+          git commit -m "chore: update submodules"
+          git push --set-upstream origin update-submodules-${{ github.run_id }}
 
       - name: File PR
         uses: actions/github-script@v7
@@ -74,10 +86,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             await github.rest.pulls.create({
-              owner: '${{ github.repository_owner }}',
-              repo: 'compose-viz',
-              head: process.env.GITHUB_RUN_ID,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: 'update-submodules-${{ github.run_id }}',
               base: 'main',
-              title: `chore: update submodules (${process.env.GITHUB_RUN_ID})`,
+              title: `chore: update submodules (${{ github.run_id }})`,
               body: `Please add the version tag to trigger the release.`,
             });
