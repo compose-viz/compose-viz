@@ -89,7 +89,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               head: 'update-submodules-${{ github.run_id }}',
-              base: 'main',
+              base: 'dev',
               title: `chore: update submodules (${{ github.run_id }})`,
               body: `Please add the version tag to trigger the release.`,
             });
