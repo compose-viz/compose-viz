@@ -72,6 +72,12 @@ If you are looking for a compose file vizualization tool, and you are using one 
 
 You need to install [Graphviz](https://graphviz.org/download/) to generate graphs.
 
+On a Mac, if you have brew, you can do
+
+```
+brew install graphviz
+```
+
 ### Installation
 
 #### Using `pip`
@@ -96,6 +102,7 @@ This example yml is from [docker compose beginner tutorial](https://github.com/d
 cd examples/voting-app/
 
 # using python script
+# You may need to replace yml with yaml
 cpv -m svg docker-compose.yml
 
 # using docker image
