@@ -13,7 +13,7 @@ from os import path
 
 
 class Parser:
-    def __init__(self, no_ports: bool, simple: bool):
+    def __init__(self, no_ports: bool = False, simple: bool = False):
         self.no_ports = no_ports
         self.simple = simple
 
