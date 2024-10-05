@@ -1,4 +1,5 @@
 import re
+from os import path
 from typing import Any, Dict, List, Optional, Union
 
 from pydantic_yaml import parse_yaml_raw_as
@@ -9,7 +10,6 @@ from compose_viz.models.device import Device
 from compose_viz.models.extends import Extends
 from compose_viz.models.port import AppProtocol, Port, Protocol
 from compose_viz.models.volume import Volume, VolumeType
-from os import path
 
 
 class Parser:
