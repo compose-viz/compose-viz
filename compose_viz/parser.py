@@ -11,6 +11,7 @@ from compose_viz.models.port import AppProtocol, Port, Protocol
 from compose_viz.models.volume import Volume, VolumeType
 from os import path
 
+
 class Parser:
     def __init__(self, no_ports: bool, simple: bool):
         self.no_ports = no_ports
@@ -37,7 +38,7 @@ class Parser:
                 dependencies.extend(Parser.compile_dependencies(dependency, services, file_path))
         return dependencies
 
-    def get_source(self, source:str):
+    def get_source(self, source: str):
         return path.basename(source) if self.simple else source
 
     def parse(self, file_path: str, root_service: Optional[str] = None) -> Compose:
