@@ -9,11 +9,11 @@ from compose_viz.models.device import Device
 from compose_viz.models.extends import Extends
 from compose_viz.models.port import AppProtocol, Port, Protocol
 from compose_viz.models.volume import Volume, VolumeType
-
+from os import path
 
 class Parser:
-    def __init__(self):
-        pass
+    def __init__(self, simple: bool):
+        self.simple = simple
 
     @staticmethod
     def _unwrap_depends_on(data_depends_on: Union[spec.ListOfStrings, Dict[Any, spec.DependsOn], None]) -> List[str]:
@@ -35,6 +35,9 @@ class Parser:
                 dependencies.append(dependency)
                 dependencies.extend(Parser.compile_dependencies(dependency, services, file_path))
         return dependencies
+
+    def get_source(self, source:str):
+        return path.basename(source) if self.simple else source
 
     def parse(self, file_path: str, root_service: Optional[str] = None) -> Compose:
         compose_data: spec.ComposeSpecification
@@ -175,12 +178,13 @@ class Parser:
                         assert ":" in volume_data, "Invalid volume input, aborting."
 
                         spilt_data = volume_data.split(":")
+                        source = self.get_source(spilt_data[0])
                         if len(spilt_data) == 2:
-                            service_volumes.append(Volume(source=spilt_data[0], target=spilt_data[1]))
+                            service_volumes.append(Volume(source=source, target=spilt_data[1]))
                         elif len(spilt_data) == 3:
                             service_volumes.append(
                                 Volume(
-                                    source=spilt_data[0],
+                                    source=source,
                                     target=spilt_data[1],
                                     access_mode=spilt_data[2],
                                 )
@@ -194,10 +198,11 @@ class Parser:
                             volume_data.source = volume_data.target
 
                         assert volume_data.source is not None
+                        source = self.get_source(volume_data.source)
 
                         service_volumes.append(
                             Volume(
-                                source=volume_data.source,
+                                source=source,
                                 target=volume_data.target,
                                 type=VolumeType[volume_data.type],
                             )
