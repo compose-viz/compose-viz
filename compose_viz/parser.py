@@ -177,16 +177,16 @@ class Parser:
                     if type(volume_data) is str:
                         assert ":" in volume_data, "Invalid volume input, aborting."
 
-                        spilt_data = volume_data.split(":")
-                        source = self.get_source(spilt_data[0])
-                        if len(spilt_data) == 2:
-                            service_volumes.append(Volume(source=source, target=spilt_data[1]))
-                        elif len(spilt_data) == 3:
+                        split_data = volume_data.split(":")
+                        source = self.get_source(split_data[0])
+                        if len(split_data) == 2:
+                            service_volumes.append(Volume(source=source, target=split_data[1]))
+                        elif len(split_data) == 3:
                             service_volumes.append(
                                 Volume(
                                     source=source,
-                                    target=spilt_data[1],
-                                    access_mode=spilt_data[2],
+                                    target=split_data[1],
+                                    access_mode=split_data[2],
                                 )
                             )
                     elif type(volume_data) is spec.Volumes:
@@ -249,15 +249,15 @@ class Parser:
                     if type(device_data) is str:
                         assert ":" in device_data, "Invalid volume input, aborting."
 
-                        spilt_data = device_data.split(":")
-                        if len(spilt_data) == 2:
-                            devices.append(Device(host_path=spilt_data[0], container_path=spilt_data[1]))
-                        elif len(spilt_data) == 3:
+                        split_data = device_data.split(":")
+                        if len(split_data) == 2:
+                            devices.append(Device(host_path=split_data[0], container_path=split_data[1]))
+                        elif len(split_data) == 3:
                             devices.append(
                                 Device(
-                                    host_path=spilt_data[0],
-                                    container_path=spilt_data[1],
-                                    cgroup_permissions=spilt_data[2],
+                                    host_path=split_data[0],
+                                    container_path=split_data[1],
+                                    cgroup_permissions=split_data[2],
                                 )
                             )
 
