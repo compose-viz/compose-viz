@@ -48,6 +48,12 @@ def compose_viz(
         "-l",
         help="Include a legend in the visualization.",
     ),
+    no_ports: bool = typer.Option(
+        False,
+        "--no-ports",
+        "-p",
+        help="Don't show ports.",
+    ),
     simple: bool = typer.Option(
         False,
         "--simple",
@@ -63,7 +69,7 @@ def compose_viz(
         is_eager=True,
     ),
 ) -> None:
-    parser = Parser(simple)
+    parser = Parser(no_ports, simple)
     compose = parser.parse(input_path, root_service=root_service)
 
     if compose:

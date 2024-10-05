@@ -12,7 +12,8 @@ from compose_viz.models.volume import Volume, VolumeType
 from os import path
 
 class Parser:
-    def __init__(self, simple: bool):
+    def __init__(self, no_ports: bool, simple: bool):
+        self.no_ports = no_ports
         self.simple = simple
 
     @staticmethod
@@ -98,7 +99,7 @@ class Parser:
                 )
 
             service_ports: List[Port] = []
-            if service_data.ports is not None:
+            if service_data.ports is not None and not self.no_ports:
                 for port_data in service_data.ports:
                     host_ip: Optional[str] = None
                     host_port: Optional[str] = None
