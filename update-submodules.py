@@ -3,17 +3,19 @@ import re
 
 def revise_naming_convention():
     name_mapping = {
-        "EnvFile1": "EnvFilePath",
-        "Volume1": "AdditionalVolumeOption",
-        "External": "ExternalVolumeNetwork",
-        "External2": "ExternalConfig",
+        r"\bEnvFile1\b": "EnvFilePath",
+        r"\bVolume1\b": "AdditionalVolumeOption",
+        r"\[External\]": "[Union[bool, ExternalVolumeNetwork]]",
+        r"\bExternal\b": "ExternalVolumeNetwork",
+        r"\[External2\]": "[Union[bool, ExternalConfig]]",
+        r"\bExternal2\b": "ExternalConfig",
     }
 
     with open("./compose_viz/spec/compose_spec.py", "r") as spec_file:
         spec_content = spec_file.read()
 
     for origin_name, new_name in name_mapping.items():
-        spec_content = re.sub(rf"\b{origin_name}\b", new_name, spec_content)
+        spec_content = re.sub(origin_name, new_name, spec_content)
 
     with open("./compose_viz/spec/compose_spec.py", "w") as spec_file:
         spec_file.write(spec_content)
@@ -49,4 +51,4 @@ __version__ = "{new_version_number}"
 
 if __name__ == "__main__":
     revise_naming_convention()
-    update_version_number()
+    # update_version_number()
