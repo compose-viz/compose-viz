@@ -1,4 +1,5 @@
 import re
+from os import path
 from typing import Any, Dict, List, Optional, Union
 
 from pydantic_yaml import parse_yaml_raw_as
@@ -12,8 +13,9 @@ from compose_viz.models.volume import Volume, VolumeType
 
 
 class Parser:
-    def __init__(self):
-        pass
+    def __init__(self, no_ports: bool = False, simple: bool = False):
+        self.no_ports = no_ports
+        self.simple = simple
 
     @staticmethod
     def _unwrap_depends_on(data_depends_on: Union[spec.ListOfStrings, Dict[Any, spec.DependsOn], None]) -> List[str]:
@@ -35,6 +37,9 @@ class Parser:
                 dependencies.append(dependency)
                 dependencies.extend(Parser.compile_dependencies(dependency, services, file_path))
         return dependencies
+
+    def get_source(self, source: str):
+        return path.basename(source) if self.simple else source
 
     def parse(self, file_path: str, root_service: Optional[str] = None) -> Compose:
         compose_data: spec.ComposeSpecification
@@ -95,7 +100,7 @@ class Parser:
                 )
 
             service_ports: List[Port] = []
-            if service_data.ports is not None:
+            if service_data.ports is not None and not self.no_ports:
                 for port_data in service_data.ports:
                     host_ip: Optional[str] = None
                     host_port: Optional[str] = None
@@ -174,15 +179,16 @@ class Parser:
                     if type(volume_data) is str:
                         assert ":" in volume_data, "Invalid volume input, aborting."
 
-                        spilt_data = volume_data.split(":")
-                        if len(spilt_data) == 2:
-                            service_volumes.append(Volume(source=spilt_data[0], target=spilt_data[1]))
-                        elif len(spilt_data) == 3:
+                        split_data = volume_data.split(":")
+                        source = self.get_source(split_data[0])
+                        if len(split_data) == 2:
+                            service_volumes.append(Volume(source=source, target=split_data[1]))
+                        elif len(split_data) == 3:
                             service_volumes.append(
                                 Volume(
-                                    source=spilt_data[0],
-                                    target=spilt_data[1],
-                                    access_mode=spilt_data[2],
+                                    source=source,
+                                    target=split_data[1],
+                                    access_mode=split_data[2],
                                 )
                             )
                     elif type(volume_data) is spec.Volumes:
@@ -194,10 +200,11 @@ class Parser:
                             volume_data.source = volume_data.target
 
                         assert volume_data.source is not None
+                        source = self.get_source(volume_data.source)
 
                         service_volumes.append(
                             Volume(
-                                source=volume_data.source,
+                                source=source,
                                 target=volume_data.target,
                                 type=VolumeType[volume_data.type],
                             )
@@ -244,15 +251,15 @@ class Parser:
                     if type(device_data) is str:
                         assert ":" in device_data, "Invalid volume input, aborting."
 
-                        spilt_data = device_data.split(":")
-                        if len(spilt_data) == 2:
-                            devices.append(Device(host_path=spilt_data[0], container_path=spilt_data[1]))
-                        elif len(spilt_data) == 3:
+                        split_data = device_data.split(":")
+                        if len(split_data) == 2:
+                            devices.append(Device(host_path=split_data[0], container_path=split_data[1]))
+                        elif len(split_data) == 3:
                             devices.append(
                                 Device(
-                                    host_path=spilt_data[0],
-                                    container_path=spilt_data[1],
-                                    cgroup_permissions=spilt_data[2],
+                                    host_path=split_data[0],
+                                    container_path=split_data[1],
+                                    cgroup_permissions=split_data[2],
                                 )
                             )
 

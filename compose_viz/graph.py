@@ -70,11 +70,12 @@ def apply_edge_style(type: str) -> dict:
 
 
 class Graph:
-    def __init__(self, compose: Compose, filename: str, include_legend: bool) -> None:
+    def __init__(self, compose: Compose, filename: str, include_legend: bool, simple: bool) -> None:
         self.dot = graphviz.Digraph()
         self.dot.attr("graph", background="#ffffff", pad="0.5", ratio="fill")
         self.compose = compose
         self.filename = filename
+        self.simple = simple
 
         if include_legend:
             self.dot.attr(rankdir="LR")
@@ -106,8 +107,9 @@ class Graph:
                 edge.edge("line_5_l", "line_5_r", label="extends", **apply_edge_style("extends"))
 
             with self.dot.subgraph(name="cluster_node_") as node:
+                node_label = "Service" if simple else "Service\n(image)"
                 node.attr(label="Node")
-                node.node("service", shape="component", label="Service\n(image)")
+                node.node("service", shape="component", label=node_label)
                 node.node("volume", shape="cylinder", label="Volume")
                 node.node("network", shape="pentagon", label="Network")
                 node.node("port", shape="circle", label="Port")
@@ -136,10 +138,12 @@ class Graph:
     def render(self, format: str, cleanup: bool = True) -> None:
         for service in self.compose.services:
             if service.image is not None:
+                service_name = service.container_name if service.container_name else service.name
+                node_label = f"{service_name}" if self.simple else f"{service_name}\n({service.image})"
                 self.add_vertex(
                     service.name,
                     "service",
-                    lable=f"{service.container_name if service.container_name else service.name}\n({service.image})",
+                    lable=node_label,
                 )
             if service.extends is not None:
                 self.add_vertex(service.name, "service", lable=f"{service.name}\n")
