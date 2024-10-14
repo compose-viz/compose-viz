@@ -48,6 +48,15 @@ def compose_viz(
         "-l",
         help="Include a legend in the visualization.",
     ),
+    no_ports: bool = typer.Option(
+        False,
+        "--no-ports",
+        "-p",
+        help="Don't show ports.",
+    ),
+    simple: bool = typer.Option(
+        False, "--simple", "-s", help="Output a more simple graph with no image names and only basename of sources."
+    ),
     _: Optional[bool] = typer.Option(
         None,
         "--version",
@@ -57,13 +66,13 @@ def compose_viz(
         is_eager=True,
     ),
 ) -> None:
-    parser = Parser()
+    parser = Parser(no_ports, simple)
     compose = parser.parse(input_path, root_service=root_service)
 
     if compose:
         typer.echo(f"Successfully parsed {input_path}")
 
-    Graph(compose, output_filename, include_legend).render(format)
+    Graph(compose, output_filename, include_legend, simple).render(format)
 
     raise typer.Exit()
 
