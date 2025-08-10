@@ -43,3 +43,8 @@ class VizFormats(str, Enum):
     xdot1_2 = "xdot1.2"
     xdot1_4 = "xdot1.4"
     xdot_json = "xdot_json"
+
+    def __str__(self):
+        # Python 3.11+ broken __str__
+        # https://github.com/python/cpython/issues/100458
+        return self.name
