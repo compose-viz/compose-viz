@@ -18,7 +18,9 @@ class Parser:
         self.simple = simple
 
     @staticmethod
-    def _unwrap_depends_on(data_depends_on: Union[spec.ListOfStrings, Dict[Any, spec.DependsOn], None]) -> List[str]:
+    def _unwrap_depends_on(
+        data_depends_on: Union[spec.ListOfStrings, Dict[Any, spec.DependsOn], None],
+    ) -> List[str]:
         service_depends_on = []
         if type(data_depends_on) is spec.ListOfStrings:
             service_depends_on = data_depends_on.root
@@ -72,9 +74,7 @@ class Parser:
                     service_image = f"build from '{service_data.build}'"
                 elif type(service_data.build) is spec.Build:
                     if service_data.build.context is not None and service_data.build.dockerfile is not None:
-                        service_image = (
-                            f"build from '{service_data.build.context}' using '{service_data.build.dockerfile}'"
-                        )
+                        service_image = f"build from '{service_data.build.context}' using '{service_data.build.dockerfile}'"
                     elif service_data.build.context is not None:
                         service_image = f"build from '{service_data.build.context}'"
             if service_data.image is not None:
@@ -96,7 +96,8 @@ class Parser:
                 # The value of the extends key MUST be a dictionary.
                 assert type(service_data.extends) is spec.Extends
                 service_extends = Extends(
-                    service_name=service_data.extends.service, from_file=service_data.extends.file
+                    service_name=service_data.extends.service,
+                    from_file=service_data.extends.file,
                 )
 
             service_ports: List[Port] = []
@@ -206,7 +207,7 @@ class Parser:
                             Volume(
                                 source=source,
                                 target=volume_data.target,
-                                type=VolumeType[volume_data.type],
+                                type=VolumeType[volume_data.type.value],
                             )
                         )
 
@@ -253,7 +254,12 @@ class Parser:
 
                         split_data = device_data.split(":")
                         if len(split_data) == 2:
-                            devices.append(Device(host_path=split_data[0], container_path=split_data[1]))
+                            devices.append(
+                                Device(
+                                    host_path=split_data[0],
+                                    container_path=split_data[1],
+                                )
+                            )
                         elif len(split_data) == 3:
                             devices.append(
                                 Device(

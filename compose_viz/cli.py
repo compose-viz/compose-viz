@@ -55,7 +55,10 @@ def compose_viz(
         help="Don't show ports.",
     ),
     simple: bool = typer.Option(
-        False, "--simple", "-s", help="Output a more simple graph with no image names and only basename of sources."
+        False,
+        "--simple",
+        "-s",
+        help="Output a more simple graph with no image names and only basename of sources.",
     ),
     _: Optional[bool] = typer.Option(
         None,
@@ -73,8 +76,6 @@ def compose_viz(
         typer.echo(f"Successfully parsed {input_path}")
 
     Graph(compose, output_filename, include_legend, simple).render(format)
-
-    raise typer.Exit()
 
 
 def start_cli() -> None:
