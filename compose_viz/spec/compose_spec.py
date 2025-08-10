@@ -81,9 +81,7 @@ class Provider(BaseModel):
         ...,
         description="ExternalVolumeNetwork component used by Compose to manage setup and teardown lifecycle of the service.",
     )
-    options: Optional[Dict[str, Union[Union[str, float, bool], List[Union[str, float, bool]]]]] = Field(
-        None, description="Provider-specific options."
-    )
+    options: Optional[Dict[str, Union[Union[str, float, bool], List[Union[str, float, bool]]]]] = Field(None, description="Provider-specific options.")
 
 
 class Logging(BaseModel):
@@ -94,9 +92,7 @@ class Logging(BaseModel):
         None,
         description="Logging driver to use, such as 'json-file', 'syslog', 'journald', etc.",
     )
-    options: Optional[Dict[str, Optional[Union[str, float]]]] = Field(
-        None, description="Options for the logging driver."
-    )
+    options: Optional[Dict[str, Optional[Union[str, float]]]] = Field(None, description="Options for the logging driver.")
 
 
 class Models(BaseModel):
@@ -255,9 +251,7 @@ class RollbackConfig(BaseModel):
         None,
         description="Duration to monitor each task for failures after it is created (e.g., '1s', '1m30s').",
     )
-    max_failure_ratio: Optional[Union[float, str]] = Field(
-        None, description="Failure rate to tolerate during a rollback."
-    )
+    max_failure_ratio: Optional[Union[float, str]] = Field(None, description="Failure rate to tolerate during a rollback.")
     order: Optional[Order] = Field(
         None,
         description="Order of operations during rollbacks: 'stop-first' (default) or 'start-first'.",
@@ -281,9 +275,7 @@ class UpdateConfig(BaseModel):
         None,
         description="Duration to monitor each updated task for failures after it is created (e.g., '1s', '1m30s').",
     )
-    max_failure_ratio: Optional[Union[float, str]] = Field(
-        None, description="Failure rate to tolerate during an update (0 to 1)."
-    )
+    max_failure_ratio: Optional[Union[float, str]] = Field(None, description="Failure rate to tolerate during an update (0 to 1).")
     order: Optional[Order] = Field(
         None,
         description="Order of operations during updates: 'stop-first' (default) or 'start-first'.",
@@ -314,9 +306,7 @@ class RestartPolicy(BaseModel):
         description="Condition for restarting the container: 'none', 'on-failure', 'any'.",
     )
     delay: Optional[str] = Field(None, description="Delay between restart attempts (e.g., '1s', '1m30s').")
-    max_attempts: Optional[Union[int, str]] = Field(
-        None, description="Maximum number of restart attempts before giving up."
-    )
+    max_attempts: Optional[Union[int, str]] = Field(None, description="Maximum number of restart attempts before giving up.")
     window: Optional[str] = Field(
         None,
         description="Time window used to evaluate the restart policy (e.g., '1s', '1m30s').",
@@ -342,9 +332,7 @@ class Placement(BaseModel):
         description="Placement constraints for the service (e.g., 'node.role==manager').",
     )
     preferences: Optional[List[Preference]] = Field(None, description="Placement preferences for the service.")
-    max_replicas_per_node: Optional[Union[int, str]] = Field(
-        None, description="Maximum number of replicas of the service."
-    )
+    max_replicas_per_node: Optional[Union[int, str]] = Field(None, description="Maximum number of replicas of the service.")
 
 
 class DiscreteResourceSpec(BaseModel):
@@ -359,9 +347,7 @@ class GenericResource(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    discrete_resource_spec: Optional[DiscreteResourceSpec] = Field(
-        None, description="Specification for discrete (countable) resources."
-    )
+    discrete_resource_spec: Optional[DiscreteResourceSpec] = Field(None, description="Specification for discrete (countable) resources.")
 
 
 class GenericResources(RootModel[List[GenericResource]]):
@@ -382,9 +368,7 @@ class ConfigItem(BaseModel):
     subnet: Optional[str] = Field(None, description="Subnet in CIDR format that represents a network segment.")
     ip_range: Optional[str] = Field(None, description="Range of IPs from which to allocate container IPs.")
     gateway: Optional[str] = Field(None, description="IPv4 or IPv6 gateway for the subnet.")
-    aux_addresses: Optional[Dict[str, str]] = Field(
-        None, description="Auxiliary IPv4 or IPv6 addresses used by Network driver."
-    )
+    aux_addresses: Optional[Dict[str, str]] = Field(None, description="Auxiliary IPv4 or IPv6 addresses used by Network driver.")
 
 
 class Ipam(BaseModel):
@@ -502,9 +486,7 @@ class BlkioLimit(BaseModel):
         extra="forbid",
     )
     path: Optional[str] = Field(None, description="Path to the device (e.g., '/dev/sda').")
-    rate: Optional[Union[int, str]] = Field(
-        None, description="Rate limit in bytes per second or IO operations per second."
-    )
+    rate: Optional[Union[int, str]] = Field(None, description="Rate limit in bytes per second or IO operations per second.")
 
 
 class BlkioWeight(BaseModel):
@@ -625,25 +607,15 @@ class BlkioConfig(BaseModel):
     model_config = ConfigDict(
         extra="forbid",
     )
-    device_read_bps: Optional[List[BlkioLimit]] = Field(
-        None, description="Limit read rate (bytes per second) from a device."
-    )
-    device_read_iops: Optional[List[BlkioLimit]] = Field(
-        None, description="Limit read rate (IO per second) from a device."
-    )
-    device_write_bps: Optional[List[BlkioLimit]] = Field(
-        None, description="Limit write rate (bytes per second) to a device."
-    )
-    device_write_iops: Optional[List[BlkioLimit]] = Field(
-        None, description="Limit write rate (IO per second) to a device."
-    )
+    device_read_bps: Optional[List[BlkioLimit]] = Field(None, description="Limit read rate (bytes per second) from a device.")
+    device_read_iops: Optional[List[BlkioLimit]] = Field(None, description="Limit read rate (IO per second) from a device.")
+    device_write_bps: Optional[List[BlkioLimit]] = Field(None, description="Limit write rate (bytes per second) to a device.")
+    device_write_iops: Optional[List[BlkioLimit]] = Field(None, description="Limit write rate (IO per second) to a device.")
     weight: Optional[Union[int, str]] = Field(
         None,
         description="Block IO weight (relative weight) for the service, between 10 and 1000.",
     )
-    weight_device: Optional[List[BlkioWeight]] = Field(
-        None, description="Block IO weight (relative weight) for specific devices."
-    )
+    weight_device: Optional[List[BlkioWeight]] = Field(None, description="Block IO weight (relative weight) for specific devices.")
 
 
 class Networks(BaseModel):
@@ -718,9 +690,6 @@ class Device(BaseModel):
 
 
 class DevicesModel(RootModel[List[Device]]):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
     root: List[Device] = Field(
         ...,
         description="Device reservations for containers, allowing services to access specific hardware devices.",
@@ -751,9 +720,7 @@ class Network(BaseModel):
         None,
         description="Specify which driver should be used for this network. Default is 'bridge'.",
     )
-    driver_opts: Optional[Dict[str, Union[str, float]]] = Field(
-        None, description="Specify driver-specific options defined as key/value pairs."
-    )
+    driver_opts: Optional[Dict[str, Union[str, float]]] = Field(None, description="Specify driver-specific options defined as key/value pairs.")
     ipam: Optional[Ipam] = Field(None, description="Custom IP Address Management configuration for this network.")
     external: Optional[Union[bool, ExternalVolumeNetwork]] = Field(
         None,
@@ -762,9 +729,7 @@ class Network(BaseModel):
     internal: Optional[Union[bool, str]] = Field(None, description="Create an externally isolated network.")
     enable_ipv4: Optional[Union[bool, str]] = Field(None, description="Enable IPv4 networking.")
     enable_ipv6: Optional[Union[bool, str]] = Field(None, description="Enable IPv6 networking.")
-    attachable: Optional[Union[bool, str]] = Field(
-        None, description="If true, standalone containers can attach to this network."
-    )
+    attachable: Optional[Union[bool, str]] = Field(None, description="If true, standalone containers can attach to this network.")
     labels: Optional[ListOrDict] = Field(None, description="Add metadata to the network using labels.")
 
 
@@ -827,9 +792,7 @@ class ServiceHook(BaseModel):
     )
     command: Command = Field(..., description="Command to execute as part of the hook.")
     user: Optional[str] = Field(None, description="User to run the command as.")
-    privileged: Optional[Union[bool, str]] = Field(
-        None, description="Whether to run the command with extended privileges."
-    )
+    privileged: Optional[Union[bool, str]] = Field(None, description="Whether to run the command with extended privileges.")
     working_dir: Optional[str] = Field(None, description="Working directory for the command.")
     environment: Optional[ListOrDict] = Field(None, description="Environment variables for the command.")
 
@@ -901,9 +864,7 @@ class Deployment(BaseModel):
     endpoint_mode: Optional[str] = Field(None, description="Endpoint mode for the service: 'vip' (default) or 'dnsrr'.")
     replicas: Optional[Union[int, str]] = Field(None, description="Number of replicas of the service container to run.")
     labels: Optional[ListOrDict] = Field(None, description="Labels to apply to the service.")
-    rollback_config: Optional[RollbackConfig] = Field(
-        None, description="Configuration for rolling back a service update."
-    )
+    rollback_config: Optional[RollbackConfig] = Field(None, description="Configuration for rolling back a service update.")
     update_config: Optional[UpdateConfig] = Field(None, description="Configuration for updating a service.")
     resources: Optional[Resources] = Field(None, description="Resource constraints and reservations for the service.")
     restart_policy: Optional[RestartPolicy] = Field(None, description="Restart policy for the service containers.")
@@ -940,9 +901,7 @@ class Service(BaseModel):
     deploy: Optional[Deployment] = None
     annotations: Optional[ListOrDict] = None
     attach: Optional[Union[bool, str]] = None
-    build: Optional[Union[str, Build]] = Field(
-        None, description="Configuration options for building the service's image."
-    )
+    build: Optional[Union[str, Build]] = Field(None, description="Configuration options for building the service's image.")
     blkio_config: Optional[BlkioConfig] = Field(None, description="Block IO configuration for the service.")
     cap_add: Optional[List[str]] = Field(
         None,
@@ -961,9 +920,7 @@ class Service(BaseModel):
         None,
         description="Override the default command declared by the container image, for example 'CMD' in Dockerfile.",
     )
-    configs: Optional[ServiceConfigOrSecret] = Field(
-        None, description="Grant access to Configs on a per-service basis."
-    )
+    configs: Optional[ServiceConfigOrSecret] = Field(None, description="Grant access to Configs on a per-service basis.")
     container_name: Optional[str] = Field(
         None,
         description="Specify a custom container name, rather than a generated default name.",
@@ -972,12 +929,8 @@ class Service(BaseModel):
     cpu_count: Optional[Union[str, CpuCount]] = Field(None, description="Number of usable CPUs.")
     cpu_percent: Optional[Union[str, CpuPercent]] = Field(None, description="Percentage of CPU resources to use.")
     cpu_shares: Optional[Union[float, str]] = Field(None, description="CPU shares (relative weight) for the container.")
-    cpu_quota: Optional[Union[float, str]] = Field(
-        None, description="Limit the CPU CFS (Completely Fair Scheduler) quota."
-    )
-    cpu_period: Optional[Union[float, str]] = Field(
-        None, description="Limit the CPU CFS (Completely Fair Scheduler) period."
-    )
+    cpu_quota: Optional[Union[float, str]] = Field(None, description="Limit the CPU CFS (Completely Fair Scheduler) quota.")
+    cpu_period: Optional[Union[float, str]] = Field(None, description="Limit the CPU CFS (Completely Fair Scheduler) period.")
     cpu_rt_period: Optional[Union[float, str]] = Field(
         None,
         description="Limit the CPU real-time period in microseconds or a duration.",
@@ -991,25 +944,19 @@ class Service(BaseModel):
         description="Number of CPUs to use. A floating-point value is supported to request partial CPUs.",
     )
     cpuset: Optional[str] = Field(None, description="CPUs in which to allow execution (0-3, 0,1).")
-    credential_spec: Optional[CredentialSpec] = Field(
-        None, description="Configure the credential spec for managed service account."
-    )
+    credential_spec: Optional[CredentialSpec] = Field(None, description="Configure the credential spec for managed service account.")
     depends_on: Optional[Union[ListOfStrings, Dict[str, DependsOn]]] = Field(
         None,
         description="Express dependency between services. Service dependencies cause services to be started in dependency order. The dependent service will wait for the dependency to be ready before starting.",
     )
-    device_cgroup_rules: Optional[ListOfStrings] = Field(
-        None, description="Add rules to the cgroup allowed devices list."
-    )
+    device_cgroup_rules: Optional[ListOfStrings] = Field(None, description="Add rules to the cgroup allowed devices list.")
     devices: Optional[List[Union[str, Devices]]] = Field(None, description="List of device mappings for the container.")
     dns: Optional[StringOrList] = Field(None, description="Custom DNS servers to set for the service container.")
     dns_opt: Optional[List[str]] = Field(
         None,
         description="Custom DNS options to be passed to the container's DNS resolver.",
     )
-    dns_search: Optional[StringOrList] = Field(
-        None, description="Custom DNS search domains to set on the service container."
-    )
+    dns_search: Optional[StringOrList] = Field(None, description="Custom DNS search domains to set on the service container.")
     domainname: Optional[str] = Field(None, description="Custom domain name to use for the service container.")
     entrypoint: Optional[Command] = Field(
         None,
@@ -1031,9 +978,7 @@ class Service(BaseModel):
         None,
         description="Expose ports without publishing them to the host machine - they'll only be accessible to linked services.",
     )
-    extends: Optional[Union[str, Extends]] = Field(
-        None, description="Extend another service, in the current file or another file."
-    )
+    extends: Optional[Union[str, Extends]] = Field(None, description="Extend another service, in the current file or another file.")
     provider: Optional[Provider] = Field(
         None,
         description="Specify a service which will not be manage by Compose directly, and delegate its management to an external provider.",
@@ -1090,9 +1035,7 @@ class Service(BaseModel):
         description="Memory limit for the container. A string value can use suffix like '2g' for 2 gigabytes.",
     )
     mem_reservation: Optional[Union[str, int]] = Field(None, description="Memory reservation for the container.")
-    mem_swappiness: Optional[Union[int, str]] = Field(
-        None, description="Container memory swappiness as percentage (0 to 100)."
-    )
+    mem_swappiness: Optional[Union[int, str]] = Field(None, description="Container memory swappiness as percentage (0 to 100).")
     memswap_limit: Optional[Union[float, str]] = Field(
         None,
         description="Amount of memory the container is allowed to swap to disk. Set to -1 to enable unlimited swap.",
@@ -1115,9 +1058,7 @@ class Service(BaseModel):
         description="Tune host's OOM preferences for the container (accepts -1000 to 1000).",
     )
     pid: Optional[str] = Field(None, description="PID mode for container.")
-    pids_limit: Optional[Union[float, str]] = Field(
-        None, description="Tune a container's PIDs limit. Set to -1 for unlimited PIDs."
-    )
+    pids_limit: Optional[Union[float, str]] = Field(None, description="Tune a container's PIDs limit. Set to -1 for unlimited PIDs.")
     platform: Optional[str] = Field(
         None,
         description="Target platform to run on, e.g., 'linux/amd64', 'linux/arm64', or 'windows/amd64'.",
@@ -1134,9 +1075,7 @@ class Service(BaseModel):
         None,
         description="Commands to run before the container stops. If any command fails, the container stop is aborted.",
     )
-    privileged: Optional[Union[bool, str]] = Field(
-        None, description="Give extended privileges to the service container."
-    )
+    privileged: Optional[Union[bool, str]] = Field(None, description="Give extended privileges to the service container.")
     profiles: Optional[ListOfStrings] = Field(
         None,
         description="List of profiles for this service. When profiles are specified, services are only started when the profile is activated.",
@@ -1157,16 +1096,12 @@ class Service(BaseModel):
     )
     runtime: Optional[str] = Field(None, description="Runtime to use for this container, e.g., 'runc'.")
     scale: Optional[Union[int, str]] = Field(None, description="Number of containers to deploy for this service.")
-    security_opt: Optional[List[str]] = Field(
-        None, description="Override the default labeling scheme for each container."
-    )
+    security_opt: Optional[List[str]] = Field(None, description="Override the default labeling scheme for each container.")
     shm_size: Optional[Union[float, str]] = Field(
         None,
         description="Size of /dev/shm. A string value can use suffix like '2g' for 2 gigabytes.",
     )
-    secrets: Optional[ServiceConfigOrSecret] = Field(
-        None, description="Grant access to Secrets on a per-service basis."
-    )
+    secrets: Optional[ServiceConfigOrSecret] = Field(None, description="Grant access to Secrets on a per-service basis.")
     sysctls: Optional[ListOrDict] = Field(
         None,
         description="Kernel parameters to set in the container. You can use either an array or a list.",
@@ -1221,19 +1156,9 @@ class ComposeSpecification(BaseModel):
         description="define the Compose project name, until user defines one explicitly.",
     )
     include: Optional[List[Include]] = Field(None, description="compose sub-projects to be included.")
-    services: Optional[Dict[str, Service]] = Field(
-        None, description="The services that will be used by your application."
-    )
-    models: Optional[Dict[str, Model]] = Field(
-        None, description="Language models that will be used by your application."
-    )
-    networks: Optional[Dict[str, Optional[Network]]] = Field(
-        None, description="Networks that are shared among multiple services."
-    )
-    volumes: Optional[Dict[str, Optional[Volume]]] = Field(
-        None, description="Named volumes that are shared among multiple services."
-    )
+    services: Optional[Dict[str, Service]] = Field(None, description="The services that will be used by your application.")
+    models: Optional[Dict[str, Model]] = Field(None, description="Language models that will be used by your application.")
+    networks: Optional[Dict[str, Optional[Network]]] = Field(None, description="Networks that are shared among multiple services.")
+    volumes: Optional[Dict[str, Optional[Volume]]] = Field(None, description="Named volumes that are shared among multiple services.")
     secrets: Optional[Dict[str, Secret]] = Field(None, description="Secrets that are shared among multiple services.")
-    configs: Optional[Dict[str, Config]] = Field(
-        None, description="Configurations that are shared among multiple services."
-    )
+    configs: Optional[Dict[str, Config]] = Field(None, description="Configurations that are shared among multiple services.")
