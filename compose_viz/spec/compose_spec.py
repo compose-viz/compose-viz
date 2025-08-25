@@ -390,16 +390,6 @@ class ExternalVolumeNetwork(BaseModel):
     )
 
 
-class External1(BaseModel):
-    model_config = ConfigDict(
-        extra="forbid",
-    )
-    name: Optional[str] = Field(
-        None,
-        description="Specifies the name of the external volume. Deprecated: use the 'name' property instead.",
-    )
-
-
 class ExternalConfig(BaseModel):
     name: Optional[str] = Field(None, description="Specifies the name of the external secret.")
 
@@ -740,7 +730,7 @@ class Volume(BaseModel):
     name: Optional[str] = Field(None, description="Custom name for this volume.")
     driver: Optional[str] = Field(None, description="Specify which volume driver should be used for this volume.")
     driver_opts: Optional[Dict[str, Union[str, float]]] = Field(None, description="Specify driver-specific options.")
-    external: Optional[External1] = Field(
+    external: Optional[bool] = Field(
         None,
         description="Specifies that this volume already exists and was created outside of Compose.",
     )
