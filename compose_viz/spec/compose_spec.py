@@ -974,7 +974,7 @@ class Service(BaseModel):
         None,
         description="Add environment variables. You can use either an array or a list of KEY=VAL pairs.",
     )
-    expose: Optional[List[Union[str, float]]] = Field(
+    expose: Optional[List[Union[str, int]]] = Field(
         None,
         description="Expose ports without publishing them to the host machine - they'll only be accessible to linked services.",
     )
