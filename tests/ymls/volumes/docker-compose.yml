@@ -26,3 +26,5 @@ services:
 volumes:
   common-volume:
   cli-volume:
+    # https://docs.docker.com/reference/compose-file/volumes/#external
+    external: true
