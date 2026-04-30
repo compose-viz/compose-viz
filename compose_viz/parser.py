@@ -239,7 +239,9 @@ class Parser:
             expose: List[str] = []
             if service_data.expose is not None:
                 for port in service_data.expose:
-                    expose.append(str(port))
+                    # to avoid to have values like 8885.0 for instance, cast floats into int first
+                    port_str = str(int(port)) if isinstance(port, float) else str(port)
+                    expose.append(port_str)
 
             profiles: List[str] = []
             if service_data.profiles is not None:
